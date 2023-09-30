@@ -1,1 +1,1 @@
-# Advanced-Topics-in-Neural-Networks-Template-2023
+# Advanced Topics in Neural Networks Template 2023
