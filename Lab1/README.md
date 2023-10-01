@@ -2,7 +2,7 @@
 
 ***
 
-Lab Notebook: [LogisticRegression.ipynb](./Lab1/LogisticRegression.ipynb)
+Lab Notebook: [LogisticRegression.ipynb](./LogisticRegression.ipynb)
 
 ***
 
