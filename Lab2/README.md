@@ -2,11 +2,11 @@
 
 ***
 
-Lab Notebook: [TensorOperations.ipynb](./Lab2/TensorOperations.ipynb)
+Lab Notebook: [TensorOperations.ipynb](./TensorOperations.ipynb)
 
 ***
 
-Homework: [Homework.pdf](./Lab2/Homework.pdf)
+Homework: [Homework.pdf](./Homework.pdf)
 
 ***
 
