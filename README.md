@@ -20,3 +20,14 @@ Local installation:
     * `conda install -c conda-forge matplotlib` / `pip install matplotlib`.
 6. Install Opencv.
     * `conda install -c conda-forge opencv` / `pip install opencv-python`.
+
+
+## Recommended resources:
+
+- Linear algebra:
+   * [Essence of linear algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) (linear transformations, matrix multiplication)
+   * [Essence of calculus](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) (derivatives, chain rule)
+- Backpropagation:
+   * [Neural Networks](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) (animated introduction to neural networks and backpropagation)
+- Convolutions:
+   * [But what is a convolution?](https://www.youtube.com/watch?v=KuXjwB4LzSA) (convolution example, convolutions in image processing and convolutions in polynomial multiplication; FFT)
