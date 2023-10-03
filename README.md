@@ -1,8 +1,16 @@
 ![image_clipdrop-enhance](https://github.com/Tensor-Reloaded/Advanced-Topics-in-Neural-Networks-Template-2023/assets/8055539/5965f7aa-34ad-4899-b2af-be3cc084cb96)
 
-# Advanced Topics in Neural Networks Template 2023
+# [Advanced Topics in Neural Networks Template 2023](https://sites.google.com/view/atnn)
 
 Repository for the Advanced Topics in Neural Networks laboratory, "Alexandru Ioan Cuza" University, Faculty of Computer Science, Master degree.
+
+
+## How to use
+
+1. Fork the repository.
+2. Upload the assignments and homeworks in their corresponding "Lab`X`" directory of your fork.
+3. Check the course website and Github Repository at least once a week. Read the updates to the README files as they contain important information regarding helpful resources and assignments.
+4. Sync your personal fork whenever changes appear in the upstream repository.
 
 ## Environment setup
 
