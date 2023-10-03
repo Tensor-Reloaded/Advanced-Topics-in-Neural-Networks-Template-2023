@@ -9,13 +9,13 @@ def main():
     b = [0.1, 0.1, 0.1]
     y = 1
 
-    (w_prime, b_prime) = iterate(x, w, b, y)
+    w_prime, b_prime = iterate(x, w, b, y)
 
     print(w_prime)
     print(b_prime)
 
 def iterate(w: Vector, x: Vector, b: Vector, y: float) -> Vector:
-    y_prime = sigmoid(sum([weight * value + bias for weight, value, bias in zip(w, x, b)]))
+    y_prime = sigmoid(sum([weight * value for weight, value in zip(w, x)]) + sum(b))
 
     error = y - y_prime
 
@@ -25,10 +25,10 @@ def iterate(w: Vector, x: Vector, b: Vector, y: float) -> Vector:
     w_prime = [weight - delta_weight for weight, delta_weight in zip(w, delta_w)]
     b_prime = [bias - delta_bias for bias, delta_bias in zip(b, delta_b)]
 
-    return (w_prime, b_prime)
+    return w_prime, b_prime
 
 def sigmoid(x: float) -> float:
-    return 1 / (1 + pow(e, -x))
+    return 1 / (1 + e ** -x)
 
 if __name__ == '__main__':
     main()
