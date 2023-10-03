@@ -4,6 +4,9 @@
 
 Lab Notebook: [LogisticRegression.ipynb](./LogisticRegression.ipynb)
 
+Lab Assignment: TODO
+<!--[Assignment.pdf](./Assignment.pdf) -->
+
 ***
 
 For self-study:
