@@ -4,8 +4,8 @@
 
 Lab Notebook: [LogisticRegression.ipynb](./LogisticRegression.ipynb)
 
-Lab Assignment: TODO
-<!--[Assignment.pdf](./Assignment.pdf) -->
+Lab Assignment:
+[Assignment.pdf](./Assignment.pdf) (Deadline: End-of-Day 09.10.2023)
 
 ***
 
