@@ -15,9 +15,9 @@ def main():
     print(b_prime)
 
 def iterate(w: Vector, x: Vector, b: Vector, y: float) -> Vector:
-    y_prime = sigmoid(sum([weight * value for weight, value in zip(w, x)]) + sum(b))
+    y_prime = activation_function(sum([weight * value for weight, value in zip(w, x)]) + sum(b))
 
-    error = y - y_prime
+    error = loss_function(y, y_prime)
 
     delta_w = [-error * weight for weight in w]
     delta_b = [-error for _ in b]
@@ -27,8 +27,11 @@ def iterate(w: Vector, x: Vector, b: Vector, y: float) -> Vector:
 
     return w_prime, b_prime
 
-def sigmoid(x: float) -> float:
+def activation_function(x: float) -> float:
     return 1 / (1 + e ** -x)
+
+def loss_function(y: float, y_prime: float) -> float:
+    return y - y_prime
 
 if __name__ == '__main__':
     main()
