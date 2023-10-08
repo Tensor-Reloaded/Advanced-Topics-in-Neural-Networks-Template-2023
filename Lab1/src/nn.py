@@ -30,7 +30,7 @@ class NeuralNetwork:
     def train(self, x: Vector[np.float32], y: np.float32) -> None:
         return self._run_backwards_propagation(x, y)
 
-    def print(self):
+    def display(self):
         print(f"Weights:\n{self.weights}")
         print(f"Bias:\t\t{self.bias}")
         print(f"Learning rate:\t{self.learning_rate}")
@@ -41,8 +41,8 @@ class NeuralNetwork:
 
         return y_prime
 
-    def _run_activation_function(self, z: np.float32) -> np.float32:
-        exp_z = np.exp(z)
+    def _run_activation_function(self, z: Vector[np.float32]) -> Vector[np.float32]:
+        exp_z = np.exp(z - np.max(z))
         return exp_z / np.sum(exp_z)
 
     def _run_backwards_propagation(self, x: Vector[np.float32], y: np.float32):

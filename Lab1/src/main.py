@@ -28,14 +28,14 @@ def exercise():
     neural_network = nn.NeuralNetwork(w, b, l)
 
     print("Initial network")
-    neural_network.print()
+    neural_network.display()
     print(f"Prediction for x before training: {neural_network.predict(x)}")
 
     neural_network.train(x, y)
 
     print()
     print("Edited network")
-    neural_network.print()
+    neural_network.display()
     print(f"Prediction for x after  training: {neural_network.predict(x)}")
 
 def wine_classifier():
@@ -44,10 +44,27 @@ def wine_classifier():
     w, b = construct_weights_biases(x, y)
     l = np.float32(0.1)
 
-    training, validation, testing = partition(x, y)
+    training, _validation, testing = partition(x, y)
 
     neural_network = nn.NeuralNetwork(w, b, l)
 
+    correct = 0
+    for values, expected_results in zip(testing[0], testing[1]):
+        correct += expected_results[np.argmax(neural_network.predict(values))]
+
+    print(f"{correct} / {len(training[0])}")
+
+    epochs = 100
+    for i in range(epochs):
+        print(f"Trained {i} / {epochs}")
+        for values, expected_results in zip(training[0], training[1]):
+            neural_network.train(values, expected_results)
+
+    correct = 0
+    for values, expected_results in zip(testing[0], testing[1]):
+        correct += expected_results[np.argmax(neural_network.predict(values))]
+
+    print(f"{correct} / {len(training[0])}")
 
 def read_csv():
     raw_data = []
@@ -61,14 +78,16 @@ def read_csv():
     return raw_data
 
 def extract_data(raw_data):
+    unique_features = { row[-1] for row in raw_data }
+
     x = [np.array(row[:-1]) for row in raw_data]
-    y = [row[-1] for row in raw_data]
+    y = [np.array([1 if row[-1] == value else 0 for value in unique_features]) for row in raw_data]
 
     return x, y
 
 def construct_weights_biases(x, y):
     features = len(x[0])
-    outputs = len(set(y))
+    outputs = len(y[0])
 
     w = np.random.randn(features, outputs)
     b = np.random.randn(outputs)
