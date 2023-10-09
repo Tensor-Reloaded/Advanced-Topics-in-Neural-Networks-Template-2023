@@ -5,8 +5,8 @@
 Lab Notebook: [TensorOperations.ipynb](./TensorOperations.ipynb)
 
 ***
-
-Homework: [Homework.pdf](./Homework.pdf)
+Lab Assignment:
+<!-- [Assignment.pdf](./Assignment.pdf) -->
 
 ***
 
