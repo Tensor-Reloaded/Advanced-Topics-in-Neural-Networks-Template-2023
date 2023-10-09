@@ -7,9 +7,9 @@ import nn
 def main():
     print("Exercise")
     exercise()
-    print()
-    print("Wine classfier")
-    wine_classifier()
+    # print()
+    # print("Wine classfier")
+    # wine_classifier()
 
 def exercise():
     x = np.array([1, 3, 0], dtype=np.float32)
