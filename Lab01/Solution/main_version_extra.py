@@ -42,8 +42,8 @@ def regroup_as_instances(column_displayed_data: ndarray) -> ndarray:
 
 
 def one_hot_encoding(results: ndarray, no_out_neurons: int) -> ndarray:
-    return np.array([[0 for _ in range(instance)] + [1] +
-                     [0 for _ in range(instance + 1, no_out_neurons)]
+    return np.array([[0 for _ in range(instance - 3)] + [1] +
+                     [0 for _ in range(instance - 2, no_out_neurons)]
                      for instance in results])
 
 
@@ -157,9 +157,9 @@ def test(model: dict, testing_data: dict) -> float:
 if __name__ == "__main__":
     train_data, test_data = define_dataset()
     model_i = {'no_input': 11,  # number of input features
-               'weights': np.random.rand(len(train_data['data']), 11),
-               'biases': np.random.rand(11),
-               'no_output': 11  # number of output scores (0-10)
+               'weights': np.random.rand(len(train_data['data']), 6),
+               'biases': np.random.rand(6),
+               'no_output': len(set(test_data['out']))  # number of output scores (3-8)
                }
     train_data['data'] = regroup_as_instances(train_data['data'])
     test_data['data'] = regroup_as_instances(test_data['data'])
@@ -181,5 +181,5 @@ if __name__ == "__main__":
     #            'biases': np.array([0.1]),
     #            'no_output': 2
     #            }
-    model_f = train(model_i, train_data, test_data, 1000, miu=0.08, batch_size=8)
+    model_f = train(model_i, train_data, test_data, 1000, miu=0.02, batch_size=8)
     print(model_f)

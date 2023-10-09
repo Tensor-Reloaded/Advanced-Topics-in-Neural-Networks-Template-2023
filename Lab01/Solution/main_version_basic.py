@@ -6,7 +6,7 @@ from typing import Tuple
 def compute_weighted_sum_features(features: np.ndarray, weights: ndarray, biases: ndarray) -> Tuple[ndarray]:
     if weights.shape[0] != features.shape[0]:
         raise AttributeError("Wrong parameters dimensions!")
-    return np.array([(sum([features[i] * weights[i][j] for i in range(weights.shape[0])])
+    return np.array([(sum([features[i] * weights[j][i] for i in range(weights.shape[0])])
                       + biases[j]) for j in range(weights.shape[1])])
     # return np.matmul(np.transpose(w), x) + biases
 
