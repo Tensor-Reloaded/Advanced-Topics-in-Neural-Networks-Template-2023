@@ -50,7 +50,7 @@ class NeuralNetwork:
 
         error = self._run_loss_function(y, y_prime)
 
-        delta_weights = np.dot(error, x.T)
+        delta_weights = np.dot(error, x.T).T
         delta_biases = error
 
         self.weights = self.weights - self.learning_rate * delta_weights

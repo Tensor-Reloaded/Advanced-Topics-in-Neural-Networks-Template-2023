@@ -42,7 +42,7 @@ def wine_classifier():
     raw_data = read_csv()
     x, y = extract_data(raw_data)
     w, b = construct_weights_biases(x, y)
-    l = np.float32(0.1)
+    l = np.float32(0.01)
 
     training, _validation, testing = partition(x, y)
 
@@ -50,21 +50,23 @@ def wine_classifier():
 
     correct = 0
     for values, expected_results in zip(testing[0], testing[1]):
-        correct += expected_results[np.argmax(neural_network.predict(values))]
+        correct += expected_results[np.argmax(neural_network.predict(values))][0]
 
-    print(f"{correct} / {len(training[0])}")
+    print(f"Initial values:\t{correct} / {len(testing[0])}")
 
     epochs = 100
     for i in range(epochs):
-        print(f"Trained {i} / {epochs}")
+        print(f"Training: \t{i + 1} / {epochs}", end="\r")
         for values, expected_results in zip(training[0], training[1]):
             neural_network.train(values, expected_results)
+    
+    print()
 
     correct = 0
     for values, expected_results in zip(testing[0], testing[1]):
-        correct += expected_results[np.argmax(neural_network.predict(values))]
+        correct += expected_results[np.argmax(neural_network.predict(values))][0]
 
-    print(f"{correct} / {len(training[0])}")
+    print(f"Final values:\t{correct} / {len(testing[0])}")
 
 def read_csv():
     raw_data = []
@@ -80,17 +82,17 @@ def read_csv():
 def extract_data(raw_data):
     unique_features = { row[-1] for row in raw_data }
 
-    x = [np.array(row[:-1]) for row in raw_data]
-    y = [np.array([1 if row[-1] == value else 0 for value in unique_features]) for row in raw_data]
+    x = [np.array(row[:-1]).reshape(-1, 1) for row in raw_data]
+    y = [np.array([1 if row[-1] == value else 0 for value in unique_features]).reshape(-1, 1) for row in raw_data]
 
     return x, y
 
 def construct_weights_biases(x, y):
-    features = len(x[0])
+    inputs = len(x[0])
     outputs = len(y[0])
 
-    w = np.random.randn(features, outputs)
-    b = np.random.randn(outputs)
+    w = np.random.randn(inputs, outputs)
+    b = np.random.randn(outputs, 1)
 
     return w, b
 
