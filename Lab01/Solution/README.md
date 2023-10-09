@@ -1,4 +1,4 @@
-##Informații relevante despre temă##
+## Informații relevante despre temă ##
 
 * am rezolvat tema atât prin implementare în Python, cât și pe caiet, de mână (vezi pdf)
 * am elaborat demonstrații pentru formulele referitoare la gradienți pe (cazul binar și) cazul multiclass pentru a înțelege matematica din spate, și am scanat și inclus schițele de demonstrație (am remarcat că existau astfel de cerințe de rezolvare în documentul Jupiter Notebook)
