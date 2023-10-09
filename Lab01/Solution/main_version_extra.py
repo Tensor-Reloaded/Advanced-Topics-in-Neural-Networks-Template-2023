@@ -157,7 +157,7 @@ def test(model: dict, testing_data: dict) -> float:
 if __name__ == "__main__":
     train_data, test_data = define_dataset()
     model_i = {'no_input': 11,  # number of input features
-               'weights': np.random.rand(len(train_data['data']), 6),
+               'weights': np.random.rand(6, len(train_data['data'])),
                'biases': np.random.rand(6),
                'no_output': len(set(test_data['out']))  # number of output scores (3-8)
                }

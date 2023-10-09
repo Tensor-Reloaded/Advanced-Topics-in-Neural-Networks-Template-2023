@@ -4,11 +4,11 @@ from typing import Tuple
 
 
 def compute_weighted_sum_features(features: np.ndarray, weights: ndarray, biases: ndarray) -> Tuple[ndarray]:
-    if weights.shape[0] != features.shape[0]:
+    if weights.shape[1] != features.shape[0]:
         raise AttributeError("Wrong parameters dimensions!")
-    return np.array([(sum([features[i] * weights[j][i] for i in range(weights.shape[0])])
-                      + biases[j]) for j in range(weights.shape[1])])
-    # return np.matmul(np.transpose(w), x) + biases
+    return np.array([(sum([features[j] * weights[i][j] for j in range(weights.shape[1])])
+                      + biases[i]) for i in range(weights.shape[0])])
+    # return np.matmul(weights, features) + biases
 
 
 def sigmoid_function(output_number: float) -> float:
@@ -31,8 +31,8 @@ def apply_activation_function(computed_output: ndarray, real_output: ndarray,
         if real_output[0] == 0.0:
             real_output = np.array([1.0, 0.0])  # belongs to False (0) class
             if it == 1:
-                weights = (np.concatenate((weights[:, 0], weights[:, 0]))
-                           .reshape(2, len(weights[:, 0]))).transpose()
+                weights = (np.concatenate((weights[0], weights[0]))
+                           .reshape(2, len(weights[0]))).transpose()
                 biases = biases.tolist()
                 biases.extend(biases)
                 biases = np.array(biases)
@@ -40,8 +40,8 @@ def apply_activation_function(computed_output: ndarray, real_output: ndarray,
         elif real_output[0] == 1.0:
             real_output = np.array([0.0, 1.0])  # belongs to True (1) class
             if it == 1:
-                weights = (np.concatenate((weights[:, 0], weights[:, 0]))
-                           .reshape(2, len(weights[:, 0]))).transpose()
+                weights = (np.concatenate((weights[0], weights[0]))
+                           .reshape(2, len(weights[0]))).transpose()
                 biases = biases.tolist()
                 biases.extend(biases)
                 biases = np.array(biases)
@@ -65,7 +65,8 @@ def logistic_regression_gradients_calculus(features: ndarray, weights: ndarray,
     print(f"Loss for current iteration: {loss}")
     gradient_z = activated_output - real_out
     print(f"Gradient z: {gradient_z}")
-    gradient_w = np.matmul(features.reshape(len(features), 1), np.array([gradient_z]))
+    gradient_w = np.array([[gradient_z[i] * features[j] for j in range(len(features))]
+                           for i in range(len(gradient_z))])
     print(f"Gradient w: {gradient_w}")
     gradient_b = np.copy(gradient_z)
     print(f"Gradient b: {gradient_b}")
@@ -74,7 +75,7 @@ def logistic_regression_gradients_calculus(features: ndarray, weights: ndarray,
 
 def logistic_regression_update(weights: ndarray, biases: ndarray, gradient_w: ndarray,
                                gradient_b: ndarray, learning_rate: ndarray) -> Tuple[ndarray, ndarray]:
-    weights -= learning_rate * gradient_w
+    weights = np.transpose(np.transpose(weights) - learning_rate * gradient_w)
     biases -= learning_rate * gradient_b
     return weights, biases
 
@@ -88,7 +89,7 @@ def define_loss_as_cross_entropy(prob_output: ndarray, real_output: ndarray) -> 
 
 def solved_demo():
     x = np.array([1.0, 3.0, 0.0])  # think of it as column vector
-    w = np.array([[-0.6, -0.5, 2.0]]).reshape(3, 1)
+    w = np.array([[-0.6, -0.5, 2.0]])
     b = np.array([0.1])
     y = np.array([1.0])  # real output
     miu = 0.2
@@ -96,8 +97,8 @@ def solved_demo():
         = logistic_regression_gradients_calculus(x, w, b, y)
     weights, biases = logistic_regression_update(adapted_weights, adapted_biases,
                                                  update_w, update_b, miu)
-    # weights = np.transpose(weights)
-    print(f"Updated weights: {weights}")
+    weights = np.transpose(weights)
+    print(f"Updated weights (directly transposed): {weights}")
     print(f"Updated biases: {biases}")
 
 
@@ -111,8 +112,7 @@ def proposed_demo():
         = logistic_regression_gradients_calculus(x, w, b, y)
     weights, biases = logistic_regression_update(adapted_weights, adapted_biases,
                                                  update_w, update_b, miu)
-    # weights = np.transpose(weights)
-    print(f"Updated weights: {weights}")
+    print(f"Updated weights (directly transposed): {weights}")
     print(f"Updated biases: {biases}")
 
 
