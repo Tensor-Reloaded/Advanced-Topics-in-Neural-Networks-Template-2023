@@ -1,5 +1,6 @@
 import torch
 from multiclass_logistic_regression import MulticlassLogisticRegression
+from torch.utils.data import TensorDataset
 
 def main():
     # Given data
@@ -17,7 +18,8 @@ def main():
     print("Initial biases:", neuron.b, "\n")
     print("Initial prediction:", neuron.forward(x), "(Real observation:", y, ")", "\n\n")
 
-    neuron.train_step(x,y)
+    training_data = TensorDataset(x.unsqueeze(0), y.unsqueeze(0))
+    neuron.train(training_data)
 
     print("Updated weights:", neuron.W)
     print("Updated biases:", neuron.b, "\n")
@@ -25,8 +27,7 @@ def main():
 
     # I chose to do it more times to see if the predicted y_hat indeed approaches the observed y
     epochs = 1000
-    for epoch in range(epochs):
-        neuron.train_step(x,y)
+    neuron.train(training_data, epochs)
 
     print("Updated(x",epochs,") weights:", neuron.W)
     print("Updated(x",epochs,") biases:", neuron.b, "\n")
