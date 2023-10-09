@@ -1,7 +1,7 @@
 import torch
 from torch import Tensor
 
-class Perceptron:
+class MulticlassLogisticRegression:
     def __init__(self, W: Tensor, b: Tensor, eta: float):
         self.W = W # weights tensor
         self.b = b # biases tensor
