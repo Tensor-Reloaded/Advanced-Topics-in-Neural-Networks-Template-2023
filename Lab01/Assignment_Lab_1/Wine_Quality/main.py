@@ -18,6 +18,8 @@ def train(X, W, b, Y, lr, epochs):
             print('y_hat = ', np.round(y_hat, decimals=4), '\n')
 
             # 3. Compute the gradients of the loss with respect to z using the cross-entropy loss and the true labels y:
+            # print(y_hat.shape)
+            print('y: ', len(y))
             nabla_zl = y_hat - y
 
             print('nabla_zl = ', np.round(nabla_zl, decimals=4), '\n')
@@ -50,7 +52,7 @@ if __name__ == '__main__':
     b = np.random.rand(11)
     labels = df.iloc[:, -1:].to_numpy()
 
-    one_hot_labels = np.zeros([1599, len(labels)], dtype=int)
+    one_hot_labels = np.zeros((len(labels), 11), dtype=int)
 
     for i in range(len(labels)):
         index = int(labels[i][0])
@@ -59,4 +61,4 @@ if __name__ == '__main__':
     lr = 1e-7
     epochs = 5
 
-    train(input_x, W, b, labels, lr, epochs)
+    train(input_x, W, b, one_hot_labels, lr, epochs)
