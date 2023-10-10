@@ -3,7 +3,7 @@ import torch.nn.functional as F
 import numpy as np
 
 # Learning rate
-learning_rate = 1
+learning_rate = 0.1
 
 # Weights
 w = torch.tensor([
@@ -12,10 +12,10 @@ w = torch.tensor([
     [-1.0, -0.5, 0.1]
 ])
 # Biases
-b = torch.tensor([0.1, 0.1, 0.1])
+b = torch.tensor([[0.1], [0.1], [0.1]])
 # Labels
-y = torch.tensor([0, 1, 0])
-x = torch.tensor([1.0, 3.0, 0.0])
+y = torch.tensor([[0], [1], [0]])
+x = torch.tensor([[1.0], [3.0], [0.0]])
 
 # Linear combinations
 transpose_w = torch.transpose(w, 0, 1)
