@@ -9,7 +9,7 @@ Lab Assignment:
 
 ***
 For self-study:
-[https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html](https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html)
+[https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html](https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html) (part 1: Tensors; the following parts should be studied in the following laboratories)
 
 ***
 References:
