@@ -81,12 +81,7 @@ def extract_data(raw_data):
     unique_features = {row[-1] for row in raw_data}
 
     x = [np.array(row[:-1]).reshape(-1, 1) for row in raw_data]
-    y = [
-        np.array([1 if row[-1] == value else 0 for value in unique_features]).reshape(
-            -1, 1
-        )
-        for row in raw_data
-    ]
+    y = [np.array([1 if row[-1] == value else 0 for value in unique_features]).reshape(-1, 1) for row in raw_data]
 
     return x, y
 

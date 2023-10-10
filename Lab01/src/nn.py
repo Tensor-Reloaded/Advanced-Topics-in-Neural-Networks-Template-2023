@@ -56,12 +56,8 @@ class NeuralNetwork:
         self.weights = self.weights - self.learning_rate * delta_weights
         self.bias = self.bias - self.learning_rate * delta_biases
 
-    def _run_cross_entropy_loss_function(
-        self, y: np.float32, y_hat: np.float32
-    ) -> np.float32:
+    def _run_cross_entropy_loss_function(self, y: np.float32, y_hat: np.float32) -> np.float32:
         return -(y * math.log(y_hat) + (1 - y) * math.log(1 - y_hat))
 
-    def _run_loss_function(
-        self, y: Vector[np.float32], y_hat: Vector[np.float32]
-    ) -> np.float32:
+    def _run_loss_function(self, y: Vector[np.float32], y_hat: Vector[np.float32]) -> np.float32:
         return y_hat - y
