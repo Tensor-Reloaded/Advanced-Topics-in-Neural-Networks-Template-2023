@@ -18,7 +18,7 @@ class NeuralNetwork:
         self,
         weights: Matrix[np.float32],
         bias: Vector[np.float32],
-        learning_rate: np.float32
+        learning_rate: np.float32,
     ):
         self.weights = weights
         self.bias = bias
@@ -50,14 +50,18 @@ class NeuralNetwork:
 
         error = self._run_loss_function(y, y_prime)
 
-        delta_weights = np.matmul(error, x.T)
+        delta_weights = error.T * x
         delta_biases = error
 
         self.weights = self.weights - self.learning_rate * delta_weights
         self.bias = self.bias - self.learning_rate * delta_biases
 
-    def _run_cross_entropy_loss_function(self, y: np.float32, y_prime: np.float32) -> np.float32:
+    def _run_cross_entropy_loss_function(
+        self, y: np.float32, y_prime: np.float32
+    ) -> np.float32:
         return -(y * math.log(y_prime) + (1 - y) * math.log(1 - y_prime))
 
-    def _run_loss_function(self, y: Vector[np.float32], y_prime: Vector[np.float32]) -> np.float32:
+    def _run_loss_function(
+        self, y: Vector[np.float32], y_prime: Vector[np.float32]
+    ) -> np.float32:
         return y_prime - y

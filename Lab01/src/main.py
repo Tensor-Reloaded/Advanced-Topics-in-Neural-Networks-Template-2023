@@ -4,23 +4,18 @@ import csv
 import numpy as np
 import nn
 
+
 def main():
     print("Exercise")
     exercise()
-    # print()
-    # print("Wine classfier")
-    # wine_classifier()
+    print()
+    print("Wine classfier")
+    wine_classifier()
+
 
 def exercise():
     x = np.array([1, 3, 0], dtype=np.float32)
-    w = np.matrix(
-        [
-            [0.3,   0.1,    -2],
-            [-0.6,  -0.5,   2],
-            [-1,    -0.5,   0.1]
-        ],
-        dtype=np.float32
-    )
+    w = np.matrix([[0.3, 0.1, -2], [-0.6, -0.5, 2], [-1, -0.5, 0.1]], dtype=np.float32)
     b = np.array([0.1, 0.1, 0.1], dtype=np.float32)
     l = np.float32(0.1)
     y = np.array([0, 1, 0], dtype=np.float32)
@@ -37,6 +32,7 @@ def exercise():
     print("Edited network")
     neural_network.display()
     print(f"Prediction for x after  training: {neural_network.predict(x)}")
+
 
 def wine_classifier():
     raw_data = read_csv()
@@ -59,7 +55,7 @@ def wine_classifier():
         print(f"Training: \t{i + 1} / {epochs}", end="\r")
         for values, expected_results in zip(training[0], training[1]):
             neural_network.train(values, expected_results)
-    
+
     print()
 
     correct = 0
@@ -67,6 +63,7 @@ def wine_classifier():
         correct += expected_results[np.argmax(neural_network.predict(values))][0]
 
     print(f"Final values:\t{correct} / {len(testing[0])}")
+
 
 def read_csv():
     raw_data = []
@@ -79,13 +76,20 @@ def read_csv():
 
     return raw_data
 
+
 def extract_data(raw_data):
-    unique_features = { row[-1] for row in raw_data }
+    unique_features = {row[-1] for row in raw_data}
 
     x = [np.array(row[:-1]).reshape(-1, 1) for row in raw_data]
-    y = [np.array([1 if row[-1] == value else 0 for value in unique_features]).reshape(-1, 1) for row in raw_data]
+    y = [
+        np.array([1 if row[-1] == value else 0 for value in unique_features]).reshape(
+            -1, 1
+        )
+        for row in raw_data
+    ]
 
     return x, y
+
 
 def construct_weights_biases(x, y):
     inputs = len(x[0])
@@ -95,6 +99,7 @@ def construct_weights_biases(x, y):
     b = np.random.randn(outputs, 1)
 
     return w, b
+
 
 def partition(x, y):
     eightyPercent = math.floor(0.80 * len(x))
@@ -106,5 +111,6 @@ def partition(x, y):
 
     return training, validation, testing
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
