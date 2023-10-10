@@ -36,7 +36,7 @@ class NeuralNetwork:
         print(f"Learning rate:\t{self.learning_rate}")
 
     def _run_forward_propagation(self, x: Vector[np.float32]) -> np.float32:
-        wx_plus_b = np.dot(self.weights.T, x) + self.bias
+        wx_plus_b = self.weights.T @ x + self.bias
         y_prime = self._run_activation_function(wx_plus_b)
 
         return y_prime

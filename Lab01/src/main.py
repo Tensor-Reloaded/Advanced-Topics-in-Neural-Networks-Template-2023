@@ -38,9 +38,9 @@ def wine_classifier():
     raw_data = read_csv()
     x, y = extract_data(raw_data)
     w, b = construct_weights_biases(x, y)
-    l = np.float32(0.01)
+    l = np.float32(0.1)
 
-    training, _validation, testing = partition(x, y)
+    training, testing = partition(x, y)
 
     neural_network = nn.NeuralNetwork(w, b, l)
 
@@ -82,7 +82,9 @@ def extract_data(raw_data):
 
     x = [np.array(row[:-1]).reshape(-1, 1) for row in raw_data]
     y = [
-        np.array([1 if row[-1] == value else 0 for value in unique_features]).reshape(-1, 1)
+        np.array([1 if row[-1] == value else 0 for value in unique_features]).reshape(
+            -1, 1
+        )
         for row in raw_data
     ]
 
@@ -101,13 +103,11 @@ def construct_weights_biases(x, y):
 
 def partition(x, y):
     eightyPercent = math.floor(0.80 * len(x))
-    ninetyPercent = math.floor(0.90 * len(x))
 
     training = (x[:eightyPercent], y[:eightyPercent])
-    validation = (x[eightyPercent:ninetyPercent], y[eightyPercent:ninetyPercent])
-    testing = (x[ninetyPercent:], y[ninetyPercent:])
+    testing = (x[eightyPercent:], y[eightyPercent:])
 
-    return training, validation, testing
+    return training, testing
 
 
 if __name__ == "__main__":
