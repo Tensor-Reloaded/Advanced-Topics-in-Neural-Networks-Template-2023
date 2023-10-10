@@ -10,7 +10,7 @@ def nn_feedforward(x, weights, biases):
 
 
 def compute_gradients(x, expected_output, predicted):
-    return torch.mul(predicted - expected_output, x), predicted - expected_output
+    return torch.matmul(x.view(-1, 1), (predicted - expected_output).view(1, -1)), predicted - expected_output
 
 
 if __name__ == '__main__':
