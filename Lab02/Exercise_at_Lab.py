@@ -1,25 +1,24 @@
-from typing import Union
-from torch import Tensor
 import torch
 
+#  can also import arrays from numpy, not only from python
+x = torch.rand((4, 8))
+print(x.size(0))  # same as shape[0]
 
-def get_normal_tensors(x: Tensor) -> Union[Tensor, None]:
-    print("x: ", x, sep="\t\t")
-    norms_batch = x.norm(dim=(1, 2))
-    print("Norms (per gradient): ", norms_batch, sep="\t\t")
-    miu = norms_batch.mean()
-    print("Mean (of norms per gradient): ", miu, sep="\t\t")
-    st_dev = norms_batch.std()  # correction = 1
-    print("Standard deviation: ", st_dev, sep="\t\t")
-    mask1 = x.norm(dim=(1, 2)) <= (miu + 1.5 * st_dev)
-    x_1 = x[mask1]
-    mask2 = x_1.norm(dim=(1, 2)) >= (miu - 1.5 * st_dev)
-    return x_1[mask2] if len(x_1[mask2]) > 0 else None
-    # mask = x.norm(dim=(1, 2)) - miu <= abs(st_dev * 1.5)
-    # return x[mask]
-    # se puteau si inmulti mask1 si mask2
+# first dimension in tensor is always batch dimension -> inmultirea opereaza direct peste
+# elementele 2x2 (dim2xdim3x... trebuie sa se potriveasca)
+
+# to('cuda'): datele se transfera de pe cpu (RAM) pe gpu
+# diferenta intre view si reshape:
+# -1 inseamna completarea restului de dimensiune: view nu recreeaza in memorie
+# unsqueeze -- creaza o dimensiune goala in plus, pt usurinta calculelor
+# stack (ex.: filtru) creeaza o dimensiune noua, cat continua pe o dimensiune deja existenta
+
+# clip poate forta gradientii sa nu faca salturi prea mari --> limitare zgomot, outliers
+# (in timp ce learning rate schimba toti gradientii deodata)
 
 
-print(get_normal_tensors(torch.rand((4, 2, 3))))  # smaller example to work on
-# print(len(get_normal_tensors(torch.rand((100, 10, 256)))))  # B = 100, N = 10, M = 256
-# elementele sunt de forma N, M (pe cazul din enunt, (10, 256))
+b = torch.rand((4, 8))
+b[b < 0.7] = 0  # facem deja elementele 0, fiind deja considerate foarte aproape de 0, pemtru a nu pastra astfel noise
+
+
+
