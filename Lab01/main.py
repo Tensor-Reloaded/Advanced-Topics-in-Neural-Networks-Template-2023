@@ -12,10 +12,12 @@ def train(x_train, y_train, learning_rate, bias, weights):
     for i in range(rows):
         x = x_train.values[i]
         y = y_train.values[i]
-        z = np.matmul(weights.transpose(), x) + bias
+        z = np.array(np.matmul(weights.transpose(), x) + bias)
+        if len(z.shape) > 1:
+            z = z.squeeze()
         current_y = softmax(z)
         delta_z = current_y - y
-        delta_weights = np.matmul(delta_z, x.transpose())
+        delta_weights = np.matmul(np.matrix(delta_z).T, np.matrix(x))
         delta_bias = delta_z
         weights = weights - learning_rate * delta_weights
         bias = bias - learning_rate * delta_bias
@@ -27,7 +29,9 @@ def train_accuracy(x_train, y_train, bias, weights):
     for i in range(rows):
         x = x_train.values[i]
         y = y_train.values[i]  
-        z = np.matmul(weights.transpose(), x) + bias
+        z = np.array(np.matmul(weights.transpose(), x) + bias)
+        if len(z.shape) > 1:
+            z = z.squeeze()
         current_y = softmax(z)
         predicted_y = np.argmax(current_y)
         if predicted_y == y:
@@ -40,7 +44,9 @@ def test(x_test, y_test, bias, weights):
     for i in range(rows):
         x = x_test.values[i]
         y = y_test.values[i]  
-        z = np.matmul(weights.transpose(), x) + bias
+        z = np.array(np.matmul(weights.transpose(), x) + bias)
+        if len(z.shape) > 1:
+            z = z.squeeze()
         current_y = softmax(z)
         predicted_y = np.argmax(current_y)
         if predicted_y == y:
@@ -50,12 +56,12 @@ def test(x_test, y_test, bias, weights):
 def execute(wine):
     x = wine.drop('quality', axis = 1)
     y = wine['quality']
-    learning_rate = 0.1
+    learning_rate = 0.2
     # bias = np.random.randint(-1, 1, size=(11))
     bias = [0.1 for i in range(11)]
     weights = np.array([[uniform(-2, 2) for i in range(11)] for j in range(11)])
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, random_state = 16)
-    for i in range(500):
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.25, random_state = np.random.randint(2, 101))
+    for i in range(100):
         # print("Epoch: ", i)
         bias, weights = train(x_train, y_train, learning_rate, bias, weights)
     train_accuracy(x_train, y_train, bias, weights)
