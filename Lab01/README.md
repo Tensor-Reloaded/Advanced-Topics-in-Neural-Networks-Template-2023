@@ -12,6 +12,7 @@ Grading Rubric:
 - Correctly calculating the weight gradients: 4pt
 - Correctly calculating the bias gradients: 2pt
 - Correctly calculating the updated weights and biases: 1pt
+- Implementing the "Extra": 2 bonus pt
 ***
 
 For self-study:
