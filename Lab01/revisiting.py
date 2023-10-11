@@ -51,6 +51,7 @@ def setup_row():
     print_tensor("b", b)
     return x, y, w, b, lr
 
+
 def forward_col(x: Tensor, w: Tensor, b: Tensor) -> Tensor:
     return w.T @ x + b
 
@@ -58,12 +59,14 @@ def forward_col(x: Tensor, w: Tensor, b: Tensor) -> Tensor:
 def forward_row(x: Tensor, w: Tensor, b: Tensor) -> Tensor:
     return x @ w + b
 
+
 def activate_col(x: Tensor) -> Tensor:
     return x.softmax(dim=0)
 
 
 def activate_row(x: Tensor) -> Tensor:
     return x.softmax(dim=1)
+
 
 def backward_col(x: Tensor, y: Tensor, y_hat: Tensor) -> Tuple[Tensor, Tensor]:
     error = y_hat - y
@@ -78,6 +81,7 @@ def backward_row(x: Tensor, y: Tensor, y_hat: Tensor) -> Tuple[Tensor, Tensor]:
     delta_w = x.T @ error
     delta_b = error.mean(dim=0)  # On column
     return delta_w, delta_b
+
 
 def raw_pytorch_col():
     print("Raw Pytorch")
@@ -144,10 +148,13 @@ def main():
     w2, b2 = pytorch_with_autograd_col()
     assert torch.allclose(w1, w2)
     assert torch.allclose(b1, b2)
-    w1, b1 = raw_pytorch_row()
-    w2, b2 = pytorch_with_autograd_row()
-    assert torch.allclose(w1, w2)
-    assert torch.allclose(b1, b2)
+    w3, b3 = raw_pytorch_row()
+    w4, b4 = pytorch_with_autograd_row()
+    assert torch.allclose(w3, w4)
+    assert torch.allclose(b3, b3)
+
+    assert torch.allclose(w1, w3)
+    assert torch.allclose(b1, b3.T)
 
 
 if __name__ == '__main__':
