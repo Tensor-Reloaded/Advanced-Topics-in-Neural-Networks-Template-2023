@@ -8,7 +8,7 @@ Repository for the Advanced Topics in Neural Networks laboratory, "Alexandru Ioa
 ## How to use
 
 1. Fork the repository.
-2. Upload the assignments and homeworks in their corresponding "Lab`X`" directory of your fork.
+2. Upload the assignments and homeworks in their corresponding "Lab`X`/Solution" directory of your fork.
 3. Check the course website and Github Repository at least once a week. Read the updates to the README files as they contain important information regarding helpful resources and assignments.
 4. Sync your personal fork whenever changes appear in the upstream repository.
 
