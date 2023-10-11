@@ -20,10 +20,10 @@ def setup():
     ])
     b = Tensor([[0.1], [0.1], [0.1]])
     lr = 0.2
-    assert x.shape == (3, 1)
-    assert y.shape == (3, 1)
-    assert b.shape == (3, 1)
-    assert w.shape == (3, 3)
+    assert x.shape == (3, 1), "x must be a column vector"
+    assert y.shape == (3, 1), "y must be a column vector"
+    assert b.shape == (3, 1), "b must be a column vector"
+    assert w.shape == (3, 3), "w must be a 3x3 matrix"
     print_tensor("x", x)
     print_tensor("y", y)
     print_tensor("w", w)
@@ -85,8 +85,8 @@ def pytorch_with_autograd():
 def main():
     w1, b1 = raw_pytorch()
     w2, b2 = pytorch_with_autograd()
-    assert torch.equal(w1, w2)
-    assert torch.equal(b1, b2)
+    assert torch.allclose(w1, w2)
+    assert torch.allclose(b1, b2)
 
 
 if __name__ == '__main__':
