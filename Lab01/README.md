@@ -7,6 +7,11 @@ Lab Notebook: [LogisticRegression.ipynb](./LogisticRegression.ipynb)
 Lab Assignment:
 [Assignment.pdf](./Assignment.pdf) (Deadline: End-of-Day 09.10.2023)
 
+Grading Rubric:
+- Correctly calculating the feed-forward: 3pt
+- Correctly calculating the weight gradients: 4pt
+- Correctly calculating the bias gradients: 2pt
+- Correctly calculating the updated weights and biases: 1pt
 ***
 
 For self-study:
