@@ -9,6 +9,7 @@ Lab Assignment: MLP implementation on MNIST, with shape: `[784, 100, 10]` (Deadl
 ***
 For self-study:
 * [Neural Networks](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) (animated introduction to neural networks and backpropagation)
+* [Essence of calculus](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) (derivatives; chain rule)
   
   
 ***
