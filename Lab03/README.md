@@ -26,3 +26,8 @@ Please check the Lab 2 Assignment's solution: (will be uploaded after Lab 3).
 References:
  - MNIST: https://pytorch.org/vision/0.15/generated/torchvision.datasets.MNIST.html#torchvision.datasets.MNIST
  - PyTorch Benchmarking: https://pytorch.org/tutorials/recipes/recipes/benchmark.html
+ - `pin_memory` & `non_blocking=True`:
+   * https://pytorch.org/docs/stable/notes/cuda.html#use-pinned-memory-buffers
+   * Pinning memory in DataLoaders: https://pytorch.org/docs/stable/notes/cuda.html#use-pinned-memory-buffers
+   * How does pinned memory actually work: https://developer.nvidia.com/blog/how-optimize-data-transfers-cuda-cc/ 
+   * Also see this discussion: https://discuss.pytorch.org/t/should-we-set-non-blocking-to-true/38234/4
