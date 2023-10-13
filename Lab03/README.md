@@ -4,7 +4,7 @@
 Lab Notebook: [TensorOperations.ipynb](./TensorOperations.ipynb)
 
 ***
-Lab Assignment: MLP implementation on MNIST, with shape: `[784, 100, 10]` (Deadline: PR by End-of-Day Monday, 23.10.2023)
+Lab Assignment: [Assignment.pdf](./Assignment.pdf) (Deadline: PR by End-of-Day Monday, 23.10.2023)
 
 ***
 For self-study:
@@ -20,7 +20,7 @@ Advanced:
   * Always measure whether compiling your model improves the performance or not! 
   
 ***
-Pleas check the Lab 2 Assignment's solution: (will be uploaded after Lab 3).
+Please check the Lab 2 Assignment's solution: (will be uploaded after Lab 3).
 
 ***
 References:
