@@ -7,7 +7,6 @@ from torch import Tensor
 import torchvision
 import torchvision.datasets as datasets
 
-# use pytorch with opencl
 torch.set_default_device('cpu')
 
 mnist_trainset = datasets.MNIST(root='./data', train=True, download=True, transform=None)
