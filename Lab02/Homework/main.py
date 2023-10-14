@@ -25,7 +25,6 @@ def error(y_true: Tensor, y: Tensor) -> Tensor:
     return y_true - y
 
 
-#implement the perceptron forward pass
 def forward_pass(x: Tensor, w: Tensor, b: Tensor) -> Tensor:
     x = x.reshape(x.shape[0], 1)
     w = torch.transpose(w, 0, 1)
