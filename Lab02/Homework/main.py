@@ -96,13 +96,6 @@ def convert_to_one_hot(y: Tensor) -> Tensor:
     return y_one_hot
 
 
-def test(x: Tensor, w: Tensor, b: Tensor, y_true: Tensor) -> (Tensor, Tensor):
-    y = forward_pass(x, w, b)
-    y_true = y_true.reshape(y_true.shape[0], 1)
-    err = error(y_true, y)
-    return err
-
-
 def accuracy(x_test: Tensor, w: Tensor, b: Tensor, y_true: Tensor) -> float:
     correct = 0
     for x, y in zip(x_test, y_true):
