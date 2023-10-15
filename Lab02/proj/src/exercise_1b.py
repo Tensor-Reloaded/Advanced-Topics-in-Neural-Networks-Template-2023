@@ -22,18 +22,14 @@ def exercise_1b():
     test_images = images_to_tensors(test_images)
     test_labels = labels_to_tensors(test_labels)
 
-    W = torch.rand(784, 10)
-    b = torch.rand(10, 1)
-    mu = 0.5
+    W, b, mu = init_neural_network()
 
-    accuracy_before_training = benchmark(test_images, W, b, test_labels, mu)
+    accuracy_before_training = benchmark(test_images, W, b, test_labels)
     print(f"Accuracy before training:\t{accuracy_before_training * 100:.5f}%")
 
     trained_W, trained_b = train_n_times(10, train_images, W, b, train_labels, mu)
 
-    accuracy_after_training = benchmark(
-        test_images, trained_W, trained_b, test_labels, mu
-    )
+    accuracy_after_training = benchmark(test_images, trained_W, trained_b, test_labels)
     print(f"Accuracy after training:\t{accuracy_after_training * 100:.5f}%")
 
 
@@ -44,17 +40,18 @@ def images_to_tensors(images: torch.Tensor) -> torch.Tensor:
 
 def labels_to_tensors(labels: list) -> torch.Tensor:
     labels_size = len(set(labels))
-    return torch.Tensor(
-        [[1 if i == label else 0 for i in range(0, labels_size)] for label in labels]
-    )
+    data = [[1 if i == label else 0 for i in range(0, labels_size)] for label in labels]
+    return torch.Tensor(data)
 
+def init_neural_network() -> t.Tuple[torch.Tensor, torch.Tensor, float]:
+    W = torch.rand(784, 10)
+    b = torch.rand(10, 1)
+    mu = 0.5
+
+    return W, b, mu
 
 def benchmark(
-    X: torch.Tensor,
-    W: torch.Tensor,
-    b: torch.Tensor,
-    y_true: torch.Tensor,
-    mu: torch.float32,
+    X: torch.Tensor, W: torch.Tensor, b: torch.Tensor, y_true: torch.Tensor
 ) -> torch.float32:
     instances = y_true.shape[0]
     accurate_guesses = 0
