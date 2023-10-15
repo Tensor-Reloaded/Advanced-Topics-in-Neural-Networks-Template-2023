@@ -1,4 +1,4 @@
-# Loader + dataset courtesy of https://www.kaggle.com/code/hojjatk/read-mnist-dataset/notebook
+# Loader + dataset courtesy of https://www.kaggle.com/datasets/hojjatk/mnist-dataset
 
 import numpy as np
 import struct
