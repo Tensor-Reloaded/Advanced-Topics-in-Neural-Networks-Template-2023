@@ -56,26 +56,22 @@ def load_dataset():
                                                ([transforms.ToTensor(),
                                                  # transforms.Normalize(0.1307, 0.3081)
                                                  ]))
-    x_train = mnist_trainset.data.float()
+    x_train = mnist_trainset.data.float() / 255.0
     # for index, observation in enumerate(x_train):
     #     std = observation.std()
     #     x_train[index] -= observation.mean()
     #     x_train[index] /= std
-    std = x_train.std() / 255.0
-    mean = x_train.mean() / 255.0
+    std = x_train.std()
+    mean = x_train.mean()
     x_train -= mean
     x_train /= std
     y_train = mnist_trainset.targets
     y_train = torch.cat([torch.cat((torch.zeros(size=(1, target)),
                                     torch.ones(size=(1, 1)),
                                     torch.zeros(size=(1, 9 - target))), dim=1) for target in y_train])
-    x_test = mnist_testset.data.float()
+    x_test = mnist_testset.data.float() / 255.0
     x_test -= mean
     x_test /= std
-    # for index, observation in enumerate(x_test):
-    #     std = observation.std()
-    #     x_test[index] -= observation.mean()
-    #     x_test[index] /= std
     y_test = mnist_testset.targets
     y_test = torch.cat([torch.cat((torch.zeros(size=(1, target)),
                                    torch.ones(size=(1, 1)),
@@ -96,12 +92,12 @@ def load_dataset():
 
 def initialize_weights():
     w = torch.rand((784, 10)).to('cuda')
-    return (w - w.mean()) / w.std()
+    return (w - w.mean()) / w.std() / 10
 
 
 def initialize_biases():
     b = torch.rand((10,)).to('cuda')
-    return (b - b.mean()) / b.std()
+    return (b - b.mean()) / b.std() / 10
 
 
 def train(x_train, y_train, x_test, y_test, mu=0.1, batch_size=1, epochs=1000, nsteps=125):
