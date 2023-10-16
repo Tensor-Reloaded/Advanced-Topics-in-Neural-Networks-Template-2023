@@ -103,8 +103,8 @@ def initialize_biases():
 def train(x_train, y_train, x_test, y_test, mu=0.1, batch_size=1, epochs=1000, nsteps=125):
     weights = initialize_weights()
     biases = initialize_biases()
-    accuracy_train = []
-    accuracy_test = []
+    accuracy_test = [evaluate(x_test, y_test, weights, biases).item() / x_test.shape[0]]
+    accuracy_train = [evaluate(x_train, y_train, weights, biases).item() / x_train.shape[0]]
     for epoch in range(epochs):
         for step in range(nsteps):
             #  select batch
@@ -122,7 +122,7 @@ def train(x_train, y_train, x_test, y_test, mu=0.1, batch_size=1, epochs=1000, n
 
 
 def draw_plot(accuracies: list, epochs: int, t_accuracies: list):
-    x_axis = list(range(1, epochs + 1, 10))
+    x_axis = list(range(0, epochs + 1, 10))
     plt.plot(x_axis, accuracies)
     plt.plot(x_axis, t_accuracies)
     plt.legend(['testing', 'training'], loc="lower right")
