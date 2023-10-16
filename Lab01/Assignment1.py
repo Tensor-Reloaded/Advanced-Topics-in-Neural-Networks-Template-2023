@@ -9,7 +9,9 @@ def feed_forward(input, weights, biases):
 
 
 def compute_gradients(input, predicted_values, labels):
-    gradient_w = torch.mul(predicted_values - labels, input)
+    # Shape (3,1) x (1,3) => (3,3)
+    gradient_transpose = (predicted_values - labels).view(1, -1)
+    gradient_w = torch.matmul(input.view(-1, 1), gradient_transpose)
     gradient_b = predicted_values - labels
 
     return gradient_w, gradient_b
