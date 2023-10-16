@@ -117,7 +117,7 @@ def train(x_train, y_train, x_test, y_test, mu=0.1, batch_size=1, epochs=1000, n
 
 
 def draw_plot(accuracies: list, epochs: int, t_accuracies: list):
-    x_axis = list(range(0, epochs + 1, 10))
+    x_axis = [0] + list(range(1, epochs + 1, 10))
     plt.plot(x_axis, accuracies)
     plt.plot(x_axis, t_accuracies)
     plt.legend(['testing', 'training'], loc="lower right")
