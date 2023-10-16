@@ -45,7 +45,7 @@ if __name__ == '__main__':
     for epoch_index in range(100_000):
         if epoch_index % 100 == 0:
             print(f"Processing batch with index {epoch_index // 100}")
-        w, b, mu = train_perceptron(x, w, b, y_true, mu)
+        w, b = train_perceptron(x, w, b, y_true)
 
     # a = torch.randn((200, 10))
     # b = torch.randn(10)
