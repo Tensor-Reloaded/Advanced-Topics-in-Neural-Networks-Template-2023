@@ -20,8 +20,7 @@ def get_accuracy(yhat, y_true):
 
 
 def train_perceptron(x: Tensor, w: Tensor, b: Tensor, y_true: Tensor = None, mu: float = None):
-    z = (x @ w)
-    z = z + b
+    z = (x @ w) + b
     yhat = sigmoid(z)
 
     err = yhat - y_true
@@ -30,12 +29,8 @@ def train_perceptron(x: Tensor, w: Tensor, b: Tensor, y_true: Tensor = None, mu:
 
     w -= mu * delta_w
     b = mu * delta_b
-
-    if mu > 0.1:
-        mu -= 0.001
-
-    print(get_accuracy(yhat, y_true))
-    return w, b, mu
+    # print(get_accuracy(yhat, y_true))
+    return w, b
 
 
 if __name__ == '__main__':
