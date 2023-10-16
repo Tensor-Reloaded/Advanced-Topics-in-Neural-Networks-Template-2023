@@ -10,7 +10,6 @@ from torchvision.transforms import transforms
 def apply_sigmoid(z: Tensor) -> Tensor:
     return 1.0 / (1 + torch.exp(-z))
     # return torch.sigmoid(z)
-    # return torch.softmax(z, dim=1)
 
 
 def train_perceptron(x: Tensor, w: Tensor, b: Tensor, y_true: Tensor, mu: float,
@@ -23,11 +22,10 @@ def train_perceptron(x: Tensor, w: Tensor, b: Tensor, y_true: Tensor, mu: float,
 
     z = x @ w + b
     y_hat = apply_sigmoid(z)
-    error = (y_true - y_hat) * (y_hat * (1 - y_hat))
-    # error = y_true - y_hat
+    # error = (y_true - y_hat) * (y_hat * (1 - y_hat))
+    error = y_true - y_hat
 
-    w += mu * (x.transpose(0, 1)
-               @  (error.mean(axis=0).unsqueeze(0).repeat(batch_size, 1)))
+    w += mu * (x.transpose(0, 1) @  error.mean(axis=0).unsqueeze(0).repeat(batch_size, 1))
     # w += mu * (x.transpose(0, 1) @  error)
     b += (mu * error.mean(axis=0))
 
@@ -43,7 +41,7 @@ def evaluate(x_test: Tensor, y_test: Tensor, w: Tensor, b: Tensor):
     for index, instance in enumerate(y_predicted):
         if int(sum(instance)) != 1:
             y_predicted[index] = Tensor([0.0] * 10)
-    return sum((y_test @ (y_predicted.transpose(0, 1))).diagonal())
+    return sum((y_test @ y_predicted.transpose(0, 1)).diagonal())
 
 
 def load_dataset():
@@ -84,6 +82,13 @@ def load_dataset():
     y_test = y_test.to('cuda')
     return x_train.reshape(-1, 784), y_train, x_test.reshape(-1, 784), y_test
 
+
+# def initialize_weights():
+#     return torch.rand((784, 10)).to('cuda')
+#
+#
+# def initialize_biases():
+#     return torch.rand((10,)).to('cuda')
 
 def initialize_weights():
     w = torch.rand((784, 10)).to('cuda')
