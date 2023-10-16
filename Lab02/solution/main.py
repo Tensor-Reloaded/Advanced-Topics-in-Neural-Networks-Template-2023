@@ -5,20 +5,23 @@ from torch import Tensor
 def calculate_sigmoid(z):
     return 1 / (1 + torch.exp(-z))
 
+
 def calculate_heavyside(z):
     return 0 if z <= 0 else 1
+
 
 def do_forward_propagation(X: Tensor, W: Tensor, b: Tensor, func):
     z = torch.mm(X, W) + b
 
     return func(z)
 
+
 def do_back_propagation(X: Tensor, W: Tensor, b: Tensor, error: Tensor):
-    
     W += mu * torch.mm(X.t(), error)
     b += mu * torch.sum(error, dim=0)
 
     return W, b
+
 
 def train_perceptron(X: Tensor, W: Tensor, b: Tensor, y_true: Tensor, mu: float):
     y_pred = do_forward_propagation(X, W, b, calculate_sigmoid)
@@ -29,7 +32,8 @@ def train_perceptron(X: Tensor, W: Tensor, b: Tensor, y_true: Tensor, mu: float)
 
     return W, b
 
-m=10
+
+m = 10
 
 X = torch.rand((m, 784))
 W = torch.rand((784, 10))
