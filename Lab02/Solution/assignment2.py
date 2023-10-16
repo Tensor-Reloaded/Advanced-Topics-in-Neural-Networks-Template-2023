@@ -87,12 +87,21 @@ def load_dataset():
     return x_train.reshape(-1, 784), y_train, x_test.reshape(-1, 784), y_test
 
 
+# def initialize_weights():
+#     return torch.rand((784, 10)).to('cuda')
+#
+#
+# def initialize_biases():
+#     return torch.rand((10,)).to('cuda')
+
 def initialize_weights():
-    return torch.rand((784, 10)).to('cuda')
+    w = torch.rand((784, 10)).to('cuda')
+    return (w - w.mean()) / w.std()
 
 
 def initialize_biases():
-    return torch.rand((10,)).to('cuda')
+    b = torch.rand((10,)).to('cuda')
+    return (b - b.mean()) / b.std()
 
 
 def train(x_train, y_train, x_test, y_test, mu=0.1, batch_size=1, epochs=1000, nsteps=125):
