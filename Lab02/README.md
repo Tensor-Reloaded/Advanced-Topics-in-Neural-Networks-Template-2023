@@ -5,7 +5,7 @@ Lab Notebook: [TensorOperations.ipynb](./TensorOperations.ipynb)
 
 ***
 Lab Assignment:
-[Assignment.pdf](./Assignment.pdf) (Deadline: End-of-Day Monday, 16.10.2023)
+[Assignment.pdf](./Assignment.pdf) (Deadline: PR by End-of-Day Monday, 16.10.2023)
 
 ***
 For self-study:
