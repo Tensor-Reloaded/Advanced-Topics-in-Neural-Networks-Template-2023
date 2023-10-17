@@ -7,9 +7,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from torch import Tensor
 
-
 with gzip.open(r'data/mnist.pkl.gz', 'rb') as fd:
     train_set, valid_set, test_set = pickle.load(fd, encoding='latin')
+
 
 # def get_normal_tensors(x: Tensor) -> Union[Tensor, None]:
 #     mean = torch.mean(x)
@@ -53,10 +53,11 @@ def train_perceptron(X: Tensor, W: Tensor, b: Tensor, y_true: Tensor, mu: float)
     #   Compute the change to b: sum(m, 10) = (10,)
     delta_b = torch.sum(error, dim=0)
 
-    return W + delta_W, b + delta_b
+    return W - delta_W, b - delta_b
 
 
-def mini_batch_training(epochs: int, batch_size: int, mu: float, training_set: Tensor, input_size: int, output_size: int, W: Tensor, b: Tensor):
+def mini_batch_training(epochs: int, batch_size: int, mu: float, training_set: Tensor, input_size: int,
+                        output_size: int, W: Tensor, b: Tensor):
     for iteration in range(epochs):
         batch_start = 0
         while True:
@@ -118,9 +119,19 @@ if __name__ == '__main__':
     W = torch.rand((input_size, output_size))
     b = torch.rand((output_size,))
 
-    W, b = mini_batch_training(15, 32, mu, train_set, 784, 10, W, b)
+    print("Results on test set with no training: ",
+          test_instances((torch.tensor(test_set[0]), torch.tensor(test_set[1])), W, b), " (accurate, inaccurate)")
+
+    epochs = 1
+    batch_size = 1  # online training
+    W, b = mini_batch_training(1, 1, mu, train_set, input_size, output_size, W, b)
 
     training_test_set = torch.tensor(train_set[0][:10000]), torch.tensor(train_set[1][:10000])
-    print("Test on training data :", test_instances(training_test_set, W, b))
-    print("Results on test set: ", test_instances((torch.tensor(test_set[0]), torch.tensor(test_set[1])), W, b))
+    print("Test on training data after 1 iteration of training:", test_instances(training_test_set, W, b),
+          " (accurate, inaccurate)")
+    print("Results on test set after 1 iteration of training: ",
+          test_instances((torch.tensor(test_set[0]), torch.tensor(test_set[1])), W, b), " (accurate, inaccurate)")
 
+    # Results on test set with no training:  (998, 9002)  (accurate, inaccurate)
+    # Test on training data : (8673, 1327)  (accurate, inaccurate)
+    # Results on test set after 1 iteration of training:  (8785, 1215)  (accurate, inaccurate)
