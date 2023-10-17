@@ -20,8 +20,7 @@ Advanced:
   * Always measure whether compiling your model improves the performance or not! 
   
 ***
-Please check the Lab 2 Assignment's solution: (will be uploaded after Lab 3).
-
+Please check the Lab 2 Assignment's [solution](../Lab02/solution.py).
 ***
 References:
  - MNIST: https://pytorch.org/vision/0.15/generated/torchvision.datasets.MNIST.html#torchvision.datasets.MNIST
