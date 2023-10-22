@@ -1,9 +1,8 @@
 import torch
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, Dataset, random_split
+from torch import device
 from model import ThreeLayerModel
-from timed import timedCuda, timedBasic
-
 
 class OneHotMNIST(Dataset):
     def __init__(self, mnist_dataset):
@@ -35,14 +34,24 @@ def getMNISTDataset() -> tuple[DataLoader, DataLoader]:
 
     return trainloader, testloader
 
+def getDevice() -> device:
+    if torch.cuda.is_available():
+        return device('cuda')
+    else:
+        return device('cpu')
+
 def main():  
     trainingData, testData = getMNISTDataset()
 
-    model = ThreeLayerModel(784,100,10)
+    model = ThreeLayerModel(784,100,10,getDevice())
 
     accuracyBeforeTraining = model.getAccuracy(testData)
-    
     print(f"Accuracy before training is: {accuracyBeforeTraining}")
+
+    model.train(trainingData, epochs=40, learningRate=0.002)
+
+    accuracyAfterTraining = model.getAccuracy(testData)
+    print(f"Accuracy after training is: {accuracyAfterTraining}")
 
 if __name__ == "__main__":
     main()
