@@ -10,6 +10,7 @@ Lab Assignment: [Assignment.pdf](./Assignment.pdf) (Deadline: PR by End-of-Day M
 For self-study:
 * [Neural Networks](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) (animated introduction to neural networks and backpropagation)
 * [Essence of calculus](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) (derivatives; chain rule)
+* Backpropagation example, from scratch: [Resource from previous years](https://drive.google.com/file/d/11pFnI-NvGjAPgBb2nZKVj2dtE3dVI8qe/view)
 
 Advanced:
 * TorchScript (PyTorch jit): https://pytorch.org/docs/stable/jit.html
