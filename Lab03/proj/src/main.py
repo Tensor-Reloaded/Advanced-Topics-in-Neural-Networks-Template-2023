@@ -20,6 +20,9 @@ def cpu_tests():
 
 
 def gpu_tests():
+    if not torch.cuda.is_available():
+        return
+
     abstract_tests(device=torch.device("cuda"))
 
 
@@ -27,22 +30,19 @@ def abstract_tests(device: torch.device) -> None:
     dataset = MNIST(train_data_percentage=0.75, device=device)
     nn = MultilayeredNeuralNetwork(
         layers=[784, 100, 10],
-        learning_rate=0.002,
+        learning_rate=0.05,
         activation_function=sigmoid,
         activation_function_derivative=sigmoid_derivative,
         cost_function=mean_squared_error,
         cost_function_derivative=mean_squared_error_derivative,
         device=device,
     )
-    testing_data = dataset.testing_data
-    batch_size = 500
-    max_epochs = 100
+    batch_size = 2000
+    max_epochs = 4000
 
-    benchmark(nn, testing_data)
-    train_batched_epochs(
-        nn, dataset.randomise_training_data().training_data, batch_size, max_epochs
-    )
-    benchmark(nn, testing_data)
+    benchmark(nn, dataset)
+    train_batched_epochs(nn, dataset, batch_size, max_epochs)
+    benchmark(nn, dataset)
 
 
 if __name__ == "__main__":

@@ -26,7 +26,7 @@ class MultilayeredNeuralNetwork:
         cost_function_derivative: t.Callable[
             [torch.Tensor, torch.Tensor], torch.Tensor
         ],
-        device: torch.device = torch.device("cpu")
+        device: torch.device = torch.device("cpu"),
     ) -> None:
         if len(layers) < 2 or len(list(filter(lambda x: x < 0, layers))) > 0:
             raise MultilayeredNeuralNetworkException(
@@ -96,7 +96,7 @@ class MultilayeredNeuralNetwork:
             activations.append(a)
             weighted_sums.append(z)
 
-        delta = activations[-1] - y
+        delta = self._cost_function_derivative(y, activations[-1]) / X.shape[0]
 
         for layer_index in range(1, layers_count - 1):
             dW = delta @ activations[-(layer_index + 1)].t()
@@ -109,6 +109,14 @@ class MultilayeredNeuralNetwork:
                 weighted_sums[-(layer_index + 1)]
             ) * (self._W[-layer_index] @ delta)
 
-        loss = self._cost_function(activations[-1], y)
+        loss = self._cost_function(y, activations[-1])
 
         return loss
+
+    @property
+    def learning_rate(self) -> float:
+        return self._learning_rate
+
+    @learning_rate.setter
+    def learning_rate(self, value: float):
+        self._learning_rate = value

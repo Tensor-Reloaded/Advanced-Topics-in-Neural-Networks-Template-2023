@@ -21,9 +21,8 @@ class MNIST:
 
         vectorised_labels = self._vectorise_labels(dataset.targets)
         vectorised_dataset = self._vectorise_dataset(dataset.data)
-        normalised_dataset = self._normalise(vectorised_dataset)
         training_data, testing_data = self._partition(
-            normalised_dataset, vectorised_labels, training_data_count
+            vectorised_dataset, vectorised_labels, training_data_count
         )
 
         self._training_data = training_data
@@ -40,9 +39,6 @@ class MNIST:
 
     def _vectorise_dataset(self, dataset: torch.Tensor) -> torch.Tensor:
         return dataset.view(dataset.shape[0], -1).type(torch.float32)
-
-    def _normalise(self, dataset: torch.Tensor) -> torch.Tensor:
-        return dataset / torch.max(dataset)
 
     def _partition(
         self, dataset: torch.Tensor, labels: torch.Tensor, training_data_count: int
