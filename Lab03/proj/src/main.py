@@ -12,12 +12,16 @@ import torch
 
 def main():
     cpu_tests()
+    gpu_tests()
+
 
 def cpu_tests():
     abstract_tests(device=torch.device("cpu"))
 
+
 def gpu_tests():
     abstract_tests(device=torch.device("cuda"))
+
 
 def abstract_tests(device: torch.device) -> None:
     dataset = MNIST(train_data_percentage=0.75, device=device)
@@ -28,14 +32,16 @@ def abstract_tests(device: torch.device) -> None:
         activation_function_derivative=sigmoid_derivative,
         cost_function=mean_squared_error,
         cost_function_derivative=mean_squared_error_derivative,
-        device=device
+        device=device,
     )
     testing_data = dataset.testing_data
-    batch_size = 200
-    max_epochs = 3000
+    batch_size = 500
+    max_epochs = 100
 
     benchmark(nn, testing_data)
-    train_batched_epochs(nn, dataset.randomise_training_data().training_data, batch_size, max_epochs)
+    train_batched_epochs(
+        nn, dataset.randomise_training_data().training_data, batch_size, max_epochs
+    )
     benchmark(nn, testing_data)
 
 
