@@ -9,7 +9,7 @@ import torch
 def flatten_img(img_data: Tensor) -> Tensor:
     dims = img_data.size()
     assert len(dims) == 3
-    return img_data.resize(dims[0], dims[1] * dims[2])
+    return img_data.view(dims[0], dims[1] * dims[2])
 
 
 def one_hot_encode(targets: Tensor) -> Tensor:
@@ -29,7 +29,8 @@ def std_dev_scale(data_set: Tensor) -> Tensor:
 def get_minst_data() -> tuple[tuple[Tensor, Tensor], tuple[Tensor, Tensor], tuple[Tensor, Tensor]]:
     data_set = MNIST("./", download=True)
 
-    scaled_data = std_dev_scale(flatten_img(data_set.data))
+    #scaled_data = std_dev_scale(flatten_img(data_set.data))
+    scaled_data = flatten_img(data_set.data) * 1.0
 
     train_end_idx = int(0.75 * len(scaled_data))
     val_end_idx = int(0.85 * len(scaled_data))
@@ -49,4 +50,4 @@ if __name__ == "__main__":
     output_layer = Layer(10, "softmax", hidden_layer)
     nn_network = output_layer.compile()
 
-    epoch_train(train_set, validation_set, 0.01, 16, 10, nn_network)
+    epoch_train(train_set, validation_set, 0.001, 4, 20, nn_network, accuracy, cross_entropy_loss)

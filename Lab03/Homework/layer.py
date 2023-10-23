@@ -9,12 +9,20 @@ def sigmoid(input_data: Tensor) -> Tensor:
 
 
 def softmax(input_data: Tensor) -> Tensor:
-    return torch.exp(input_data) / torch.sum(torch.exp(input_data))
+    return torch.exp(input_data) / torch.sum(torch.exp(input_data), dim=1).view(-1, 1)
 
 
 ACTIVATION_FNS = {
     "sigmoid": sigmoid,
     "softmax": softmax
+}
+
+HIDDEN_LAYER_ERROR = {
+    "sigmoid": lambda output, next_error, next_layer: output * (1 - output) * (next_error @ next_layer.weights.T)
+}
+
+OUTPUT_LAYER_ERROR = {
+    ("softmax", "cross_entropy"): lambda output, target: target - output
 }
 
 
@@ -57,7 +65,6 @@ class Layer(LikeLayer):
         layers = []
         layer_to_insert = self
         while layer_to_insert.previous is not None:
-            assert layer_to_insert.activation == "sigmoid" or layer_to_insert.activation == "softmax"
             layer_to_insert.__activation_fn = ACTIVATION_FNS[layer_to_insert.activation]
 
             layers.insert(0, layer_to_insert)
@@ -65,7 +72,9 @@ class Layer(LikeLayer):
         return layers
 
     def feed_forward(self, input_data: Tensor) -> Tensor:
-        return self.__activation_fn(input_data @ self.weights + self.biases)
+        res = self.__activation_fn(input_data @ self.weights + self.biases)
+        assert torch.any(torch.isnan(res)) == False
+        return res
 
     @staticmethod
     def compute_error_output_layer(output: Tensor, target: Tensor) -> Tensor:
@@ -73,5 +82,5 @@ class Layer(LikeLayer):
 
     @staticmethod
     def compute_error(output: Tensor, next_error: Tensor, next_layer: "Layer") -> Tensor:
-        return next_layer.weights @ next_error
+        return output * (1 - output) * (next_error @ next_layer.weights.T)
 
