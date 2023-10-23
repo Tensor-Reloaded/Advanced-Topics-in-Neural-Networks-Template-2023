@@ -8,7 +8,7 @@ from typing import Callable
 
 
 class Network:
-    LEARNING_RATE = 0.1
+    LEARNING_RATE = 0.5
     BATCH_SIZE = 30
     ITERATIONS = 10
 
