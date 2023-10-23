@@ -68,14 +68,15 @@ def sigmoid(x: Tensor) -> Tensor:
     return x.sigmoid()
 
 
-def backward(x: Tensor, y: Tensor, y_hidden: Tensor, y_output: Tensor, w_output: Tensor) -> Tuple[list[Tensor], list[Tensor]]:
+def backward(x: Tensor, y: Tensor, y_hidden: Tensor, y_output: Tensor, w_output: Tensor) -> Tuple[
+    list[Tensor], list[Tensor]]:
     delta_b_output = y_output - y
     delta_w_output = y_hidden.T @ delta_b_output
 
     delta_b_hidden = (delta_b_output @ w_output.T) * y_hidden * (1 - y_hidden)
     delta_w_hidden = x.T @ delta_b_hidden
-    delta_b_hidden = delta_b_hidden.mean(dim=0) # On column
-    delta_b_output = delta_b_output.mean(dim=0) # On column
+    delta_b_hidden = delta_b_hidden.mean(dim=0)  # On column
+    delta_b_output = delta_b_output.mean(dim=0)  # On column
 
     return [delta_w_hidden, delta_w_output], [delta_b_hidden, delta_b_output]
 
@@ -84,7 +85,6 @@ def train_batch(x: Tensor, y: Tensor, w_list: list[Tensor], b_list: list[Tensor]
     y_hidden = activate(forward(x, w_list[0], b_list[0]), layer=0)
     y_output = activate(forward(y_hidden, w_list[1], b_list[1]), layer=1)
 
-    loss = functional.cross_entropy(y_output, y)  # will use difference in computing new weights and biases
     delta_w_list, delta_b_list = backward(x, y, y_hidden, y_output, w_list[1])
 
     for layer_index in range(2):
@@ -96,6 +96,7 @@ def train_batch(x: Tensor, y: Tensor, w_list: list[Tensor], b_list: list[Tensor]
 def train_epoch(data: Tensor, labels: Tensor, w_list: list[Tensor], b_list: list[Tensor],
                 lr: float, batch_size: int) -> Tuple[list[Tensor], list[Tensor]]:
     non_blocking = w_list[0].device.type == 'cuda'
+
     for i in range(0, data.shape[0], batch_size):
         x = data[i: i + batch_size].to(w_list[0].device, non_blocking=non_blocking)
         y = labels[i: i + batch_size].to(w_list[0].device, non_blocking=non_blocking)
@@ -113,21 +114,29 @@ def softmax_derivative(x):
     return derivative
 
 
-def evaluate(data: Tensor, labels: Tensor, w_list: list[Tensor], b_list: list[Tensor], batch_size: int) -> float:
+def evaluate(data: Tensor, labels: Tensor, w_list: list[Tensor], b_list: list[Tensor], batch_size: int,
+             get_y_max=False) -> Tuple[float, float]:
     # Labels are not one hot encoded, because we do not need them as one hot.
     total_correct_predictions = 0
     total_len = data.shape[0]
     non_blocking = w_list[0].device.type == 'cuda'
+
+    total_loss = 0
+    no_batches = total_len / batch_size
     for i in range(0, total_len, batch_size):
         x = data[i: i + batch_size].to(w_list[0].device, non_blocking=non_blocking)
-        y = labels[i: i + batch_size].to(w_list[0].device, non_blocking=non_blocking)
+        y_max_value_indices = labels[i: i + batch_size].to(w_list[0].device, non_blocking=non_blocking)
         predicted_distribution = activate(
             forward(activate(forward(x, w_list[0], b_list[0]), layer=0), w_list[1], b_list[1]), layer=1)
+
+        total_loss += functional.cross_entropy(predicted_distribution, y_max_value_indices)
         # check torch.max documentation
         predicted_max_value, predicted_max_value_indices = torch.max(predicted_distribution, dim=1)
         # we check if the indices of the max value per line correspond to the correct label. We get a boolean mask
         # with True where the indices are the same, false otherwise
-        equality_mask = predicted_max_value_indices == y
+        if get_y_max:
+            y_max_value, y_max_value_indices = torch.max(y_max_value_indices, dim=1)
+        equality_mask = predicted_max_value_indices == y_max_value_indices
         # We sum the boolean mask, and get the number of True values in the mask. We use .item() to get the value out of
         # the tensor
         correct_predictions = equality_mask.sum().item()
@@ -135,28 +144,21 @@ def evaluate(data: Tensor, labels: Tensor, w_list: list[Tensor], b_list: list[Te
         total_correct_predictions += correct_predictions
 
     value = total_correct_predictions / total_len
-    if value > 0.90:
-        global lr
-        if lr > 0.001:
-            lr -= 0.00005
-        elif lr > 0.0001:
-            lr -= 0.00001
-    return value
-
-
-lr = 0.005
+    # used avg of all batch losses
+    return value, total_loss / total_len
 
 
 def train(epochs: int = 1000, device: torch.device = get_default_device()):
     print(f"Using device {device}")
-    pin_memory = device.type == 'cuda'  # Check the provided references.
+    lr = 0.005
+    pin_memory = device.type == 'cuda'
     # w_list = [torch.rand((784, 100), device=device) * 0.01,
     #           torch.rand((100, 10), device=device) * 0.01]
     # w_list = [torch.rand((784, 100), device=device) * 0.01,
     #            torch.rand((100, 10), device=device) * 0.01]
-    # Xavier Initialization
-    w_list = [torch.rand((784, 100), device=device) * sqrt(2 / (784 + 100)),
-              torch.rand((100, 10), device=device) * sqrt(2 / (100 + 10))]
+
+    w_list = [torch.rand((784, 100), device=device) * 0.01,
+              torch.rand((100, 10), device=device) * 0.003]
 
     b_list = [torch.zeros((1, 100), device=device),
               torch.zeros((1, 10), device=device)]
@@ -169,8 +171,17 @@ def train(epochs: int = 1000, device: torch.device = get_default_device()):
     epochs = tqdm(range(epochs))
     for _ in epochs:
         w_list, b_list = train_epoch(data, labels, w_list, b_list, lr, batch_size)
-        accuracy = evaluate(data_test, labels_test, w_list, b_list, eval_batch_size)
-        epochs.set_postfix_str(f"accuracy = {accuracy}")
+
+        accuracy_train, loss_train = evaluate(data, labels, w_list, b_list, eval_batch_size, get_y_max=True)
+        accuracy_test, loss_test = evaluate(data_test, labels_test, w_list, b_list, eval_batch_size)
+
+        if accuracy_train > 0.9 and accuracy_test > 0.9:
+            if lr > 0.001:
+                lr -= 0.00005
+            elif lr > 0.0001:
+                lr -= 0.00001
+        epochs.set_postfix_str(
+            f"accuracy = {accuracy_test}, loss_train = {loss_test}, accuracy_test= {accuracy_train}, accuracy_train= {loss_train}")
 
 
 if __name__ == '__main__':
