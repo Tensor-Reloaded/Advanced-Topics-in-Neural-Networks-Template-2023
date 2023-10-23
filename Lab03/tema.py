@@ -30,8 +30,10 @@ def backward(x: Tensor, y: Tensor, y_hat: Tensor, hidden: Tensor) -> Tuple[Tenso
     dW_hidden = hidden @ error
     db_hidden = error.mean(dim=0)
 
-    dW_input = (dW_hidden.T @ x).T @ error.T
-    db_input = error.mean(dim=1)
+    #compute dW_input and db_input
+    error_input = error @ dW_hidden.t()
+    dW_input = dW_hidden.t() @ error_input
+    db_input = error_input.mean(dim=0)
     return dW_hidden, db_hidden, dW_input, db_input
 
 
@@ -135,5 +137,4 @@ def train(epochs: int = 1000, device: torch.device = get_default_device()):
 
 
 if __name__ == '__main__':
-
     train(1000)
