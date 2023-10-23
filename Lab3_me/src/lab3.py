@@ -103,6 +103,8 @@ def evaluate(data: Tensor, labels: Tensor,
 
     # Labels are not one hot encoded, because we do not need them as one hot.
     total_correct_predictions = 0
+    total_loss = 0
+
     total_len = data.shape[0]
 
     device = w_hidden.device
@@ -128,7 +130,14 @@ def evaluate(data: Tensor, labels: Tensor,
         # correct_predictions = (torch.max(predicted_distribution, dim=1)[1] == y).sum().item()
         total_correct_predictions += correct_predictions
 
-    return total_correct_predictions / total_len
+        predicted_class = predicted_distribution.argmax(dim=1)
+  #      loss = torch.nn.CrossEntropyLoss(y, predicted_class)
+    #    total_loss += loss.item()
+
+    average_loss = total_loss / (total_len / batch_size)
+    accuracy = total_correct_predictions / total_len
+
+    return accuracy, average_loss
 
 def train_epoch(data: Tensor, labels: Tensor,
                 w_hidden: Tensor, b_hidden: Tensor,
@@ -172,8 +181,9 @@ def train():
 
     for _ in epochs:
         w_hidden, b_hidden, w_output, b_output = train_epoch(data, labels, w_hidden, b_hidden, w_output, b_output,lr, batch_size)
-        accuracy = evaluate(data_test, labels_test, w_hidden, b_hidden, w_output, b_output, eval_batch_size)
-        epochs.set_postfix_str(f"accuracy = {accuracy}")
+        accuracy, loss = evaluate(data_test, labels_test, w_hidden, b_hidden, w_output, b_output, eval_batch_size)
+
+        epochs.set_postfix_str(f"accuracy = {accuracy}, loss = {loss}")
 
        # accuracy = evaluate(data_test, labels_test, w, b, eval_batch_size)
         #epochs.set_postfix_str(f"accuracy = {accuracy}")
