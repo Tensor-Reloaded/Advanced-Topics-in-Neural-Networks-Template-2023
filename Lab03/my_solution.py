@@ -181,7 +181,7 @@ def train(epochs: int = 1000, device: torch.device = get_default_device()):
             elif lr > 0.0001:
                 lr -= 0.00001
         epochs.set_postfix_str(
-            f"accuracy = {accuracy_test}, loss_train = {loss_test}, accuracy_test= {accuracy_train}, accuracy_train= {loss_train}")
+            f"accuracy_test = {accuracy_test}, loss_test = {loss_test}, accuracy_train= {accuracy_train}, loss_train= {loss_train}")
 
 
 if __name__ == '__main__':
