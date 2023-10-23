@@ -13,10 +13,8 @@ import typing as t
 def main():
     dataset = datasets.MNIST(root="./data", train=False, download=True, transform=None)
     nn = MultilayeredNeuralNetwork(
-        layers=[784, 10],
-        learning_rate=0.5,
-        # activation_function=reLU,
-        # activation_function_derivative=reLU_derivative,
+        layers=[784, 100, 10],
+        learning_rate=0.002,
         activation_function=sigmoid,
         activation_function_derivative=sigmoid_derivative,
         cost_function=mean_squared_error,
@@ -40,12 +38,13 @@ def main():
         f"Accuracy: {true_positives} / {testing_data[2]} = {true_positives / testing_data[2] * 100:.5f}%"
     )
 
-    max_epochs = 10
+    max_epochs = 20
+    total_loss = 0
     for i in range(0, max_epochs):
         print(f"Epoch: {i + 1} / {max_epochs}", end="\r")
         randomised_training_data = randomise(training_data)
         for X, y in zip(randomised_training_data[0], randomised_training_data[1]):
-            nn.train(X, y)
+            total_loss += nn.train(X, y)
     print()
 
     true_positives = 0
@@ -64,7 +63,7 @@ def vectorise_labels(labels: torch.Tensor) -> torch.Tensor:
 
     for i in range(0, len(labels)):
         data[i][labels[i]] = 1
-        
+
     return data.view(data.shape[0], -1, 1)
 
 
@@ -77,7 +76,7 @@ def vectorise_dataset(dataset: torch.Tensor) -> torch.Tensor:
 
 
 def normalise(dataset: torch.Tensor) -> torch.Tensor:
-    return torch.where(dataset == 0, 0, 1 / dataset)
+    return dataset / torch.max(dataset)
 
 
 def partition(
