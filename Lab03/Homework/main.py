@@ -59,3 +59,13 @@ if __name__ == "__main__":
 
     print(f"TEST SET - Accuracy is: {accuracy(test_set[0], test_set[1], nn_network)}")
     print(f"TEST SET - Loss is: {cross_entropy_loss(test_set[0], test_set[1], nn_network)}")
+
+    # TRAINING SET - Accuracy on epoch 27 is: 0.9988889098167419
+    # TRAINING SET - Loss on epoch 27 is: 0.02557274865718393
+
+    # VALIDATION SET - Accuracy on epoch 27 is: 0.9574999809265137
+    # VALIDATION SET - Loss on epoch 27 is: 0.27556862487740685
+
+    # TEST SET - Accuracy is: 0.9702222347259521
+    # TEST SET - Loss is: 0.19479536430111477
+
