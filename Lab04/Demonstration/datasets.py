@@ -31,8 +31,7 @@ class WineDataset(Dataset):
         features = self.features[idx] # Don't transform the original features
         labels = self.labels[idx] # Don't transform the original labels
         for transform in self.feature_transforms:
-            features = transform(self.features[idx])
+            features = transform(features)
         for transform in self.label_transforms:
-            labels = transform(self.labels[idx])
+            labels = transform(labels)
         return features, labels
-

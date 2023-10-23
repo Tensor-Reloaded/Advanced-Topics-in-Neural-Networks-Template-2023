@@ -15,19 +15,20 @@ print("Number of samples", len(total_dataset))
 print("Number of features", len(total_dataset.features.shape))
 print("Number of classes", total_dataset.labels.unique())
 
-
 feature_transforms = [WineFeatureGaussianNoise(0, 0.1)] # Try to compare with no augmentation
 label_transforms = [OneHot(total_dataset.labels.unique())] # [3, 4, 5, 6, 7, 8]
 
-total_dataset = WineDataset(dataset_file="winequality-red.csv", feature_transforms=feature_transforms, label_transforms=label_transforms)
+total_dataset = WineDataset(dataset_file="winequality-red.csv", \
+    feature_transforms=feature_transforms, \
+    label_transforms=label_transforms)
 
 # Split the dataset into training and testing sets
 train_dataset, test_dataset = torch.utils.data.random_split(total_dataset, [0.7, 0.3])
 
 # Alternatively, you can use the train_test_split function from sklearn and initialize the WineDataset with the split indices
-# train_indices, test_indices = train_test_split(np.arange(len(total_dataset)), test_size=0.3, random_state=42)
-# train_dataset = WineDataset(dataset_file="winequality-red.csv", split_indices=train_indices, feature_transforms=feature_transforms, label_transforms=label_transforms)
-# test_dataset = WineDataset(dataset_file="winequality-red.csv", split_indices=test_indices, feature_transforms=feature_transforms, label_transforms=label_transforms)
+## train_indices, test_indices = train_test_split(np.arange(len(total_dataset)), test_size=0.3, random_state=42)
+## train_dataset = WineDataset(dataset_file="winequality-red.csv", split_indices=train_indices, feature_transforms=feature_transforms, label_transforms=label_transforms)
+## test_dataset = WineDataset(dataset_file="winequality-red.csv", split_indices=test_indices, feature_transforms=feature_transforms, label_transforms=label_transforms)
 
 
 # Create instances of DataLoader for training and testing
@@ -43,6 +44,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Training loop
 num_epochs = 500
+model.train()
 for epoch in range(num_epochs):
     model.train()
     total_loss = 0
