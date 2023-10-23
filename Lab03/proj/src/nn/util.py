@@ -24,6 +24,7 @@ def train_batched_epochs(
     max_epochs: int,
 ):
     training_data = dataset.randomise_training_data().training_data
+    loss_mean = 0
     total_loss = 0
 
     for epoch in range(0, max_epochs):
@@ -33,10 +34,12 @@ def train_batched_epochs(
         std_dev, mean = torch.std_mean(X)
         X = X - mean / std_dev
 
-        total_loss += nn.train_batched(X, y, batch_size)
+        current_loss = nn.train_batched(X, y, batch_size)
+        loss_mean = (epoch * loss_mean + current_loss.sum()) / (epoch + 1)
+        total_loss += current_loss.sum()
 
         print(
-            f"Training epoch {epoch + 1} / {max_epochs}. Loss: {total_loss.sum()}",
+            f"Training epoch {epoch + 1} / {max_epochs}. Total loss: {total_loss:.2f}\tAverage loss: {loss_mean:.2f}",
             end="\r",
         )
 
