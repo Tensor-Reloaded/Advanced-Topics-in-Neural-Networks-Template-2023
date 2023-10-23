@@ -69,6 +69,8 @@ class MLP:
             if epoch % 10 == 0:
                 print(f"Epoch {epoch} done")
                 print(f"Loss: {util.cross_entropy_error(self.forward_prop(train_set), train_labels)}")
+                # print("Accuracy: ", self.test(train_set, train_labels))
+                print('---------------------------------------')
 
     def test(self, test_set, test_labels):
         correct = 0
@@ -80,7 +82,7 @@ class MLP:
             if idx_max == correct_idx:
                 correct += 1
             total += 1
-        print(f"Accuracy: {correct / total}")
+        return correct / total
 
 
 

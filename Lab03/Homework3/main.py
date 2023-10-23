@@ -32,6 +32,7 @@ import util
 # y_train = util.convert_to_one_hot(y_train)
 # y_test = util.convert_to_one_hot(y_test)
 
+torch.device('cpu')
 
 mnist_trainset = datasets.MNIST(root='./data', train=True, download=True, transform=None)
 mnist_testset = datasets.MNIST(root='./data', train=False, download=True, transform=None)
@@ -63,3 +64,45 @@ if __name__ == "__main__":
     # Test model
     acc = model.test(x_test, y_test)
     print(f"Accuracy: {acc}")
+
+# Epoch 0 done
+# Loss: 1.5743049383163452
+# Accuracy:  0.9289166666666666
+# ---------------------------------------
+# Epoch 10 done
+# Loss: 1.4864616394042969
+# Accuracy:  0.9892
+# ---------------------------------------
+# Epoch 20 done
+# Loss: 1.4736779928207397
+# Accuracy:  0.9968833333333333
+# ---------------------------------------
+# Epoch 30 done
+# Loss: 1.4681593179702759
+# Accuracy:  0.9994833333333333
+# ---------------------------------------
+# Epoch 40 done
+# Loss: 1.465474247932434
+# Accuracy:  0.9998666666666667
+# ---------------------------------------
+# Epoch 50 done
+# Loss: 1.464221477508545
+# Accuracy:  0.99995
+# ---------------------------------------
+# Epoch 60 done
+# Loss: 1.463523268699646
+# Accuracy:  0.9999833333333333
+# ---------------------------------------
+# Epoch 70 done
+# Loss: 1.463023066520691
+# Accuracy:  0.9999833333333333
+# ---------------------------------------
+# Epoch 80 done
+# Loss: 1.462689757347107
+# Accuracy:  0.9999833333333333
+# ---------------------------------------
+# Epoch 90 done
+# Loss: 1.4624584913253784
+# Accuracy:  1.0
+# ---------------------------------------
+# Accuracy: 0.9804
