@@ -1,0 +1,17 @@
+Plot1 params:
+no_epochs = 30
+batch_size = 128
+learning_rate = 0.1
+weight_decay = 1
+
+Plot2 params:
+no_epochs = 30
+batch_size = 128
+learning_rate = 0.25
+weight_decay = 0
+
+Plot3 params:
+no_epochs = 50
+batch_size = 128
+learning_rate = 0.25
+weight_decay = 0.5
