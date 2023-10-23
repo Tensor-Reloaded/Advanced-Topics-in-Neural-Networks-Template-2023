@@ -1,0 +1,333 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "gpuType": "T4",
+      "authorship_tag": "ABX9TyN0CkP9YRYccRb5a9x5r6jC",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    },
+    "accelerator": "GPU"
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/smocgeorgemarian/Advanced-Topics-in-Neural-Networks-Template-2023/blob/main/Lab03/my_solution_colab\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "xtkX7v-BjIWu",
+        "outputId": "9816d0d0-cbbf-4eba-b7f2-2d3c1f0be184"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Using device cuda\n",
+            "Downloading http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz\n",
+            "Downloading http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz to ./data/MNIST/raw/train-images-idx3-ubyte.gz\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "100%|██████████| 9912422/9912422 [00:00<00:00, 108056500.94it/s]\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Extracting ./data/MNIST/raw/train-images-idx3-ubyte.gz to ./data/MNIST/raw\n",
+            "\n",
+            "Downloading http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz\n",
+            "Downloading http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz to ./data/MNIST/raw/train-labels-idx1-ubyte.gz\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "100%|██████████| 28881/28881 [00:00<00:00, 15345286.78it/s]"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Extracting ./data/MNIST/raw/train-labels-idx1-ubyte.gz to ./data/MNIST/raw\n",
+            "\n",
+            "Downloading http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz\n",
+            "Downloading http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz to ./data/MNIST/raw/t10k-images-idx3-ubyte.gz\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "\n",
+            "100%|██████████| 1648877/1648877 [00:00<00:00, 26723848.19it/s]\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Extracting ./data/MNIST/raw/t10k-images-idx3-ubyte.gz to ./data/MNIST/raw\n",
+            "\n",
+            "Downloading http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz\n",
+            "Downloading http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz to ./data/MNIST/raw/t10k-labels-idx1-ubyte.gz\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "100%|██████████| 4542/4542 [00:00<00:00, 27892428.65it/s]\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Extracting ./data/MNIST/raw/t10k-labels-idx1-ubyte.gz to ./data/MNIST/raw\n",
+            "\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "100%|██████████| 500/500 [02:23<00:00,  3.49it/s, accuracy_test = 0.9806, loss_test = 0.002971842885017395, accuracy_train= 0.9996666666666667, loss_train= 0.00293534598313272]\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Using device cuda\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "100%|██████████| 500/500 [02:20<00:00,  3.56it/s, accuracy_test = 0.9804, loss_test = 0.0029721891041845083, accuracy_train= 0.9996833333333334, loss_train= 0.00293521280400455]\n"
+          ]
+        }
+      ],
+      "source": [
+        "from typing import Tuple\n",
+        "import numpy as np\n",
+        "import torch\n",
+        "from torch import Tensor\n",
+        "from math import sqrt\n",
+        "from torchvision.datasets import MNIST\n",
+        "from tqdm import tqdm\n",
+        "import torch.nn.functional as functional\n",
+        "\n",
+        "\n",
+        "def get_default_device():\n",
+        "    if torch.cuda.is_available():\n",
+        "        return torch.device('cuda')\n",
+        "        # For multi-gpu workstations, PyTorch will use the first available GPU (cuda:0), unless specified otherwise\n",
+        "        # (cuda:1).\n",
+        "    if torch.backends.mps.is_available():\n",
+        "        return torch.device('mos')\n",
+        "    return torch.device('cpu')\n",
+        "\n",
+        "\n",
+        "def collate(x) -> Tensor:\n",
+        "    if isinstance(x, (tuple, list)):\n",
+        "        if isinstance(x[0], Tensor):\n",
+        "            return torch.stack(x)\n",
+        "        return torch.tensor(x)\n",
+        "    raise \"Not supported yet\"\n",
+        "    # see torch\\utils\\data\\_utils\\collate.py\n",
+        "\n",
+        "\n",
+        "def to_one_hot(x: Tensor) -> Tensor:\n",
+        "    return torch.eye(x.max() + 1)[x]\n",
+        "\n",
+        "\n",
+        "def load_mnist(path: str = \"./data\", train: bool = True, pin_memory: bool = True):\n",
+        "    mnist_raw = MNIST(path, download=True, train=train)\n",
+        "    mnist_data = []\n",
+        "    mnist_labels = []\n",
+        "    for image, label in mnist_raw:\n",
+        "        tensor = torch.from_numpy(np.array(image))\n",
+        "        mnist_data.append(tensor)\n",
+        "        mnist_labels.append(label)\n",
+        "\n",
+        "    mnist_data = collate(mnist_data).float()  # shape 60000, 28, 28\n",
+        "    mnist_data = mnist_data.flatten(start_dim=1)  # shape 60000, 784\n",
+        "    mnist_data /= mnist_data.max()  # min max normalize\n",
+        "    mnist_labels = collate(mnist_labels)  # shape 60000\n",
+        "    if train:\n",
+        "        mnist_labels = to_one_hot(mnist_labels)  # shape 60000, 10\n",
+        "    if pin_memory:\n",
+        "        return mnist_data.pin_memory(), mnist_labels.pin_memory()\n",
+        "    return mnist_data, mnist_labels\n",
+        "\n",
+        "\n",
+        "def forward(x: Tensor, w: Tensor, b) -> Tensor:\n",
+        "    # print(\"Shape of x\", x.shape)\n",
+        "    # print(\"Shape of b\", b.shape)\n",
+        "    return x @ w + b\n",
+        "\n",
+        "\n",
+        "def activate(x: Tensor, layer: int) -> Tensor:\n",
+        "    # print(\"Shape of x\", x.shape)\n",
+        "    if layer == 0:\n",
+        "        return x.sigmoid()\n",
+        "    return x.softmax(dim=1)\n",
+        "\n",
+        "\n",
+        "def sigmoid(x: Tensor) -> Tensor:\n",
+        "    return x.sigmoid()\n",
+        "\n",
+        "\n",
+        "def backward(x: Tensor, y: Tensor, y_hidden: Tensor, y_output: Tensor, w_output: Tensor) -> Tuple[\n",
+        "    list[Tensor], list[Tensor]]:\n",
+        "    delta_b_output = y_output - y\n",
+        "    delta_w_output = y_hidden.T @ delta_b_output\n",
+        "\n",
+        "    delta_b_hidden = (delta_b_output @ w_output.T) * y_hidden * (1 - y_hidden)\n",
+        "    delta_w_hidden = x.T @ delta_b_hidden\n",
+        "    delta_b_hidden = delta_b_hidden.mean(dim=0)  # On column\n",
+        "    delta_b_output = delta_b_output.mean(dim=0)  # On column\n",
+        "\n",
+        "    return [delta_w_hidden, delta_w_output], [delta_b_hidden, delta_b_output]\n",
+        "\n",
+        "\n",
+        "def train_batch(x: Tensor, y: Tensor, w_list: list[Tensor], b_list: list[Tensor], lr: float) -> Tuple[list[Tensor], list[Tensor]]:\n",
+        "    y_hidden = activate(forward(x, w_list[0], b_list[0]), layer=0)\n",
+        "    y_output = activate(forward(y_hidden, w_list[1], b_list[1]), layer=1)\n",
+        "\n",
+        "    delta_w_list, delta_b_list = backward(x, y, y_hidden, y_output, w_list[1])\n",
+        "\n",
+        "    for layer_index in range(2):\n",
+        "        w_list[layer_index] -= lr * delta_w_list[layer_index]\n",
+        "        b_list[layer_index] -= lr * delta_b_list[layer_index]\n",
+        "    return w_list, b_list\n",
+        "\n",
+        "\n",
+        "def train_epoch(data: Tensor, labels: Tensor, w_list: list[Tensor], b_list: list[Tensor],\n",
+        "                lr: float, batch_size: int) -> Tuple[list[Tensor], list[Tensor]]:\n",
+        "    non_blocking = w_list[0].device.type == 'cuda'\n",
+        "\n",
+        "    for i in range(0, data.shape[0], batch_size):\n",
+        "        x = data[i: i + batch_size].to(w_list[0].device, non_blocking=non_blocking)\n",
+        "        y = labels[i: i + batch_size].to(w_list[0].device, non_blocking=non_blocking)\n",
+        "        w_list, b_list = train_batch(x, y, w_list, b_list, lr)\n",
+        "    return w_list, b_list\n",
+        "\n",
+        "\n",
+        "# tried it for hidden layer but results were not effective\n",
+        "def softmax_derivative(x):\n",
+        "    batch_size, vector_dim = x.shape\n",
+        "    I = torch.eye(vector_dim).unsqueeze(0).expand(batch_size, -1, -1)\n",
+        "\n",
+        "    derivative = (I - x.view(batch_size, vector_dim, 1) @ x.view(batch_size, 1, vector_dim)) * x.view(batch_size,\n",
+        "                                                                                                      vector_dim, 1)\n",
+        "    return derivative\n",
+        "\n",
+        "\n",
+        "def evaluate(data: Tensor, labels: Tensor, w_list: list[Tensor], b_list: list[Tensor], batch_size: int,\n",
+        "             get_y_max=False) -> Tuple[float, float]:\n",
+        "    # Labels are not one hot encoded, because we do not need them as one hot.\n",
+        "    total_correct_predictions = 0\n",
+        "    total_len = data.shape[0]\n",
+        "    non_blocking = w_list[0].device.type == 'cuda'\n",
+        "\n",
+        "    total_loss = 0\n",
+        "    no_batches = total_len / batch_size\n",
+        "    for i in range(0, total_len, batch_size):\n",
+        "        x = data[i: i + batch_size].to(w_list[0].device, non_blocking=non_blocking)\n",
+        "        y_max_value_indices = labels[i: i + batch_size].to(w_list[0].device, non_blocking=non_blocking)\n",
+        "        predicted_distribution = activate(\n",
+        "            forward(activate(forward(x, w_list[0], b_list[0]), layer=0), w_list[1], b_list[1]), layer=1)\n",
+        "\n",
+        "        total_loss += functional.cross_entropy(predicted_distribution, y_max_value_indices) / batch_size\n",
+        "        # check torch.max documentation\n",
+        "        predicted_max_value, predicted_max_value_indices = torch.max(predicted_distribution, dim=1)\n",
+        "        # we check if the indices of the max value per line correspond to the correct label. We get a boolean mask\n",
+        "        # with True where the indices are the same, false otherwise\n",
+        "        if get_y_max:\n",
+        "            y_max_value, y_max_value_indices = torch.max(y_max_value_indices, dim=1)\n",
+        "        equality_mask = predicted_max_value_indices == y_max_value_indices\n",
+        "        # We sum the boolean mask, and get the number of True values in the mask. We use .item() to get the value out of\n",
+        "        # the tensor\n",
+        "        correct_predictions = equality_mask.sum().item()\n",
+        "        # correct_predictions = (torch.max(predicted_distribution, dim=1)[1] == y).sum().item()\n",
+        "        total_correct_predictions += correct_predictions\n",
+        "\n",
+        "    value = total_correct_predictions / total_len\n",
+        "    # used avg of all batch losses\n",
+        "    return value, total_loss / no_batches\n",
+        "\n",
+        "\n",
+        "def train(epochs: int = 1000, device: torch.device = get_default_device()):\n",
+        "    print(f\"Using device {device}\")\n",
+        "    lr = 0.005\n",
+        "    pin_memory = device.type == 'cuda'\n",
+        "    # w_list = [torch.rand((784, 100), device=device) * 0.01,\n",
+        "    #           torch.rand((100, 10), device=device) * 0.01]\n",
+        "    # w_list = [torch.rand((784, 100), device=device) * 0.01,\n",
+        "    #            torch.rand((100, 10), device=device) * 0.01]\n",
+        "\n",
+        "    w_list = [torch.rand((784, 100), device=device) * 0.01,\n",
+        "              torch.rand((100, 10), device=device) * 0.003]\n",
+        "\n",
+        "    b_list = [torch.zeros((1, 100), device=device),\n",
+        "              torch.zeros((1, 10), device=device)]\n",
+        "\n",
+        "    batch_size = 100\n",
+        "    eval_batch_size = 500\n",
+        "    data, labels = load_mnist(train=True, pin_memory=pin_memory)\n",
+        "    data_test, labels_test = load_mnist(train=False, pin_memory=pin_memory)\n",
+        "\n",
+        "    epochs = tqdm(range(epochs))\n",
+        "    for _ in epochs:\n",
+        "        w_list, b_list = train_epoch(data, labels, w_list, b_list, lr, batch_size)\n",
+        "\n",
+        "        accuracy_train, loss_train = evaluate(data, labels, w_list, b_list, eval_batch_size, get_y_max=True)\n",
+        "        accuracy_test, loss_test = evaluate(data_test, labels_test, w_list, b_list, eval_batch_size)\n",
+        "\n",
+        "        if accuracy_train > 0.9 and accuracy_test > 0.9:\n",
+        "            if lr > 0.001:\n",
+        "                lr -= 0.00005\n",
+        "            elif lr > 0.0001:\n",
+        "                lr -= 0.00001\n",
+        "        epochs.set_postfix_str(\n",
+        "            f\"accuracy_test = {accuracy_test}, loss_test = {loss_test}, accuracy_train= {accuracy_train}, loss_train= {loss_train}\")\n",
+        "\n",
+        "\n",
+        "if __name__ == '__main__':\n",
+        "    train(500, torch.device('cuda'))\n",
+        "    train(500)\n"
+      ]
+    }
+  ]
+}
