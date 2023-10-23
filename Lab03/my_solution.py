@@ -1,11 +1,11 @@
 from typing import Tuple
+
 import numpy as np
 import torch
+import torch.nn.functional as functional
 from torch import Tensor
-from math import sqrt
 from torchvision.datasets import MNIST
 from tqdm import tqdm
-import torch.nn.functional as functional
 
 
 def get_default_device():
