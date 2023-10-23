@@ -4,7 +4,7 @@
 Lab Notebook: 
 
 ***
-Lab Assignment: [Assignment.pdf](./Assignment.pdf) (Deadline: PR by End-of-Day Monday, 30.10.2023)
+Lab Assignment: [Assignment.pdf](./Assignment.pdf) (Deadline: PR by End-of-Day Monday, 30.10.2023). Use the "Dataset" folder for your homework.
 
 ***
 References:
