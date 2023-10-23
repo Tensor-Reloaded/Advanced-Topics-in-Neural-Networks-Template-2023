@@ -134,6 +134,12 @@ if __name__ == '__main__':
 
     model.train_mini_batch(model.training_set, 10, 32, 0.5)
 
+    print('Training set:')
+    model.test_model(model.training_set)
+
+    # Training set:
+    # Correct: 49438, Wrong: 562, Total: 50000, Accuracy: 98.87 %, Average Loss: 1.4854742288589478
+
     print('Testing set:')
     model.test_model(model.testing_set)
     # Testing set:
@@ -142,4 +148,4 @@ if __name__ == '__main__':
     print('Validation set:')
     model.test_model(model.validation_set)
     # Validation set:
-    # Correct: 9751, Wrong: 249, Total: 10000, Accuracy: 97.51 %, Average Loss: 1.4948376417160034
+    # Correct:¬ 9751, Wrong: 249, Total: 10000, Accuracy: 97.51 %, Average Loss: 1.4948376417160034
