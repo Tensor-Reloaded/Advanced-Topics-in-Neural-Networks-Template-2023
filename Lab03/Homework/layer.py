@@ -17,12 +17,12 @@ ACTIVATION_FNS = {
     "softmax": softmax
 }
 
-HIDDEN_LAYER_ERROR = {
+HIDDEN_LAYER_ERROR_FNS = {
     "sigmoid": lambda output, next_error, next_layer: output * (1 - output) * (next_error @ next_layer.weights.T)
 }
 
-OUTPUT_LAYER_ERROR = {
-    ("softmax", "cross_entropy"): lambda output, target: target - output
+OUTPUT_LAYER_ERROR_FNS = {
+    ("softmax", "cross_entropy"): lambda output, target: output - target
 }
 
 
@@ -46,6 +46,8 @@ class Layer(LikeLayer):
         self.previous = previous
 
         self.__activation_fn: Callable = None
+        self.__hidden_layer_error_fn: Callable = None
+        self.__output_layer_error_fn: Callable = None
 
     @staticmethod
     def __initialize_kernel(previous: int, current: int) -> tuple[Tensor, Tensor]:
@@ -59,13 +61,18 @@ class Layer(LikeLayer):
             (1, current)
         )
 
-        return weights, biases
+        return weights.double(), biases.double()
 
-    def compile(self) -> list["Layer"]:
+    def compile(self, loss: str) -> list["Layer"]:
         layers = []
         layer_to_insert = self
         while layer_to_insert.previous is not None:
             layer_to_insert.__activation_fn = ACTIVATION_FNS[layer_to_insert.activation]
+
+            if len(layers) == 0:
+                layer_to_insert.__output_layer_error_fn = OUTPUT_LAYER_ERROR_FNS[(layer_to_insert.activation, loss)]
+            else:
+                layer_to_insert.__hidden_layer_error_fn = HIDDEN_LAYER_ERROR_FNS[layer_to_insert.activation]
 
             layers.insert(0, layer_to_insert)
             layer_to_insert = layer_to_insert.previous
@@ -73,14 +80,12 @@ class Layer(LikeLayer):
 
     def feed_forward(self, input_data: Tensor) -> Tensor:
         res = self.__activation_fn(input_data @ self.weights + self.biases)
-        assert torch.any(torch.isnan(res)) == False
+        assert not torch.any(torch.isnan(res))
         return res
 
-    @staticmethod
-    def compute_error_output_layer(output: Tensor, target: Tensor) -> Tensor:
-        return target - output
+    def compute_error_output_layer(self, output: Tensor, target: Tensor) -> Tensor:
+        return self.__output_layer_error_fn(output, target)
 
-    @staticmethod
-    def compute_error(output: Tensor, next_error: Tensor, next_layer: "Layer") -> Tensor:
-        return output * (1 - output) * (next_error @ next_layer.weights.T)
+    def compute_error(self, output: Tensor, next_error: Tensor, next_layer: "Layer") -> Tensor:
+        return self.__hidden_layer_error_fn(output, next_error, next_layer)
 
