@@ -66,7 +66,8 @@ for images, labels in test_dataset:
 
 accuracy = (correct / total) * 100
 
-print(f'Test Accuracy: {accuracy:.2f}%')
+print(f'Test Accuracy: {accuracy:.2f}%')#96.94% accuracy
+
 #loss = np.mean((y - output_layer_output) ** 2)
 #print(loss)
 
