@@ -129,7 +129,7 @@ def evaluate(data: Tensor, labels: Tensor, w_list: list[Tensor], b_list: list[Te
         predicted_distribution = activate(
             forward(activate(forward(x, w_list[0], b_list[0]), layer=0), w_list[1], b_list[1]), layer=1)
 
-        total_loss += functional.cross_entropy(predicted_distribution, y_max_value_indices)
+        total_loss += functional.cross_entropy(predicted_distribution, y_max_value_indices) / batch_size
         # check torch.max documentation
         predicted_max_value, predicted_max_value_indices = torch.max(predicted_distribution, dim=1)
         # we check if the indices of the max value per line correspond to the correct label. We get a boolean mask
@@ -145,7 +145,7 @@ def evaluate(data: Tensor, labels: Tensor, w_list: list[Tensor], b_list: list[Te
 
     value = total_correct_predictions / total_len
     # used avg of all batch losses
-    return value, total_loss / total_len
+    return value, total_loss / no_batches
 
 
 def train(epochs: int = 1000, device: torch.device = get_default_device()):
