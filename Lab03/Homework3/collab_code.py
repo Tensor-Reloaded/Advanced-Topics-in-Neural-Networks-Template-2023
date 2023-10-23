@@ -168,7 +168,7 @@ y_test = y_test.float()
 x_test = x_test / 255
 
 model = MLP([784, 100, 10])
-model.train(x_train, y_train, batch_size=100, lr=0.01, epochs=100)
+model.train(x_train, y_train, batch_size=100, lr=0.01, epochs=50)
 
 # Test model
 acc = model.test(x_test, y_test)
