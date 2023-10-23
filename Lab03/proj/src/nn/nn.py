@@ -14,6 +14,8 @@ class MultilayeredNeuralNetwork:
     _W: t.List[torch.Tensor]
     _b: t.List[torch.Tensor]
 
+    _device: torch.device
+
     def __init__(
         self,
         layers: t.List[int],
@@ -24,6 +26,7 @@ class MultilayeredNeuralNetwork:
         cost_function_derivative: t.Callable[
             [torch.Tensor, torch.Tensor], torch.Tensor
         ],
+        device: torch.device = torch.device("cpu")
     ) -> None:
         if len(layers) < 2 or len(list(filter(lambda x: x < 0, layers))) > 0:
             raise MultilayeredNeuralNetworkException(
@@ -36,18 +39,37 @@ class MultilayeredNeuralNetwork:
         self._activation_function_derivative = activation_function_derivative
         self._cost_function = cost_function
         self._cost_function_derivative = cost_function_derivative
+        self._device = device
 
         self._W = [
-            torch.randn(inputs, outputs)
+            torch.randn(inputs, outputs).to(device=device)
             for inputs, outputs in zip(layers[:-1], layers[1:])
         ]
-        self._b = [torch.randn(outputs, 1) for outputs in layers[1:]]
+        self._b = [torch.randn(outputs, 1).to(device=device) for outputs in layers[1:]]
 
     def predict(self, X: torch.Tensor) -> torch.Tensor:
         return self._forward_propagate(X)
 
-    def train(self, X: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+    def train_one(self, X: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         return self._backward_propagate(X, y)
+
+    def train_batched(
+        self, X: torch.Tensor, y: torch.Tensor, batch_size: int
+    ) -> torch.Tensor:
+        if batch_size < 1:
+            raise MultilayeredNeuralNetworkException(
+                f"Invalid batch size: Given {batch_size}, expected >= 1"
+            )
+
+        batch_loss = 0
+
+        for batch_index in range(0, X.shape[0] // batch_size):
+            X_batch = X[batch_size * batch_index : batch_size * (batch_index + 1)].t()
+            y_batch = y[batch_size * batch_index : batch_size * (batch_index + 1)].t()
+
+            batch_loss += self.train_one(X_batch, y_batch)
+
+        return batch_loss
 
     def _forward_propagate(self, X: torch.Tensor) -> torch.Tensor:
         a = X
@@ -77,10 +99,10 @@ class MultilayeredNeuralNetwork:
         delta = activations[-1] - y
 
         for layer_index in range(1, layers_count - 1):
-            dW = delta.t() * activations[-(layer_index + 1)]
+            dW = delta @ activations[-(layer_index + 1)].t()
             db = delta.sum(dim=1, keepdim=True)
 
-            self._W[-layer_index] -= self._learning_rate * dW
+            self._W[-layer_index] -= self._learning_rate * dW.t()
             self._b[-layer_index] -= self._learning_rate * db
 
             delta = self._activation_function_derivative(
