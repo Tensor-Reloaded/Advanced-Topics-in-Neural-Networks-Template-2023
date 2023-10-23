@@ -37,10 +37,8 @@ class MLP:
         hidden_layer.error = hidden_layer.activation * (1 - hidden_layer.activation) * (
                 output_layer.error @ output_layer.weights.t())
 
-        # cahsdasdoqwiejd
         hidden_layer_grad_w = train_set.t() @ hidden_layer.error
         hidden_layer_grad_b = hidden_layer.error
-        # sum output_grad_b
 
         output_layer.weights -= learning_rate * output_layer_grad_w
         output_layer.biases += torch.sum(-learning_rate * output_layer_grad_b, dim=0)

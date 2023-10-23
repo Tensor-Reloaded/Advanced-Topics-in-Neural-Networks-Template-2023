@@ -9,29 +9,6 @@ from torch.utils.data import DataLoader
 
 import util
 
-# transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
-#
-# train_dataset = datasets.MNIST(root='./data', train=True, transform=transform, download=True)
-# test_dataset = datasets.MNIST(root='./data', train=False, transform=transform, download=True)
-#
-# # Define batch size
-# batch_size = 100
-#
-# # Create data loaders for the datasets
-# train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-# test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
-#
-# # Split data into x_train, y_train, x_test, y_test
-# x_train, y_train = next(iter(train_loader))
-# x_test, y_test = next(iter(test_loader))
-#
-# # Ensure x_train, x_test have the shape [batch_size, num_features]
-# x_train = x_train.view(x_train.size(0), -1)
-# x_test = x_test.view(x_test.size(0), -1)
-#
-# y_train = util.convert_to_one_hot(y_train)
-# y_test = util.convert_to_one_hot(y_test)
-
 torch.device('cpu')
 
 mnist_trainset = datasets.MNIST(root='./data', train=True, download=True, transform=None)
