@@ -1,20 +1,30 @@
-from math import sqrt
+import typing as t
 import torch
 from .nn import MultilayeredNeuralNetwork
 
 
-def benchmark(nn: MultilayeredNeuralNetwork, dataset):
-    testing_data = dataset.randomise_testing_data().testing_data
-    true_positives = 0
+def benchmark(
+    nn: MultilayeredNeuralNetwork,
+    test_dataset,
+):
+    testing_data = test_dataset.randomise().data
+    loss_mean = 0
+    accuracy = 0
+    index = 0
 
     for X, y in zip(testing_data[0], testing_data[1]):
-        true_positives += torch.argmax(nn.predict(X.view(-1, 1))) == torch.argmax(
-            y.view(-1, 1)
-        )
+        y_hat = nn.predict(X.view(-1, 1))
 
-    print(
-        f"Accuracy: {true_positives} / {testing_data[2]} = {true_positives / testing_data[2] * 100:.5f}%"
-    )
+        is_true_positive = torch.argmax(y_hat) == torch.argmax(y.view(-1, 1))
+        loss = nn.cost_function(y.view(-1, 1), y_hat, X)
+        loss_mean = (index * loss_mean + loss.mean()) / (index + 1)
+        accuracy = (index * accuracy + is_true_positive) / (index + 1)
+
+        print(f"Testing: accuracy = {accuracy * 100:.5f}%, loss mean = {loss_mean:.5f}", end="\r")
+
+        index += 1
+
+    print()
 
 
 def train_batched_epochs(
@@ -23,23 +33,22 @@ def train_batched_epochs(
     batch_size: int,
     max_epochs: int,
 ):
-    training_data = dataset.randomise_training_data().training_data
     loss_mean = 0
-    total_loss = 0
 
     for epoch in range(0, max_epochs):
+        training_data = dataset.randomise().data
         X = training_data[0]
         y = training_data[1]
 
         std_dev, mean = torch.std_mean(X)
         X = X - mean / std_dev
 
-        current_loss = nn.train_batched(X, y, batch_size)
-        loss_mean = (epoch * loss_mean + current_loss.sum()) / (epoch + 1)
-        total_loss += current_loss.sum()
+        loss = nn.train_batched(X, y, batch_size)
+
+        loss_mean = (epoch * loss_mean + loss.mean()) / (epoch + 1)
 
         print(
-            f"Training epoch {epoch + 1} / {max_epochs}. Total loss: {total_loss:.2f}\tAverage loss: {loss_mean:.2f}",
+            f"Training: epoch = {epoch + 1} / {max_epochs}, loss mean = {loss_mean:.5f}",
             end="\r",
         )
 

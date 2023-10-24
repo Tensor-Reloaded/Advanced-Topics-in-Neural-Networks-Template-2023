@@ -120,3 +120,8 @@ class MultilayeredNeuralNetwork:
     @learning_rate.setter
     def learning_rate(self, value: float):
         self._learning_rate = value
+
+    @property
+    def cost_function(self) -> t.Callable[[torch.Tensor, torch.Tensor], torch.Tensor]:
+        return self._cost_function
+    
