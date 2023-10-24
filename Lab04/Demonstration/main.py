@@ -39,16 +39,17 @@ test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 model = WineQualityMLP(input_dim=11, \
     output_dim = len(total_dataset.labels.unique()), \
     output_activation=nn.Softmax(dim=1))
+# model = model.to('mps')
 criterion = nn.BCELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Training loop
 num_epochs = 500
-model.train()
 for epoch in range(num_epochs):
     model.train()
     total_loss = 0
     for features, labels in train_loader:
+        # features, labels = features.to('mps'), labels.to('mps')
         optimizer.zero_grad()
         outputs = model(features)
         loss = criterion(outputs, labels)
