@@ -131,17 +131,9 @@ def load_dataset(path: str = "./data", train: bool = True, pin_memory: bool = Tr
             img_rotated_2 = imutils.rotate(img_shifted_1.numpy(), -5)
             x_data += [torch.from_numpy(img_rotated_1), torch.from_numpy(img_rotated_2)]
             y_data += [label] * 2
-            img_rotated_1 = imutils.rotate(img_shifted_1.numpy(), 10)
-            img_rotated_2 = imutils.rotate(img_shifted_1.numpy(), -10)
-            x_data += [torch.from_numpy(img_rotated_1), torch.from_numpy(img_rotated_2)]
-            y_data += [label] * 2
             img_shifted_2 = torch.cat((tensor[:26, :], 255 * torch.ones(size=(2, 28))))
             img_rotated_1 = imutils.rotate(img_shifted_2.numpy(), 5)
             img_rotated_2 = imutils.rotate(img_shifted_2.numpy(), -5)
-            x_data += [torch.from_numpy(img_rotated_1), torch.from_numpy(img_rotated_2)]
-            y_data += [label] * 2
-            img_rotated_1 = imutils.rotate(img_shifted_2.numpy(), 10)
-            img_rotated_2 = imutils.rotate(img_shifted_2.numpy(), -10)
             x_data += [torch.from_numpy(img_rotated_1), torch.from_numpy(img_rotated_2)]
             y_data += [label] * 2
             img_shifted_3 = torch.cat((255 * torch.ones(size=(28, 2)), tensor[:, 2:]), dim=1)
@@ -158,21 +150,14 @@ def load_dataset(path: str = "./data", train: bool = True, pin_memory: bool = Tr
             img_rotated_2 = imutils.rotate(img_shifted_4.numpy(), -5)
             x_data += [torch.from_numpy(img_rotated_1), torch.from_numpy(img_rotated_2)]
             y_data += [label] * 2
-            img_rotated_1 = imutils.rotate(img_shifted_4.numpy(), 10)
-            img_rotated_2 = imutils.rotate(img_shifted_4.numpy(), -10)
-            x_data += [torch.from_numpy(img_rotated_1), torch.from_numpy(img_rotated_2)]
-            y_data += [label] * 2
             x_data += [img_shifted_1, img_shifted_2, img_shifted_3, img_shifted_4]
             y_data += [label] * 4
 
-            img_rotated_1 = imutils.rotate(img, 5)
-            img_rotated_2 = imutils.rotate(img, -5)
-            x_data += [torch.from_numpy(img_rotated_1), torch.from_numpy(img_rotated_2)]
-            y_data += [label] * 2
-            img_rotated_1 = imutils.rotate(img, 10)
-            img_rotated_2 = imutils.rotate(img, -10)
-            x_data += [torch.from_numpy(img_rotated_1), torch.from_numpy(img_rotated_2)]
-            y_data += [label] * 2
+            for angle in range(5, 16, 1):
+                img_rotated_1 = imutils.rotate(img, angle)
+                img_rotated_2 = imutils.rotate(img, -angle)
+                x_data += [torch.from_numpy(img_rotated_1), torch.from_numpy(img_rotated_2)]
+                y_data += [label] * 2
 
             gaussian = tensor + torch.randn_like(tensor, dtype=torch.float32) * 0.1
             x_data += [gaussian]
@@ -246,7 +231,7 @@ def train(epochs: int = 1000, device: torch.device = get_default_device(),
     adam_optimizer1 = AdamOptimizer()
     adam_optimizer2 = AdamOptimizer()
     for epoch in epochs:
-        if not (epoch + 1) % 60:
+        if not (epoch + 1) % 15:
             mu *= 0.2
         weights, biases, loss = train_perceptron(adam_optimizer0, adam_optimizer1, adam_optimizer2,
                                                  x_train, y_train, weights, biases,
