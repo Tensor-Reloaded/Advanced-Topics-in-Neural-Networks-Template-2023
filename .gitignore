@@ -160,5 +160,4 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-Lab02/data
-Lab03/data
+.DS_Store
