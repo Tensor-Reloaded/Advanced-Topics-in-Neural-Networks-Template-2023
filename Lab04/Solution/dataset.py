@@ -57,12 +57,12 @@ class Dataset(torch_data.Dataset):
                 )
 
                 if image_file_1_timestamp_str is None:
-                    raise exceptions.DataloaderException(
+                    raise exceptions.DatasetException(
                         f"Image {image_file_1} cannot be parsed for timestamp"
                     )
 
                 if image_file_2_timestamp_str is None:
-                    raise exceptions.DataloaderException(
+                    raise exceptions.DatasetException(
                         f"Image {image_file_2} cannot be parsed for timestamp"
                     )
 
