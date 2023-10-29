@@ -30,9 +30,6 @@ class Dataset(torch_data.Dataset):
 
         self.__image_sets = self.__load(self.__root)
         self.__image_sets = self.__load_on_device(self.__image_sets, self.__device)
-        self.__image_sets = self.__apply_transformations(
-            self.__image_sets, self.__transformations
-        )
 
         self.__size = self.__compute_size(self.__image_sets)
 
@@ -132,4 +129,12 @@ class Dataset(torch_data.Dataset):
 
     def __getitem__(self, index) -> ImageSet:
         image_set = self.__image_sets[index]
-        return image_set
+        image_1 = image_set[0]
+        image_2 = image_set[1]
+        time_skip = image_set[2]
+
+        for transform in self.__transformations:
+            image_1 = transform(image_1)
+            image_2 = transform(image_2)
+
+        return (image_1, image_2, time_skip)
