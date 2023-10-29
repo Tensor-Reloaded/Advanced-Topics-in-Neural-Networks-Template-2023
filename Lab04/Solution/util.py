@@ -24,8 +24,8 @@ def run(
             validation_loss_mean = (
                 reduce(lambda x, y: x + y, validation_losses) / len(validation_losses)
             ).item()
-            training_loss_means.append(training_loss_mean)
-            validation_loss_means.append(validation_loss_mean)
+            training_loss_means.append((epoch, training_loss_mean))
+            validation_loss_means.append((epoch, validation_loss_mean))
 
             print(
                 f"Training epoch {epoch + 1}: training loss mean = {training_loss_mean}, validation loss mean = {validation_loss_mean}",
