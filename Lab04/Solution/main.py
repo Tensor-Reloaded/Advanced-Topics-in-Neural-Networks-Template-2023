@@ -3,10 +3,13 @@ from dataset_load_logic import load_data
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 from neural_network import SatelliteConv
+from torch.utils.data import Subset
+from torchvision import transforms
 from torch import nn
 from torch import optim
-from torch.utils.data import Subset
-from tqdm import tqdm
+from datasets import same_transform
+from trainer import run
+import seaborn as sns
 
 
 def display_images(dataset: ImageComparisonDatasetWrapper):
@@ -18,33 +21,31 @@ def display_images(dataset: ImageComparisonDatasetWrapper):
     plt.show()
 
 
-def test(model, dataset: Subset, loss_fn, optimizer):
-    num_epochs = 100
+def visualize(dataset: Subset, model: SatelliteConv):
+    in_img, out_img, days_between = dataset[len(dataset) // 2]
 
-    for epoch in range(num_epochs):
-        model.train()
-        total_loss = 0
-        pbar = tqdm(total=len(dataset), desc="Training", dynamic_ncols=True)
+    plt.imshow(in_img.permute(1, 2, 0))
+    plt.show()
+    plt.imshow(out_img.permute(1, 2, 0))
+    plt.show()
 
-        for in_img, out_img, nr_days in dataset:
-            optimizer.zero_grad()
-            outputs = model((in_img, nr_days))
-            loss = loss_fn(outputs, out_img)
-            loss.backward()
-            optimizer.step()
-            total_loss += loss.item()
+    plt.imshow(model((in_img, days_between)).permute(1, 2, 0).detach().numpy())
+    plt.show()
 
-            pbar.set_postfix({'Loss': loss.item()})
-            pbar.update()
 
-        pbar.close()
-        print(f'Epoch {epoch + 1}/{num_epochs}, Loss: {total_loss / len(dataset)}\n')
+def plot_evolution(evolution: list, title: str):
+    sns.lineplot(data=evolution).set_title(title)
+    plt.show()
 
 
 if __name__ == "__main__":
     SatelliteImagesDataset = materialize_wrapper(load_data)
     satellite_dataset = SatelliteImagesDataset(
-        r"D:\personal\CARN\Advanced-Topics-in-Neural-Networks-2023\Lab04\Homework Dataset", None,
+        r"D:\personal\CARN\Advanced-Topics-in-Neural-Networks-2023\Lab04\Homework Dataset",
+        [same_transform(transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 0.5))),
+         same_transform(transforms.RandomErasing(p=0.2, scale=(0.01, 0.01), value=1)),
+         same_transform(transforms.RandomHorizontalFlip(p=0.5)),
+         same_transform(transforms.Resize((64, 64)))],
         random_rotation=(0, 20)
     )
 
@@ -56,8 +57,13 @@ if __name__ == "__main__":
     val_loader = DataLoader(val_subset, batch_size=32, shuffle=False)
     test_loader = DataLoader(test_subset, batch_size=32, shuffle=False)
 
-    satellite_model = SatelliteConv(image_dims=(3, 128, 128))
+    satellite_model = SatelliteConv(image_dims=(3, 64, 64))
     model_loss_fn = nn.MSELoss()
     model_optimizer = optim.Adam(satellite_model.parameters(), lr=0.001)
 
-    test(satellite_model, train_subset, model_loss_fn, model_optimizer)
+    visualize(test_subset, satellite_model)
+    train_evo, val_evo = run(2, satellite_model, train_subset, val_subset, model_loss_fn, model_optimizer)
+    visualize(test_subset, satellite_model)
+
+    plot_evolution(train_evo, "Train evolution")
+    plot_evolution(val_evo, "Val evolution")

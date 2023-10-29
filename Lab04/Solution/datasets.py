@@ -23,31 +23,6 @@ COMMON_TRANSFORMS = {
 }
 
 
-class ImageCache:
-    LIMIT = (2 ** 30) / ((128 * 128 * 3) * 8)
-
-    def __init__(self):
-        self.__container: dict[str, Tensor] = {}
-        self.__inserted_images: list[str] = []
-
-    def __contains__(self, img_path: str) -> bool:
-        return img_path in self.__container
-
-    def __getitem__(self, img_path: str) -> Tensor:
-        assert img_path in self
-        return self.__container[img_path]
-
-    def __setitem__(self, img_path: str, img: Tensor):
-        assert img_path not in self
-
-        if len(self.__inserted_images) == self.LIMIT:
-            del self.__container[self.__inserted_images[0]]
-            self.__inserted_images.pop(0)
-
-        self.__container[img_path] = img
-        self.__inserted_images.append(img_path)
-
-
 class ImageComparisonDatasetWrapper(Dataset):
     wrapped: bool = False
     load_data_fn: Callable
@@ -71,7 +46,19 @@ class ImageComparisonDatasetWrapper(Dataset):
         if transforms_to_apply:
             self.transforms += transforms_to_apply
 
-        self.img_cache = ImageCache()
+        self.img_cache = self.__make_cache(self.images_data_paths)
+
+    @staticmethod
+    def __make_cache(images_data_paths: list[str, str, int]) -> dict[str, Tensor]:
+        result = dict[str, Tensor]()
+
+        for lh_img, rh_img, days_between in images_data_paths:
+            if lh_img not in result:
+                result[lh_img] = ImageComparisonDatasetWrapper.load_image(lh_img)
+            if rh_img not in result:
+                result[rh_img] = ImageComparisonDatasetWrapper.load_image(rh_img)
+
+        return result
 
     def __len__(self) -> int:
         return len(self.images_data_paths)
@@ -85,13 +72,9 @@ class ImageComparisonDatasetWrapper(Dataset):
 
         return lh_img, rh_img, days_between
 
-    def load_image(self, img_path: str) -> Tensor:
-        if img_path in self.img_cache:
-            return self.img_cache[img_path]
-
-        img = ToTensor()(Image.open(img_path))
-        self.img_cache[img_path] = img
-        return img
+    @staticmethod
+    def load_image(img_path: str) -> Tensor:
+        return ToTensor()(Image.open(img_path))
 
     def split(self, *percentages) -> list[Subset]:
         assert abs(sum(percentages) - 1) < 0.001
