@@ -14,7 +14,7 @@ class RandomRotation:
 
 class Flatten:
     def __call__(self, image: torch.Tensor) -> torch.Tensor:
-        return image.view(-1)
+        return image.reshape(-1)
 
 class ToFloat:
     def __call__(self, image: torch.Tensor) -> torch.Tensor:
