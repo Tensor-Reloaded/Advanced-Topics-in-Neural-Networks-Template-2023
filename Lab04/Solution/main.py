@@ -3,10 +3,11 @@
 import torch
 import torchvision
 import torch.utils.data as torch_data
-from util import run, test, train, val
-from nn import NeuralNetwork
-from dataset import Dataset
 from transforms import Flatten, ToFloat
+from dataset import Dataset
+from nn import NeuralNetwork
+from util import run, test, train, val
+from graph import graph
 
 
 def main():
@@ -51,6 +52,9 @@ def main():
         train=train_fn, val=val_fn, epochs=30
     )
     test(model=model, test_dataloader=test_dataloader)
+
+    graph("Training loss means", training_loss_means)
+    graph("Validation loss means", validation_loss_means)
 
 
 
