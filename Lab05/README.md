@@ -23,3 +23,6 @@ References:
    - CIFAR-10 training example: https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html (you must not use convolutions in your homework!)
  - TorchVision transforms getting started: https://pytorch.org/vision/main/auto_examples/transforms/plot_transforms_getting_started.html
  - TorchVision examples: https://pytorch.org/vision/stable/auto_examples/transforms/plot_transforms_illustrations.html#sphx-glr-auto-examples-transforms-plot-transforms-illustrations-py
+ - Optimizers:
+   - Optimizers, Learning Rate Schedulers \& other advanced techniques: https://pytorch.org/docs/stable/optim.html
+   - SAM implementation: https://github.com/davda54/sam
