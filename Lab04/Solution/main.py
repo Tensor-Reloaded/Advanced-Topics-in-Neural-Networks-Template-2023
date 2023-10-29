@@ -62,7 +62,7 @@ if __name__ == "__main__":
     model_optimizer = optim.Adam(satellite_model.parameters(), lr=0.001)
 
     visualize(test_subset, satellite_model)
-    train_evo, val_evo = run(2, satellite_model, train_subset, val_subset, model_loss_fn, model_optimizer)
+    train_evo, val_evo = run(6, satellite_model, train_subset, val_subset, model_loss_fn, model_optimizer)
     visualize(test_subset, satellite_model)
 
     plot_evolution(train_evo, "Train evolution")
