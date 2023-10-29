@@ -16,7 +16,6 @@ class Dataset(torch_data.Dataset):
     __device: str
     __transformations: t.List
     __image_sets: t.List[ImageSet]
-    __size: int
 
     def __init__(
         self,
@@ -30,8 +29,6 @@ class Dataset(torch_data.Dataset):
 
         self.__image_sets = self.__load(self.__root)
         self.__image_sets = self.__load_on_device(self.__image_sets, self.__device)
-
-        self.__size = self.__compute_size(self.__image_sets)
 
     def __load(self, path: str) -> t.List[ImageSet]:
         results: t.List[ImageSet] = []
@@ -102,30 +99,8 @@ class Dataset(torch_data.Dataset):
 
         return image_sets
 
-    def __apply_transformations(
-        self,
-        image_sets: t.List[ImageSet],
-        transformations: t.List[t.Callable[[torch.Tensor], torch.Tensor]],
-    ) -> t.List[ImageSet]:
-        for index in range(0, len(image_sets)):
-            image_set = image_sets[index]
-            image_1 = image_set[0]
-            image_2 = image_set[1]
-            time_skip = image_set[2]
-
-            for transform in transformations:
-                image_1 = transform(image_1)
-                image_2 = transform(image_2)
-
-            image_sets[index] = (image_1, image_2, time_skip)
-
-        return image_sets
-
-    def __compute_size(self, image_sets: t.List[ImageSet]) -> int:
-        return len(image_sets)
-
     def __len__(self) -> int:
-        return self.__size
+        return len(self.__image_sets)
 
     def __getitem__(self, index) -> ImageSet:
         image_set = self.__image_sets[index]
@@ -138,3 +113,11 @@ class Dataset(torch_data.Dataset):
             image_2 = transform(image_2)
 
         return (image_1, image_2, time_skip)
+
+    def get_image_size(self):
+        image_sample = self.__image_sets[0][0] 
+
+        for transform in self.__transformations:
+            image_sample = transform(image_sample)
+
+        return image_sample.shape[0]

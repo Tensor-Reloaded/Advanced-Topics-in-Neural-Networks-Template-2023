@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 
 import typing as t
-import torch
+from functools import reduce
 from nn import NeuralNetwork
 from dataset import Dataset
-from transforms import Flatten, RandomRotation, ToFloat
+from transforms import Flatten, ToFloat
+import torch
 import torchvision
 import torch.utils.data as torch_data
 
 
 def main():
     transformations = [
-        # RandomRotation(min_angle=-15, max_angle=15),
-        # torchvision.transforms.RandomResizedCrop(size=(64, 64), antialias=True),
+        torchvision.transforms.RandomRotation(degrees=90),
+        torchvision.transforms.RandomInvert(p=0.5),
+        torchvision.transforms.GaussianBlur(kernel_size=15),
         torchvision.transforms.Grayscale(),
         Flatten(),
         ToFloat(),
@@ -20,10 +22,6 @@ def main():
     dataset = Dataset(
         root="../Homework Dataset", transformations=transformations, device="cpu"
     )
-    model = NeuralNetwork(image_size=16384)
-    optimiser = torch.optim.SGD(model.parameters(), lr=0.01)
-    loss_function = torch.nn.MSELoss()
-
     train_dataset, validation_dataset, test_dataset = torch.utils.data.random_split(
         dataset, [0.7, 0.15, 0.15]
     )
@@ -32,6 +30,10 @@ def main():
         validation_dataset, batch_size=64, shuffle=True
     )
     test_dataloader = torch_data.DataLoader(test_dataset, batch_size=64, shuffle=True)
+
+    model = NeuralNetwork(image_size=dataset.get_image_size())
+    optimiser = torch.optim.SGD(model.parameters(), lr=0.01)
+    loss_function = torch.nn.MSELoss()
 
     train_fn = train(
         model=model,
@@ -46,40 +48,45 @@ def main():
     )
 
     test(model=model, test_dataloader=test_dataloader)
-    run(train=train_fn, val=val_fn, epochs=30)
+    training_loss_means, validation_loss_means = run(
+        train=train_fn, val=val_fn, epochs=30
+    )
     test(model=model, test_dataloader=test_dataloader)
 
 
 def run(
-    train,
-    val,
+    train: t.Callable[[], t.List[torch.Tensor]],
+    val: t.Callable[[], t.List[torch.Tensor]],
     epochs: int,
-):
-    current_loss_mean: t.Union[None, torch.Tensor] = None
-    previous_loss_mean: t.Union[None, torch.Tensor] = None
+) -> t.Tuple[t.List[t.Tuple[int, float]], t.List[t.Tuple[int, float]]]:
+    training_loss_means: t.List[t.Tuple[int, float]] = []
+    validation_loss_means: t.List[t.Tuple[int, float]] = []
 
     try:
         for epoch in range(0, epochs):
-            train()
-            current_loss_mean = val(current_loss_mean, epoch)
+            training_losses = train()
+            validation_losses = val()
+
+            training_loss_mean = (
+                reduce(lambda x, y: x + y, training_losses) / len(training_losses)
+            ).item()
+            validation_loss_mean = (
+                reduce(lambda x, y: x + y, validation_losses) / len(validation_losses)
+            ).item()
+            training_loss_means.append(training_loss_mean)
+            validation_loss_means.append(validation_loss_mean)
 
             print(
-                f"Training epoch {epoch + 1}: previous mean loss = {previous_loss_mean}, current mean loss = {current_loss_mean}",
+                f"Training epoch {epoch + 1}: training loss mean = {training_loss_mean}, validation loss mean = {validation_loss_mean}",
                 end="\r",
             )
-
-            # if (
-            #     previous_loss_mean is not None
-            #     and current_loss_mean > previous_loss_mean
-            # ):
-            #     raise StopIteration
-
-            previous_loss_mean = current_loss_mean
 
     except StopIteration:
         pass
 
     print()
+
+    return training_loss_means, validation_loss_means
 
 
 def train(
@@ -88,8 +95,9 @@ def train(
     loss_function,
     train_dataloader,
 ):
-    def fn():
+    def fn() -> t.List[torch.Tensor]:
         model.train()
+        training_losses: t.List[torch.Tensor] = []
 
         for training_image_set in train_dataloader:
             optimiser.zero_grad()
@@ -101,6 +109,10 @@ def train(
 
             optimiser.step()
 
+            training_losses.append(loss)
+
+        return training_losses
+
     return fn
 
 
@@ -109,24 +121,17 @@ def val(
     loss_function,
     validation_dataloader,
 ):
-    def fn(
-        current_loss_mean,
-        epoch,
-    ):
+    def fn() -> t.List[torch.Tensor]:
         model.eval()
+        validation_losses: t.List[torch.Tensor] = []
 
         for validation_image_set in validation_dataloader:
             y_hat = model(validation_image_set[0])
             loss = loss_function(y_hat, validation_image_set[1])
 
-            if current_loss_mean == None:
-                current_loss_mean = loss.mean().item()
-            else:
-                current_loss_mean = (epoch * current_loss_mean + loss.mean().item()) / (
-                    epoch + 1
-                )
+            validation_losses.append(loss)
 
-        return current_loss_mean
+        return validation_losses
 
     return fn
 
