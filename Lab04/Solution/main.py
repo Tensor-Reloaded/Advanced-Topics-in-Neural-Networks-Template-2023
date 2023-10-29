@@ -12,9 +12,8 @@ from graph import graph
 
 def main():
     transformations = [
-        torchvision.transforms.RandomRotation(degrees=90),
-        torchvision.transforms.RandomInvert(p=0.5),
-        torchvision.transforms.GaussianBlur(kernel_size=15),
+        torchvision.transforms.RandomInvert(p=0.2),
+        torchvision.transforms.GaussianBlur(kernel_size=7),
         torchvision.transforms.Grayscale(),
         Flatten(),
         ToFloat(),
@@ -32,7 +31,7 @@ def main():
     test_dataloader = torch_data.DataLoader(test_dataset, batch_size=64, shuffle=True)
 
     model = NeuralNetwork(image_size=dataset.get_image_size())
-    optimiser = torch.optim.SGD(model.parameters(), lr=0.01)
+    optimiser = torch.optim.SGD(model.parameters(), lr=0.03)
     loss_function = torch.nn.MSELoss()
 
     train_fn = train(
@@ -49,13 +48,12 @@ def main():
 
     test(model=model, test_dataloader=test_dataloader)
     training_loss_means, validation_loss_means = run(
-        train=train_fn, val=val_fn, epochs=30
+        train=train_fn, val=val_fn, epochs=20
     )
     test(model=model, test_dataloader=test_dataloader)
 
     graph("Training loss means", training_loss_means)
     graph("Validation loss means", validation_loss_means)
-
 
 
 if __name__ == "__main__":
