@@ -25,10 +25,28 @@ class NeuralNetwork(nn.Module):
         self.layer_2_weights = nn.Linear(2048, 1024).to(
             device=self.__device, non_blocking=self.__device == "cuda"
         )
-        self.layer_3_weights = nn.Linear(1024, 2048).to(
+        self.layer_3_weights = nn.Linear(1024, 512).to(
             device=self.__device, non_blocking=self.__device == "cuda"
         )
-        self.layer_4_weights = nn.Linear(2048, image_size).to(
+        self.layer_4_weights = nn.Linear(512, 256).to(
+            device=self.__device, non_blocking=self.__device == "cuda"
+        )
+        self.layer_5_weights = nn.Linear(256, 128).to(
+            device=self.__device, non_blocking=self.__device == "cuda"
+        )
+        self.layer_6_weights = nn.Linear(128, 256).to(
+            device=self.__device, non_blocking=self.__device == "cuda"
+        )
+        self.layer_7_weights = nn.Linear(256, 512).to(
+            device=self.__device, non_blocking=self.__device == "cuda"
+        )
+        self.layer_8_weights = nn.Linear(512, 1024).to(
+            device=self.__device, non_blocking=self.__device == "cuda"
+        )
+        self.layer_9_weights = nn.Linear(1024, 2048).to(
+            device=self.__device, non_blocking=self.__device == "cuda"
+        )
+        self.layer_10_weights = nn.Linear(2048, image_size).to(
             device=self.__device, non_blocking=self.__device == "cuda"
         )
 
@@ -47,6 +65,12 @@ class NeuralNetwork(nn.Module):
         y_hat = self.__activation_function(self.layer_1_weights(X))
         y_hat = self.__activation_function(self.layer_2_weights(y_hat))
         y_hat = self.__activation_function(self.layer_3_weights(y_hat))
-        y_hat = self.__output_layer_activation_function(self.layer_4_weights(y_hat))
+        y_hat = self.__activation_function(self.layer_4_weights(y_hat))
+        y_hat = self.__activation_function(self.layer_5_weights(y_hat))
+        y_hat = self.__activation_function(self.layer_6_weights(y_hat))
+        y_hat = self.__activation_function(self.layer_7_weights(y_hat))
+        y_hat = self.__activation_function(self.layer_8_weights(y_hat))
+        y_hat = self.__activation_function(self.layer_9_weights(y_hat))
+        y_hat = self.__output_layer_activation_function(self.layer_10_weights(y_hat))
 
         return y_hat
