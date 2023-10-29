@@ -161,3 +161,7 @@ cython_debug/
 #.idea/
 
 .DS_Store
+
+Lab02/data
+Lab03/data
+Lab04/Solution/runs
