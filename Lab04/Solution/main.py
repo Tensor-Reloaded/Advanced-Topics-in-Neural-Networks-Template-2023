@@ -21,7 +21,7 @@ def main():
         root="../Homework Dataset", transformations=transformations, device="cpu"
     )
     model = NeuralNetwork(image_size=16384)
-    optimiser = torch.optim.SGD(model.parameters(), lr=0.2)
+    optimiser = torch.optim.SGD(model.parameters(), lr=0.01)
     loss_function = torch.nn.MSELoss()
 
     train_dataset, validation_dataset, test_dataset = torch.utils.data.random_split(
@@ -46,7 +46,7 @@ def main():
     )
 
     test(model=model, test_dataloader=test_dataloader)
-    run(train=train_fn, val=val_fn, epochs=20)
+    run(train=train_fn, val=val_fn, epochs=30)
     test(model=model, test_dataloader=test_dataloader)
 
 
@@ -96,6 +96,9 @@ def train(
             y_hat = model(training_image_set[0])
             loss = loss_function(y_hat, training_image_set[1])
             loss.backward()
+
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+
             optimiser.step()
 
     return fn
