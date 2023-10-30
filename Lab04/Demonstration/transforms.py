@@ -4,6 +4,14 @@ import torch.nn.functional as F
 
 __all__ = ['OneHot', 'WineFeatureGaussianNoise']
 
+class Normalize:
+    def __init__(self, classes):
+        self.classes = torch.tensor(classes, dtype=torch.long)
+
+    def __call__(self, label):
+        return F.one_hot(torch.where(self.classes == label)[0], len(self.classes)).squeeze(0).float(
+
+
 class OneHot:
     def __init__(self, classes):
         self.classes = torch.tensor(classes, dtype=torch.long)
