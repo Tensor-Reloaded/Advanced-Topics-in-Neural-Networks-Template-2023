@@ -10,7 +10,7 @@ from typing import Callable
 class Network:
     LEARNING_RATE = 0.5
     BATCH_SIZE = 30
-    ITERATIONS = 10
+    ITERATIONS = 20
 
     def __init__(self, dataset_file_path: str):
         self.training_set = None
