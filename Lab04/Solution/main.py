@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import torch.cuda
 import os
 import matplotlib.pyplot as plt
+from torch.utils.data import DataLoader
 from torchvision.transforms.v2 import RandomRotation
 
 from Solution.ImageDataset import ImageDataset
@@ -20,6 +21,10 @@ if __name__ == '__main__':
     dataset_folder = os.path.abspath("../HomeWork Dataset")
     transforms = [RandomRotation(degrees=360)]
     img_dataset = ImageDataset(dataset_folder, r"./homework_dataset.csv", get_default_device(), transforms)
+    train_dataset, validation_dataset, test_dataset = torch.utils.data.random_split(img_dataset, [0.7, 0.15, 0.15])
+    train_loader = DataLoader(train_dataset, batch_size=4, shuffle=True)
+    validation_loader = DataLoader(validation_dataset, batch_size=4, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=4, shuffle=False)
     print(len(img_dataset))
     print(img_dataset[0][0].shape)
     print(img_dataset[0][1])
