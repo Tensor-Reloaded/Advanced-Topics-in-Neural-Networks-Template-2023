@@ -9,9 +9,10 @@ __all__ = ['ImageDataset']
 
 # Custom dataset class
 class ImageDataset(Dataset):
-    def __init__(self, dataset_file, split_indices=None, feature_transforms=None, label_transforms=None):
+    def __init__(self, dataset_file, split_indices=None, feature_transforms=None, label_transforms=None, combined_random_transforms=None):
         self.feature_transforms = feature_transforms if feature_transforms is not None else []
         self.label_transforms = label_transforms if feature_transforms is not None else []
+        self.combined_random_transforms = combined_random_transforms if combined_random_transforms is not None else []
 
         df = pd.read_csv(dataset_file)
         if split_indices is None:
@@ -34,10 +35,11 @@ class ImageDataset(Dataset):
             features = transform(features)
         for transform in self.label_transforms:
             labels = transform(labels)
+        for transform in self.combined_random_transforms:
+            features, labels = transform(features, labels)
 
-        # make an array out of features
-        features = features.view(-1)
-        labels = labels.view(-1)
+        features = features.reshape(-1)
+        labels = labels.reshape(-1)
 
         # Normalize features
         features = torch.tensor(features, dtype=torch.float32) / 255

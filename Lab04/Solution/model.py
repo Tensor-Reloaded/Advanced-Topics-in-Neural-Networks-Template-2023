@@ -18,4 +18,4 @@ class ImageMLP(nn.Module):
         x = torch.relu(self.fc2(x))
         x = self.fc3(x)
 
-        return self.output_activation(x)
+        return x

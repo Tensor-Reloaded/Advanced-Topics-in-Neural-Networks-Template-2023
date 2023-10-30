@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -7,10 +8,16 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transform import *
 
-feature_transforms = [Crop(100), Resize(224), HorizontalFlip, Rotate(15)]
-label_transforms = [Crop(100), Resize(224), HorizontalFlip, Rotate(15)]
+torch.device("cpu")
 
-total_dataset = ImageDataset(dataset_file="./data/images.csv")
+feature_transforms = [Resize(100)]
+label_transforms = [Resize(100)]
+combined_random_transforms = [HorizontalFlip(0.5), RandomRotate()]
+
+total_dataset = ImageDataset(dataset_file="./data/images.csv",
+                             feature_transforms=feature_transforms,
+                             label_transforms=label_transforms,
+                             combined_random_transforms=combined_random_transforms)
 
 print("Number of samples", len(total_dataset))
 print("Number of features", len(total_dataset.features.shape))
@@ -26,11 +33,15 @@ start_image, time_skip, end_image = next(iter(train_loader))
 features_size = start_image.size(1) + 1
 labels_size = end_image.size(1)
 
-model = ImageMLP(input_dim=features_size, output_dim=labels_size, output_activation=nn.Softmax(dim=1))
-criterion = nn.BCELoss()
+model = ImageMLP(input_dim=features_size, output_dim=labels_size)
+criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-num_epochs = 100
+epoch_array = []
+valid_loss_array = []
+train_loss_array = []
+
+num_epochs = 50
 for epoch in range(num_epochs):
     model.train()
     total_loss = 0
@@ -46,6 +57,7 @@ for epoch in range(num_epochs):
 
         pbar.set_postfix({'Loss': loss.item()})
         pbar.update()
+    train_loss_array.append(total_loss / len(train_loader))
 
     model.eval()
     total_loss = 0
@@ -60,19 +72,48 @@ for epoch in range(num_epochs):
         pbar.update()
 
     print("Epoch: {}, Validation Loss: {}".format(epoch, total_loss / len(valid_loader)))
+    epoch_array.append(epoch)
+    valid_loss_array.append(total_loss / len(valid_loader))
 
 # Test
 model.eval()
-correct = 0
-total = 0
+mse = 0
+
+
+def mean_squared_error(target, predicted):
+    return torch.mean((predicted - target) ** 2)
+
+
 with torch.no_grad():
     for features, time_skip, labels in test_loader:
         full_features = torch.cat((features, time_skip.unsqueeze(1)), dim=1)
         outputs = model(full_features)
-        total += labels.size(0)
-        correct += (outputs.argmax(dim=1) == labels.argmax(dim=1)).sum().item()
+
+        # Calculate the MSE between predicted and target images
+        mse += mean_squared_error(labels, outputs)
+
+# Calculate the average MSE across all test samples
+mse /= len(test_loader)
+print(f'Mean Squared Error: {mse}')
+#####################################################
+# Mean Squared Error (50 epochs): 4.7666219415987143e-07
+#####################################################
+
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
+
+plt.plot(epoch_array, train_loss_array)
+
+plt.xlabel("Epoch")
+plt.ylabel("Training Loss")
+plt.title("Training Loss vs Epoch")
+plt.show()
 
 
-print(f'Test Accuracy: {100 * correct / total}%')
+plt.plot(epoch_array, valid_loss_array)
 
-
+plt.xlabel("Epoch")
+plt.ylabel("Validation Loss")
+plt.title("Validation Loss vs Epoch")
+plt.show()
