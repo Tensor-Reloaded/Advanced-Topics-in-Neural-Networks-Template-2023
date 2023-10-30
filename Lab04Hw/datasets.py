@@ -28,13 +28,8 @@ class SubfolderDataset(Dataset):
     def __init__(self, folder_path, transform=None):
         self.folder_path = folder_path
 
-        if transform is not None:
-            self.transform = transforms.Compose([
-                transforms.ToTensor(), 
-                transform
-            ])
-        else:
-            self.transform = transforms.ToTensor()
+        self.cache = {}
+        self.transform=transform
 
         image_files = sorted([f for f in os.listdir(folder_path) if f.endswith('.tif')])
         self.image_pairs = [(image_files[i], image_files[j]) 
@@ -45,21 +40,25 @@ class SubfolderDataset(Dataset):
         return len(self.image_pairs)
 
     def __getitem__(self, idx):
+
+        if idx in self.cache:
+            return self.cache[idx]
+
         img1_path, img2_path = self.image_pairs[idx]
         img1 = Image.open(os.path.join(self.folder_path, img1_path))
         img2 = Image.open(os.path.join(self.folder_path, img2_path))
 
-        angle = random.uniform(-30, 30)
-
-        # Apply the same rotation to both images
-        img1 = F.rotate(img1, angle)
-        img2 = F.rotate(img2, angle)
-
-        img1 = self.transform(img1)
-        img2 = self.transform(img2)
+        if(self.transform):
+            seed = torch.random.initial_seed()
+            torch.manual_seed(seed)
+            img1 = self.transform(img1)
+            torch.manual_seed(seed)
+            img2 = self.transform(img2)
 
         months_between = self.__months_between(img1_path, img2_path)
         months_between = torch.tensor([months_between], dtype=torch.float32)
+
+        self.cache[idx] = (img1, img2, months_between)
         return img1, img2, months_between
 
     def __months_between(self, path1, path2):

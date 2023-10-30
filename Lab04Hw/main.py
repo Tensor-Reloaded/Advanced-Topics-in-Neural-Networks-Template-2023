@@ -10,9 +10,12 @@ from model import Model
 
 transform = transforms.Compose([
     torchvision.transforms.Grayscale(),
+    torchvision.transforms.RandomHorizontalFlip(),
+    torchvision.transforms.RandomRotation(30),
+    torchvision.transforms.ToTensor(),
+    torchvision.transforms.Normalize((0.5,), (0.5,)),
     torchvision.transforms.Lambda(lambda x: x.view(-1)) # flatten
 ])
-
 
 dataset = MetaDataset('C:/School/Sem1/CARN/Advanced-Topics-in-Neural-Networks-Template-2023/Lab04/Homework Dataset/', transform)
 
@@ -28,17 +31,12 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 validation_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-dataiter = iter(train_loader)
-first_item = next(dataiter)
-img1, img2, months_between = first_item
-
-print(img1.size(), img2.size(), months_between.size())
-
-model = Model(image_size=16384, hidden_size=128)
+model = Model(image_size=16384, hidden_size=128, device=device)
 
 criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters())
 
-n_epochs = 10 
+n_epochs = 25 
 model.run(train_loader, validation_loader, criterion, optimizer, n_epochs)
