@@ -2,8 +2,8 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 import os
-import cv2 as cv2
 import torchvision.transforms.v2 as transforms
+from PIL import Image
 
 __all__ = ['MosaicDataset']
 
@@ -16,7 +16,8 @@ def extract_year_month(text: str) -> tuple[int, int]:
 # For each image ,we will associate all the images that have a positive time skip between them,
 # saved as paths
 class MosaicDataset(Dataset):
-    def __init__(self, dataset_folder: str, use_random_rotation: bool = True, transformers=None):
+    def __init__(self, device: torch.device, dataset_folder: str, use_random_rotation: bool = True, transformers=None):
+        self.device = device
         self.use_random_rotation = use_random_rotation
         self.transformers = transformers if transformers is not None else []
 
@@ -54,8 +55,12 @@ class MosaicDataset(Dataset):
         path_image1, months_between = self.features[idx]
         path_image2 = self.labels[idx]
 
-        image1 = torch.Tensor(cv2.imread(path_image1))
-        image2 = torch.Tensor(cv2.imread(path_image2))
+        image1 = Image.open(path_image1)
+        image2 = Image.open(path_image2)
+
+        for transform in self.transformers:
+            image1 = transform(image1)
+            image2 = transform(image2)
 
         if self.use_random_rotation:
             # TODO:Some rotations lead to changing the colors of the images...Could this lead to problems?
@@ -71,21 +76,20 @@ class MosaicDataset(Dataset):
             image1 = augmentation(image1)
             image2 = augmentation(image2)
 
-        for transform in self.transformers:
-            image1 = transform(image1)
-            image2 = transform(image2)
+        # Convert to tensor,if not already(due to Grayscale i moved this after transforms)
+        non_blocking = (self.device.type == 'cuda')
+        image1 = image1.clone().detach().to(self.device, non_blocking=non_blocking)
+        image2 = image2.clone().detach().to(self.device, non_blocking=non_blocking)
 
-        return image1, image2, months_between
+        # Standardize
+        image1 /= 255
+        image2 /= 255
+
+        return torch.flatten(image1), torch.flatten(image2), months_between
 
 
 if __name__ == '__main__':
-    dataset = MosaicDataset(dataset_folder="Homework Dataset", use_random_rotation=True)
+    transformer = [transforms.Compose([transforms.Grayscale(), transforms.ToTensor()])]
+    dataset = MosaicDataset(dataset_folder="Homework Dataset", use_random_rotation=True, transformers=transformer)
     for i in range(1000, 1001):
-        image1, image2, months_between = dataset.__getitem__(i)
-
-        cv2.imshow("Im1", np.array(image1, dtype=np.uint8))
-        cv2.imshow("Im2", np.array(image2, dtype=np.uint8))
-        # print("Mb: ", months_between)
-
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        image01, image02, months = dataset.__getitem__(i)
