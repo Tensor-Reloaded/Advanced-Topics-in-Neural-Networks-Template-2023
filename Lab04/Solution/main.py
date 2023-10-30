@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from Lab04.Homework.models import ImagePredictionModel
-from Lab04.Homework.transforms import RotateImageWrapper, ColorJitterWrapper
+from Lab04.Solution.models import ImagePredictionModel
+from Lab04.Solution.transforms import RotateImageWrapper, ColorJitterWrapper
 from datasets import *
 from torch.utils.data import DataLoader
 from tqdm import tqdm

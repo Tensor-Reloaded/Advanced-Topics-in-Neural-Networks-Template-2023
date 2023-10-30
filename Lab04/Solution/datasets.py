@@ -42,7 +42,7 @@ class ImageDataset(Dataset):
     def __len__(self):
         return len(self.tuples)
 
-    # @lru_cache(maxsize=10_000)
+    @lru_cache(maxsize=10_000)
     def __getitem__(self, idx):
         input_file, output_file, delta_time = self.tuples[idx]
         input_img = torch.from_numpy(cv.imread(input_file))
