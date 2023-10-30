@@ -58,7 +58,7 @@ class NeuralNetwork(nn.Module):
         )
 
     def forward(self, X: torch.Tensor) -> torch.Tensor:
-        # FIXME: Before call, tensor is of shape [59, 4096]. Here it is [4096]...
+        # FIXME: Before call, tensor is of shape [batch_size, image_size]. Here it is [image_size]...
         if len(X.shape) == 1:
             X = X.view(1, -1)
 
