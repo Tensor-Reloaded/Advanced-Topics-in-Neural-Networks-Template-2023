@@ -78,24 +78,6 @@ def run(n, model, train_loader, validation_loader, device=None):
 
 
 if __name__ == '__main__':
-
-    # data_reader = DataReader(folder_path, 6)
-    # data_reader.read_and_convert_images()
-    # data_reader.create_dataset()
-    #
-    # # print(type(data_reader.dataset[0][0]),type(data_reader.dataset[0][1]),type(data_reader.dataset[0][2]))
-    #
-    #
-    # #Image.fromarray(v2.Grayscale(data_reader.inputs[0]).numpy()).show()
-    #
-    #data_transforms = [v2.Grayscale(), transforms.ToTensor()]
-    # img = data_reader.dataset[0][0]
-    # for transform in data_transforms:
-    #     img = transform(img)
-    #
-    # print(img.flatten())
-    # print(len(data_reader.dataset))
-
     folder_path = "Homework Dataset"
 
     data_transforms = [Padding(), RandomGaussianBlur(), RandomRotation(), v2.Grayscale(), transforms.ToTensor()]
@@ -110,34 +92,7 @@ if __name__ == '__main__':
     test_loader = DataLoader(test_dataset, batch_size=10, shuffle=False)
 
     model = GlobalImageMLP(input_dim, output_dim)
-    # criterion = nn.BCELoss()
-    # optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     run(10, model, train_loader, validation_loader)
-
-
-    # model.train()
-    # for features, labels, time_skip in validation_loader:
-    #     optimizer.zero_grad()
-    #     outputs = model(features)
-    #     loss = criterion(outputs, labels)
-    #     loss.backward()
-    #     optimizer.step()
-    #     print(loss.item())
-
-
-    #print(validate_dataset.__len__())
-
-
-
-
-    # total_dataset.dataset[0][0].show()
-    # total_dataset.dataset[0][1].show()
-
-    # inp, out = total_dataset.__getitem__(0)
-    # inp.show()
-    # out.show()
-    # print(out.shape)
-
 
 
