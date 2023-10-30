@@ -4,13 +4,12 @@ import matplotlib.pyplot as plt
 import time
 
 class Model(nn.Module):
-    def __init__(self, image_size, hidden_size, device):
+    def __init__(self, image_input_size, months_between_input_size, hidden_size, device):
         super(Model, self).__init__()
         self.device = device
-        months_input_size = 1
-        self.image_layer = nn.Linear(image_size, hidden_size).to(device)
-        self.months_layer = nn.Linear(months_input_size, hidden_size).to(device)
-        self.output_layer = nn.Linear(hidden_size * 2, image_size).to(device)
+        self.image_layer = nn.Linear(image_input_size, hidden_size).to(device)
+        self.months_layer = nn.Linear(months_between_input_size, hidden_size).to(device)
+        self.output_layer = nn.Linear(hidden_size * 2, image_input_size).to(device)
         self.activation = nn.LeakyReLU(negative_slope=0.01)
 
     def forward(self, image_input, months_input):
@@ -23,7 +22,7 @@ class Model(nn.Module):
         output = self.output_layer(combined_output)
         return output
 
-    def run(self, train_loader, val_loader, criterion, optimizer, n_epochs):
+    def run(self, train_loader, evaluation_loader, criterion, optimizer, n_epochs):
 
         train_losses = []
         val_losses = []
@@ -33,7 +32,7 @@ class Model(nn.Module):
             epoch_start_time = time.time()
 
             train_loss = self.train_model(train_loader, criterion, optimizer)
-            val_loss = self.validate_model(val_loader, criterion)
+            val_loss = self.evaluate_model(evaluation_loader, criterion)
 
             train_losses.append(train_loss)
             val_losses.append(val_loss)
@@ -73,11 +72,11 @@ class Model(nn.Module):
         epoch_loss = running_loss / len(train_loader.dataset)
         return epoch_loss
 
-    def validate_model(self, validation_loader, criterion):
+    def evaluate_model(self, evaluation_loader, criterion):
         self.eval()
         running_loss = 0.0
         with torch.no_grad():
-            for images_start, images_end, months_between in validation_loader:
+            for images_start, images_end, months_between in evaluation_loader:
 
                 images_start = images_start.to(self.device)
                 images_end = images_end.to(self.device)
@@ -86,5 +85,5 @@ class Model(nn.Module):
                 outputs = self(images_start, months_between)
                 loss = criterion(outputs, images_end)
                 running_loss += loss.item() * images_start.size(0)
-        epoch_loss = running_loss / len(validation_loader.dataset)
+        epoch_loss = running_loss / len(evaluation_loader.dataset)
         return epoch_loss

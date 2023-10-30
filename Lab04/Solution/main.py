@@ -33,10 +33,18 @@ test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-model = Model(image_size=16384, hidden_size=128, device=device)
+model = Model(
+    image_input_size=16384, 
+    months_between_input_size=1, 
+    hidden_size=128, 
+    device=device
+)
 
 criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters())
 
-n_epochs = 25 
+n_epochs = 5 
 model.run(train_loader, validation_loader, criterion, optimizer, n_epochs)
+
+test_loss = model.evaluate_model(test_loader, criterion)
+print(f'Test Loss: {test_loss:.4f}')
