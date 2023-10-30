@@ -3,12 +3,13 @@ import torch.nn as nn
 import torch.optim as optim
 
 from Lab04.Solution.models import ImagePredictionModel
-from Lab04.Solution.transforms import RotateImageWrapper, ColorJitterWrapper
+from Lab04.Solution.transforms import RotateImageWrapper, ColorJitterWrapper, CropImageWrapper
 from datasets import *
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 BATCH_SIZE = 100
+SCALE_RATIO = 255
 
 
 def train(epoch_index: int, model: ImagePredictionModel, val_loader: DataLoader, train_loader: DataLoader,
@@ -21,6 +22,7 @@ def train(epoch_index: int, model: ImagePredictionModel, val_loader: DataLoader,
     correct = 0
     for features, labels, days in train_loader:
         if len(features) < BATCH_SIZE:
+            pbar.update()
             continue
         # features, labels = features.to('mps'), labels.to('mps')
         optimizer.zero_grad()
@@ -32,8 +34,8 @@ def train(epoch_index: int, model: ImagePredictionModel, val_loader: DataLoader,
 
         total_loss += labels.size(0)
 
-        scaled_outputs = (outputs * 1).to(torch.int)  # Scale outputs and convert to integers
-        scaled_labels = (labels * 1).to(torch.int)
+        scaled_outputs = (outputs * SCALE_RATIO).to(torch.int)  # Scale outputs and convert to integers
+        scaled_labels = (labels * SCALE_RATIO).to(torch.int)
 
         match_count = 0
         for test_index in range(len(scaled_outputs)):
@@ -49,24 +51,33 @@ def train(epoch_index: int, model: ImagePredictionModel, val_loader: DataLoader,
 
     pbar.close()
 
+    pbar = tqdm(total=len(val_loader), desc="Validation", dynamic_ncols=True)
     model.eval()  # Set the model to evaluation mode
-    validation_loss = 0.0
+    total_values = 0
+    validation_loss = 0
     with torch.no_grad():
         match_count = 0
         for inputs, labels, days in val_loader:  # Iterate over the validation data
             outputs = model(inputs, days)
             validation_loss += criterion(outputs, labels)
-            pbar.set_postfix({'Validation': validation_loss, 'Accuracy': match_count / len(val_loader) * 100})
+            total_values += len(labels)
+            scaled_outputs = (outputs * BATCH_SIZE).to(torch.int)  # Scale outputs and convert to integers
+            scaled_labels = (labels * BATCH_SIZE).to(torch.int)
 
-            for test_index in range(len(outputs)):
-                if torch.equal(outputs[test_index], labels[test_index]):
-                    match_count += 1
+            elementwise_equal = torch.eq(scaled_labels, scaled_outputs)
 
-        average_validation_loss = validation_loss / len(val_loader)
+            # Check equality for each row
+            row_equal = elementwise_equal.all(dim=1)
 
-    print(f'Epoch - Validation Loss: {average_validation_loss:.4f}')
+            # Count the number of matching rows
+            match_count += row_equal.sum().item()
 
-    # print(f'Epoch {epoch + 1}/{num_epochs}, Loss: {total_loss / len(train_loader)}\n')
+            pbar.set_postfix({'Loss': validation_loss, 'Accuracy': match_count / total_values * 100})
+            pbar.update()
+
+
+    pbar.close()
+    print(f'Epoch {epoch_index} - Validation Loss: {validation_loss:.4f}')
 
 
 def model_test(model, test_loader):
@@ -79,15 +90,25 @@ def model_test(model, test_loader):
     with torch.no_grad():
         for features, labels in test_loader:
             outputs = model(features)
-            total += labels.size(0)
-            correct += (outputs.argmax(dim=1) == labels.argmax(dim=1)).sum().item()
+            scaled_outputs = (outputs * SCALE_RATIO).to(torch.int)  # Scale outputs and convert to integers
+            scaled_labels = (labels * SCALE_RATIO).to(torch.int)
+
+            elementwise_equal = torch.eq(scaled_labels, scaled_outputs)
+
+            # Check equality for each row
+            row_equal = elementwise_equal.all(dim=1)
+            total += len(features)
+            # Count the number of matching rows
+            correct += row_equal.sum().item()
 
             loss = criterion(outputs, labels)
             total_loss += loss.item()
+    print(f"Accuracy: {correct / total}, Loss: {total_loss / total}")
 
 
 def run(n: int):
-    total_dataset = ImageDataset(dataset_file="./../Homework Dataset", transform_list=[RotateImageWrapper(), ColorJitterWrapper()])
+    total_dataset = ImageDataset(dataset_file="./../Homework Dataset",
+                                 transform_list=[CropImageWrapper()])
 
     print("Number of samples", len(total_dataset))
     train_dataset, validation_dataset, test_dataset = torch.utils.data.random_split(total_dataset, [0.7, 0.15, 0.15])
