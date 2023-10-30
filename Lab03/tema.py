@@ -21,9 +21,9 @@ bias_output = np.zeros((1, output_size))
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
-learning_rate = 0.1
+learning_rate = 0.001
 
-epochs = 10
+epochs = 1000
 for epoch in range(epochs):
     for images, labels in train_dataset:
         # Flatten the input image
