@@ -32,58 +32,64 @@ class Dataset(torch_data.Dataset):
 
     def __load(self, path: str) -> t.List[ImageSet]:
         results: t.List[ImageSet] = []
-        image_folder_paths: t.List[t.List[str]] = []
+        raw_image_folders: t.List[t.List[t.Tuple[str, torch.Tensor]]] = []
         timestamp_regexp = re.compile("global_monthly_(\d{4}_\d{2})_")
 
         for folder in os.listdir(path):
-            image_folder = []
+            raw_images = []
 
             for file in os.listdir(f"{path}/{folder}/images"):
-                image_folder.append(f"{path}/{folder}/images/{file}")
-
-            image_folder_paths.append(image_folder)
-
-        for folder in image_folder_paths:
-            for index in range(0, len(folder) - 1):
-                image_file_1 = folder[index]
-                image_file_2 = folder[index + 1]
-                image_file_1_filename = os.path.basename(image_file_1)
-                image_file_2_filename = os.path.basename(image_file_2)
-                image_file_1_timestamp_str = timestamp_regexp.search(
-                    image_file_1_filename
-                )
-                image_file_2_timestamp_str = timestamp_regexp.search(
-                    image_file_2_filename
+                image_path = f"{path}/{folder}/images/{file}"
+                raw_images.append(
+                    (
+                        image_path,
+                        torchvision.transforms.functional.pil_to_tensor(
+                            pic=PIL_Image.open(image_path)
+                        ),
+                    )
                 )
 
-                if image_file_1_timestamp_str is None:
-                    raise exceptions.DatasetException(
-                        f"Image {image_file_1} cannot be parsed for timestamp"
+            raw_image_folders.append(raw_images)
+
+        for folder in raw_image_folders:
+            for image_1_index in range(0, len(folder) - 1):
+                for image_2_index in range(image_1_index + 1, len(folder)):
+                    image_name_1 = folder[image_1_index][0]
+                    image_name_2 = folder[image_2_index][0]
+                    image_1 = folder[image_1_index][1]
+                    image_2 = folder[image_2_index][1]
+
+                    image_file_1_filename = os.path.basename(image_name_1)
+                    image_file_2_filename = os.path.basename(image_name_2)
+                    image_file_1_timestamp_str = timestamp_regexp.search(
+                        image_file_1_filename
+                    )
+                    image_file_2_timestamp_str = timestamp_regexp.search(
+                        image_file_2_filename
                     )
 
-                if image_file_2_timestamp_str is None:
-                    raise exceptions.DatasetException(
-                        f"Image {image_file_2} cannot be parsed for timestamp"
+                    if image_file_1_timestamp_str is None:
+                        raise exceptions.DatasetException(
+                            f"Image {image_name_1} cannot be parsed for timestamp"
+                        )
+
+                    if image_file_2_timestamp_str is None:
+                        raise exceptions.DatasetException(
+                            f"Image {image_name_2} cannot be parsed for timestamp"
+                        )
+
+                    image_file_1_timestamp = datetime.datetime.strptime(
+                        image_file_1_timestamp_str.group(1), "%Y_%m"
+                    )
+                    image_file_2_timestamp = datetime.datetime.strptime(
+                        image_file_2_timestamp_str.group(1), "%Y_%m"
+                    )
+                    time_skip = abs(
+                        (image_file_1_timestamp.year - image_file_2_timestamp.year) * 12
+                        + (image_file_1_timestamp.month - image_file_2_timestamp.month)
                     )
 
-                image_file_1_timestamp = datetime.datetime.strptime(
-                    image_file_1_timestamp_str.group(1), "%Y_%m"
-                )
-                image_file_2_timestamp = datetime.datetime.strptime(
-                    image_file_2_timestamp_str.group(1), "%Y_%m"
-                )
-                image_1 = torchvision.transforms.functional.pil_to_tensor(
-                    pic=PIL_Image.open(image_file_1)
-                )
-                image_2 = torchvision.transforms.functional.pil_to_tensor(
-                    pic=PIL_Image.open(image_file_2)
-                )
-                time_skip = abs(
-                    (image_file_1_timestamp.year - image_file_2_timestamp.year) * 12
-                    + (image_file_1_timestamp.month - image_file_2_timestamp.month)
-                )
-
-                results.append((image_1, image_2, time_skip))
+                    results.append((image_1, image_2, time_skip))
 
         return results
 
@@ -115,7 +121,7 @@ class Dataset(torch_data.Dataset):
         return (image_1, image_2, time_skip)
 
     def get_image_size(self):
-        image_sample = self.__image_sets[0][0] 
+        image_sample = self.__image_sets[0][0]
 
         for transform in self.__transformations:
             image_sample = transform(image_sample)

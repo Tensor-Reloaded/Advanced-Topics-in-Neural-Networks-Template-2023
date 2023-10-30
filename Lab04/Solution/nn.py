@@ -19,7 +19,7 @@ class NeuralNetwork(nn.Module):
         super(NeuralNetwork, self).__init__()
         self.__device = device
 
-        self.layer_1_weights = nn.Linear(image_size, 2048).to(
+        self.layer_1_weights = nn.Linear(image_size + 1, 2048).to(
             device=self.__device, non_blocking=self.__device == "cuda"
         )
         self.layer_2_weights = nn.Linear(2048, 1024).to(
@@ -57,10 +57,14 @@ class NeuralNetwork(nn.Module):
             else nn.Identity()
         )
 
-    def forward(self, X: torch.Tensor) -> torch.Tensor:
+    def forward(self, X: torch.Tensor, time_skip: torch.Tensor) -> torch.Tensor:
         # FIXME: Before call, tensor is of shape [batch_size, image_size]. Here it is [image_size]...
         if len(X.shape) == 1:
             X = X.view(1, -1)
+        if len(time_skip.shape) == 1:
+            time_skip = time_skip.view(-1, 1)
+
+        X = torch.concat((X, time_skip), dim=-1)
 
         y_hat = self.__activation_function(self.layer_1_weights(X))
         y_hat = self.__activation_function(self.layer_2_weights(y_hat))
