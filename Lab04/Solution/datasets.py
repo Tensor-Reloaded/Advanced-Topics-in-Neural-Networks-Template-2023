@@ -34,8 +34,6 @@ class ImageDataset(Dataset):
                         start_date, end_date = end_date, start_date
 
                     self.tuples.append((start_file, end_file, ImageDataset.months(end_date, start_date)))
-            if len(self.tuples) > 6000:
-                break
 
     @staticmethod
     def months(d1, d2):
