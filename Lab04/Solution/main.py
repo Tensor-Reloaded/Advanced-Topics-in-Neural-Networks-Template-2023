@@ -6,6 +6,8 @@ from dataset import *
 from tqdm import tqdm
 
 from models import ImageMLP
+import matplotlib.pyplot as plt
+
 
 total_dataset = ImageDataset(dataset_path="Homework Dataset")
 print(len(total_dataset))
@@ -27,12 +29,10 @@ criterion = nn.MSELoss()
 optimizer = optim.SGD(model.parameters(), lr=1e-2)
 
 device = 'cpu'
+num_epochs = 100
 
-print(torch.cuda.device_count())
-# Training loop
-num_epochs = 200
-pbar = tqdm(range(num_epochs))
-for epoch in pbar:
+
+def train():
     model.train()
     total_loss = 0
     total = 0
@@ -47,9 +47,11 @@ for epoch in pbar:
         total_loss += loss.item()
 
         total += labels.size(0)
-        correct += (outputs.argmax(dim=1) == labels.argmax(dim=1)).sum().item()
+        correct += (outputs == labels).sum().item()
     train_acc = 100 * correct / total
+    return train_acc, total_loss
 
+def validate():
     # Evaluation
     model.eval()
     correct = 0
@@ -59,8 +61,30 @@ for epoch in pbar:
             outputs = model(features)
             total += labels.size(0)
             correct += (outputs.argmax(dim=1) == labels.argmax(dim=1)).sum().item()
-    pbar.set_postfix_str(f'Epoch {epoch + 1}/{num_epochs}, Train Accuracy: {train_acc}%, Train Loss: {total_loss / len(train_loader)}, Validation Accuracy: {100 * correct / total}%\n')
+    validate_acc = 100 * correct / total
+    return validate_acc
 
+
+def run(num_epochs):
+    pbar = tqdm(range(num_epochs))
+    train_accs = []
+    validate_accs = []
+    for epoch in pbar:
+        train_acc, total_loss = train()
+        validate_acc = validate()
+        pbar.set_postfix_str(
+        f'Epoch {epoch + 1}/{num_epochs}, Train Accuracy: {train_acc}%, Train Loss: {total_loss / len(train_loader)}, Validation Accuracy: {validate_acc}%\n')
+        train_accs.append(train_acc)
+        validate_accs.append(validate_acc)
+
+    fig, ax = plt.subplots()
+    ax.plot(range(num_epochs), train_accs, label='Train Accuracy', color='blue')
+    ax.plot(range(num_epochs), validate_accs, label='Validate Accuracy', color='red')
+    plt.show()
+
+
+
+run(num_epochs)
 
 # Evaluation
 model.eval()
