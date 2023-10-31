@@ -97,7 +97,7 @@ class Crop:
             sample[self.instances[0]] = (v2.RandomResizedCrop(self.shape)
                                          (sample[self.instances[0]]))
             state = torch.get_rng_state()
-            for instance in self.instances:
+            for instance in self.instances[1:]:
                 torch.set_rng_state(state)
                 sample[instance] = v2.RandomResizedCrop(self.shape)(sample[instance])
         else:
@@ -117,7 +117,10 @@ class RandomRotation:
         if type(sample) == list:
             if self.instances == 'all':
                 self.instances = range(len(sample))
+            # sample[self.instances[0]] = (v2.RandomRotation(degrees=10)(sample[instance[0]]))
+            # state = torch.get_rng_state()
             for instance in self.instances:
+                # torch.set_rng_state(state)
                 sample[instance] = v2.RandomRotation(degrees=10)(sample[instance])
         else:
             sample = v2.RandomRotation(degrees=10)(sample)
