@@ -9,7 +9,7 @@ from torchvision.transforms import v2
 from Assignment5 import utils
 from Assignment5.model import Model
 from Assignment5.runner import Runner
-from Assignment5.transforms import FeatureLabelsSplit, MinMaxNormalization, NumberToTensor, ImageToTensor, ChangeType, \
+from Assignment5.transforms_var2 import FeatureLabelsSplit, MinMaxNormalization, NumberToTensor, ImageToTensor, ChangeType, \
     ReshapeTensors, RandomRotation, GroupTensors, ColorChange, UngroupTensors, Crop, DecomposeChannels, \
     RecomposeChannels
 from Assignment5.utils import build_dataset_initial
@@ -34,21 +34,21 @@ runner.run_model(model, transforms=[NumberToTensor(instances=[2],
                                     ImageToTensor(instances=[0, 1],
                                                   device=utils.get_default_device()),
                                     ChangeType(dtype=torch.float32),
-                                    GroupTensors(instances=[0, 1],
-                                                 device=utils.get_default_device()),
+                                    # GroupTensors(instances=[0, 1],
+                                    #              device=utils.get_default_device()),
                                     DecomposeChannels(instances=[0],
                                                       device=utils.get_default_device()),
-                                    # Crop(instances=[0],
-                                    #      shape=torch.Size([256, 128])),  # random transformation, correct
-                                    ColorChange(instances=[0]),  # random transformation, correct
-                                    RandomRotation(instances=[0]),  # random transformation, correct
+                                    # Crop(instances=[0, 1],
+                                    #      shape=torch.Size([128, 128])),  # random transformation, correct
+                                    ColorChange(instances=[0, 1]),  # random transformation, correct
+                                    RandomRotation(instances=[0, 1]),  # random transformation, correct
                                     RecomposeChannels(instances=[0]),
-                                    UngroupTensors(instance=0, dim=128),
+                                    # UngroupTensors(instance=0, dim=128),
                                     MinMaxNormalization(instances=[2], minim=0, maxim=12),
                                     ReshapeTensors(128 * 128 * 3, instances=[0, 1]),
                                     FeatureLabelsSplit(features=[0, 2], labels=[1],
                                                        device=utils.get_default_device())],
-                 split_path=f'.\\HD_Split', dataset_csv=True,
+                 split_path=f'.\\HD_Split', dataset_csv=False,
                  transforms_test=[NumberToTensor(instances=[2], device=utils.get_default_device()),
                                   ImageToTensor(instances=[0, 1], device=utils.get_default_device()),
                                   ChangeType(dtype=torch.float32),

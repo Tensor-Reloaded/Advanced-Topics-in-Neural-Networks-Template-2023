@@ -94,10 +94,14 @@ class Crop:
             # sample[self.instances[0]] = (v2.RandomResizedCrop(self.shape)
             #                              (sample[self.instances[0]]))
             # state = torch.get_rng_state()
+            batch = []
             for instance in self.instances:
                 # torch.set_rng_state(state)
-                sample[instance] = v2.RandomResizedCrop(
-                    self.shape, antialias=True)(sample[instance])
+                batch.append(sample[instance])
+            new_images = v2.RandomResizedCrop(
+                self.shape, antialias=True)(batch)
+            for instance in self.instances:
+                sample[instance] = new_images[instance]
         else:
             sample = v2.RandomResizedCrop(self.shape, antialias=True)(sample)
         return sample
@@ -141,9 +145,13 @@ class ColorChange:
         if type(sample) == list:
             if self.instances == 'all':
                 self.instances = range(len(sample))
+            batch = []
             for instance in self.instances:
-                sample[instance] = v2.ColorJitter(brightness=0.5, contrast=1,
-                                                  saturation=0.5, hue=0.5)(sample[instance])
+                batch.append(sample[instance])
+            new_images = v2.ColorJitter(brightness=0.5, contrast=1,
+                                        saturation=0.5, hue=0.5)(batch)
+            for instance in self.instances:
+                sample[instance] = new_images[instance]
         else:
             sample = v2.ColorJitter(brightness=0.5, contrast=1,
                                     saturation=0.1, hue=0.5)(sample)
