@@ -9,8 +9,6 @@ from model import CityLearner
 
 data_folder = "C:\\Users\\Gabriel\\Desktop\\Laborator\\ATNN\\Advanced-Topics-in-Neural-Networks-Template-2023\\Lab4_me\\dataset"
 
-
-
 def print_hi(name):
 
     dataset = AgedCityImagesDataset(data_folder)
@@ -51,8 +49,7 @@ def print_hi(name):
     test_loader = DataLoader(test_files, batch_size=batch_size, shuffle=False)
     val_loader = DataLoader(val_files, batch_size=batch_size, shuffle=False)
 
-    # Instantiate your custom model
-    model = CityLearner()  # Define your model class
+    model = CityLearner()
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
