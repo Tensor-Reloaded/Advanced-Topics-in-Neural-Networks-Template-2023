@@ -96,9 +96,10 @@ class Crop:
             # state = torch.get_rng_state()
             for instance in self.instances:
                 # torch.set_rng_state(state)
-                sample[instance] = v2.RandomResizedCrop(self.shape)(sample[instance])
+                sample[instance] = v2.RandomResizedCrop(
+                    self.shape, antialias=True)(sample[instance])
         else:
-            sample = v2.RandomResizedCrop(self.shape)(sample)
+            sample = v2.RandomResizedCrop(self.shape, antialias=True)(sample)
         return sample
 
 
@@ -118,9 +119,9 @@ class RandomRotation:
             # state = torch.get_rng_state()
             for instance in self.instances:
                 # torch.set_rng_state(state)
-                sample[instance] = v2.RandomRotation(degrees=10)(sample[instance])
+                sample[instance] = v2.RandomRotation(degrees=5)(sample[instance])
         else:
-            sample = v2.RandomRotation(degrees=10)(sample)
+            sample = v2.RandomRotation(degrees=2)(sample)
         return sample
 
 
@@ -138,7 +139,7 @@ class ColorChange:
                 self.instances = range(len(sample))
             for instance in self.instances:
                 sample[instance] = v2.ColorJitter(brightness=0.5, contrast=1,
-                                                  saturation=0.1, hue=0.5)(sample[instance])
+                                                  saturation=0.5, hue=0.5)(sample[instance])
         else:
             sample = v2.ColorJitter(brightness=0.5, contrast=1,
                                     saturation=0.1, hue=0.5)(sample)

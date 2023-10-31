@@ -21,7 +21,7 @@ model = (Model(128 * 128 * 3 + 1, 128 * 128 * 3, hidden_layers=[128, 128],
                activations=[-1, -1, torch.sigmoid],
                optimizers=[torch.optim.Adam], optimizer_args=[{'lr': 0.001}],
                loss=torch.nn.MSELoss(), device=utils.get_default_device(),
-               dropouts=[('a', 0.2)],
+               # dropouts=[('a', 0.2)],
                gradient_clipping=True,
                weight_initialization=[torch.nn.init.xavier_normal_,
                                       torch.nn.init.xavier_normal_,
@@ -38,8 +38,8 @@ runner.run_model(model, transforms=[NumberToTensor(instances=[2],
                                                  device=utils.get_default_device()),
                                     DecomposeChannels(instances=[0],
                                                       device=utils.get_default_device()),
-                                    Crop(instances=[0],
-                                         shape=torch.Size([256, 128])),  # random transformation, correct
+                                    # Crop(instances=[0],
+                                    #      shape=torch.Size([256, 128])),  # random transformation, correct
                                     ColorChange(instances=[0]),  # random transformation, correct
                                     RandomRotation(instances=[0]),  # random transformation, correct
                                     RecomposeChannels(instances=[0]),
