@@ -6,4 +6,4 @@
 * Bonus 2+3: implementat prin adăugarea facilităților de dropout, optimizatori, regularizări, normalizări etc. -- ceea ce am învățat din temele anterioare că poate spori eficiența și acuratețea totodată -- în cadrul clasei modelului și tratarea lor la construirea arhitecturii rețelei. De asemenea, am oferit transformărilor posibilitatea de a fi rulate pe GPU. Am adăugat dovezi, la câteva configurații ale modelului cu și fără diferite optimizări, pentru numărul de epoci în care se atinge o anumită performanță și A/B Testing, prin capturi de ecran ale rulărilor și grafice ale acurateții. Dacă se așteaptă altfel de dovezi în acest sens, pot modifica (dar nu știam exact ce se așteaptă să includ aici pentru a dovedi ingeniozitatea sau eficiența în practică a pipeline-ului).
 * din greșeală folderul se numește "Assignment5" în loc de "Assignment4", dar așa l-am creat de la început și nu am mai schimbat ulterior dependințele
 
-####Nota: O sa intreb la laborator despre partea cu dovezile de AB Testing.####
+#### Nota: O sa intreb la laborator despre partea cu dovezile de AB Testing. ####
