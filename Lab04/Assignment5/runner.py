@@ -37,7 +37,7 @@ class Runner:  # corresponds to scenario when dataset needs to be loaded and pro
                                          training=False)
 
             train_loader = DataLoader(train_dataset, batch_size=32,
-                                      shuffle=False, pin_memory=pin_memory)
+                                      shuffle=True, pin_memory=pin_memory)
             test_loader = DataLoader(test_dataset, batch_size=32,
                                      shuffle=False, pin_memory=pin_memory)
             validation_loader = DataLoader(validation_dataset, batch_size=32,
