@@ -46,6 +46,8 @@ class TrainTune:
             correct += (self.similarity(outputs, labels) >= self.treshold).sum()
             loss = self.model.loss(outputs, labels)
             loss.backward()
+            if self.model.gradient_clipping:
+                torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.model.clip_value)
             for index, optimizer in enumerate(self.optimizers):
                 self.optimizers[index].step()
             total_loss += loss.item()

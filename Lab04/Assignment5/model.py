@@ -13,7 +13,8 @@ class Model(nn.Module):  # only builds linear layers since this is all we learne
                  device: torch.device = torch.device('cpu'),
                  activations: List = None, loss=nn.BCELoss(), dropouts: List[Tuple[str, int]] = None,
                  weight_initialization=None, momentum: float = 0.001,
-                 batch_normalization: bool = False, regularization=None, gradient_clipping: bool = False,
+                 batch_normalization: bool = False, regularization=None,
+                 gradient_clipping: bool = False, clip_value: int = 1,
                  optimizers: List = None, optimizer_args: List[dict] = None, default_optim_args: dict = None):
         super(Model, self).__init__()
         if not default_optim_args:
@@ -28,6 +29,7 @@ class Model(nn.Module):  # only builds linear layers since this is all we learne
         self.batch_normalization = batch_normalization
         self.regularization = regularization
         self.gradient_clipping = gradient_clipping
+        self.clip_value = clip_value
         self.activations = activations
         self.loss = loss
         self.loss = (self.loss + momentum * regularization) if regularization else self.loss
