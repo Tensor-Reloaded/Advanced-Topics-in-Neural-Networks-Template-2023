@@ -30,9 +30,11 @@ class Runner:  # corresponds to scenario when dataset needs to be loaded and pro
             train_dataset = Dataset(f'{split_path}\\train', self.dataset_builder,
                                     transformations=transforms, transformations_test=transforms_test)
             test_dataset = Dataset(f'{split_path}\\test', self.dataset_builder,
-                                   transformations=transforms, transformations_test=transforms_test)
+                                   transformations=transforms, transformations_test=transforms_test,
+                                   training=False)
             validation_dataset = Dataset(f'{split_path}\\validate', self.dataset_builder,
-                                         transformations=transforms, transformations_test=transforms_test)
+                                         transformations=transforms, transformations_test=transforms_test,
+                                         training=False)
 
             train_loader = DataLoader(train_dataset, batch_size=32,
                                       shuffle=False, pin_memory=pin_memory)
