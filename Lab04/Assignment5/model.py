@@ -14,7 +14,7 @@ class Model(nn.Module):  # only builds linear layers since this is all we learne
                  activations: List = None, loss=nn.BCELoss(), dropouts: List[Tuple[str, int]] = None,
                  weight_initialization=None, momentum: float = 0.001,
                  batch_normalization: bool = False, regularization=None,
-                 gradient_clipping: bool = False, clip_value: int = 1,
+                 gradient_clipping: bool = False, clip_value: float = 1.0,
                  optimizers: List = None, optimizer_args: List[dict] = None, default_optim_args: dict = None):
         super(Model, self).__init__()
         if not default_optim_args:
