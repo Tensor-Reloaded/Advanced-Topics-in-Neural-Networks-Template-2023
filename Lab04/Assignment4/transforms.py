@@ -84,8 +84,9 @@ class ChangeType:
 
 
 class Crop:
-    def __init__(self, instances: Union[str, List[int]] = 'all'):
+    def __init__(self, shape: torch.Size, instances: Union[str, List[int]] = 'all'):
         self.instances = instances
+        self.shape = shape
 
     def __call__(self, sample_par: Union[Tensor, List[Tensor]]):
         if type(sample_par) == list:
@@ -95,13 +96,12 @@ class Crop:
         if type(sample) == list:
             if self.instances == 'all':
                 self.instances = range(len(sample))
-            batch = []
+            sample[self.instances[0]] = (v2.RandomResizedCrop(self.shape)
+                                         (sample[self.instances[0]]))
+            state = torch.get_rng_state()
             for instance in self.instances:
-                batch.append(sample[instance])
-            shape = batch[0].shape
-            new_images = v2.RandomResizedCrop(shape)(batch)
-            for instance in self.instances:
-                sample[instance] = new_images[instance]
+                torch.set_rng_state(state)
+                sample[instance] = v2.RandomResizedCrop(self.shape)(sample[instance])
         else:
             sample = v2.RandomResizedCrop(sample.shape)(sample)
         return sample
@@ -119,12 +119,8 @@ class RandomRotation:
         if type(sample) == list:
             if self.instances == 'all':
                 self.instances = range(len(sample))
-            batch = []
             for instance in self.instances:
-                batch.append(sample[instance])
-            new_images = v2.RandomRotation(degrees=10)(batch)
-            for instance in self.instances:
-                sample[instance] = new_images[instance]
+                sample[instance] = v2.RandomRotation(degrees=10)(sample[instance])
         else:
             sample = v2.RandomRotation(degrees=10)(sample)
         return sample
@@ -142,13 +138,9 @@ class ColorChange:
         if type(sample) == list:
             if self.instances == 'all':
                 self.instances = range(len(sample))
-            batch = []
             for instance in self.instances:
-                batch.append(sample[instance])
-            new_images = v2.ColorJitter(brightness=0.5, contrast=1,
-                                        saturation=0.1, hue=0.5)(batch)
-            for instance in self.instances:
-                sample[instance] = new_images[instance]
+                sample[instance] = v2.ColorJitter(brightness=0.5, contrast=1,
+                                                  saturation=0.1, hue=0.5)(sample[instance])
         else:
             sample = v2.ColorJitter(brightness=0.5, contrast=1,
                                     saturation=0.1, hue=0.5)(sample)
@@ -222,10 +214,11 @@ class GroupTensors:
             self.instances = range(len(sample))
         result = Tensor(sample[self.instances[0]])
         for instance in self.instances[1:]:
-            result = torch.stack((result, sample[instance]))
+            result = torch.cat((result, sample[instance]), dim=0)
         deleted = 0
         for instance in self.instances:
             del sample[instance - deleted]
+            deleted += 1
         sample.insert(self.position, result)
         return sample
 
@@ -252,16 +245,17 @@ class ReshapeTensors:
 
 
 class UngroupTensors:
-    def __init__(self, instance: int):
+    def __init__(self, instance: int, dim: int):
         self.instance = instance
         self.position = 0
+        self.dim = dim
 
     def __call__(self, sample_par):
         if type(sample_par) == list:
             sample = list(sample_par)
         else:
             sample = Tensor(sample_par)
-        result = list(sample[self.instance].split(1))
+        result = list(sample[self.instance].split(self.dim))
         sample = sample[:self.instance] + result + sample[(self.instance + 1):]
         return sample
 
@@ -278,19 +272,17 @@ class DecomposeChannels:
         if type(sample) == list:
             if self.instances == 'all':
                 self.instances = range(len(sample))
-            inserted = 0
             for instance in self.instances:
-                instance += 2 * inserted
-                sample = (sample[:instance] + [sample[instance][:, :, 0],
-                                               sample[instance][:, :, 1],
-                                               sample[instance][:, :, 2]]
-                          + sample[instance + 1:])
-                inserted += 1
+                new_sample = Tensor(torch.stack([sample[instance][:, :, 0],
+                                                 sample[instance][:, :, 1],
+                                                 sample[instance][:, :, 2]]))
+                sample[instance] = Tensor(new_sample)
 
         else:
-            sample = [sample[:, :, 0],
-                      sample[:, :, 1],
-                      sample[:, :, 2]]
+            new_sample = Tensor(torch.stack([sample[:, :, 0],
+                                             sample[:, :, 1],
+                                             sample[:, :, 2]]))
+            sample = Tensor(new_sample)
         return sample
 
 
@@ -307,13 +299,13 @@ class RecomposeChannels:
             if self.instances == 'all':
                 self.instances = [range(x, x + 3) for x in range(0, len(sample), 3)]
             for instance in self.instances:
-                sample[instance[0]] = Tensor(sample[instance])
-            deleted = 0
-            for instance in self.instances:
-                del sample[instance[1] - deleted]
-                deleted += 1
-                del sample[instance[2] - deleted]
-                deleted += 1
+                new_sample = Tensor(torch.stack([sample[instance][0, :, :],
+                                                 sample[instance][1, :, :],
+                                                 sample[instance][2, :, :]], dim=2))
+                sample[instance] = Tensor(new_sample)
         else:
-            raise ValueError('Sample is not decomposed.')
+            new_sample = Tensor(torch.stack([sample[0, :, :],
+                                             sample[1, :, :],
+                                             sample[2, :, :]], dim=2))
+            sample = Tensor(new_sample)
         return sample

@@ -1,11 +1,11 @@
 import torch
 from torch.utils.data import DataLoader
 
-from Assignment4.dataset import Dataset
-from Assignment4.loader import TrainLoader, TestLoader, ValidateLoader
-from Assignment4.model import Model
-from Assignment4.train import TrainTune
-from Assignment4.utils import split_dataset, split_dataset_csv
+from Assignment5.dataset import Dataset
+from Assignment5.loader import TrainLoader, TestLoader, ValidateLoader
+from Assignment5.model import Model
+from Assignment5.train import TrainTune
+from Assignment5.utils import split_dataset, split_dataset_csv
 
 
 class Runner:  # corresponds to scenario when dataset needs to be loaded and processed from local device, as we work;

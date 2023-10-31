@@ -3,8 +3,8 @@ from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from Assignment4.model import Model
-from Assignment4.plotter import MetricsMemory
+from Assignment5.model import Model
+from Assignment5.plotter import MetricsMemory
 
 
 class TrainTune:

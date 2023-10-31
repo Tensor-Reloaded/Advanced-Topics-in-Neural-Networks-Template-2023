@@ -3,7 +3,7 @@ from typing import List, Tuple
 import torch
 from torch import nn
 
-from Assignment4 import transforms
+from Assignment5 import transforms
 
 
 class Model(nn.Module):  # only builds linear layers since this is all we learned up to now;
