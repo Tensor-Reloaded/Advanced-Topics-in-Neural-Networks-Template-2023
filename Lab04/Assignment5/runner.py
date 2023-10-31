@@ -11,11 +11,14 @@ from Assignment5.utils import split_dataset, split_dataset_csv
 class Runner:  # corresponds to scenario when dataset needs to be loaded and processed from local device, as we work;
     # for including other various scenarios a super class might be built
     def __init__(self, epochs: int, device: torch.device('cpu'),
-                 dataset_path, dataset_builder):
+                 dataset_path, dataset_builder,
+                 similarity_func=torch.nn.CosineSimilarity(), treshold=0.95):
         self.dataset_builder = dataset_builder
         self.epochs = epochs
         self.device = device
         self.dataset_path = dataset_path
+        self.similarity = similarity_func
+        self.treshold = treshold
 
     def run_model(self, model: Model, dataset_csv: bool = False, split_path='',
                   transforms=None, transforms_test=None):
@@ -48,5 +51,6 @@ class Runner:  # corresponds to scenario when dataset needs to be loaded and pro
             validation_loader = ValidateLoader('validation.csv', transformations=transforms,
                                                transformations_test=transforms_test,
                                                batch_size=32, shuffle=False, pin_memory=pin_memory)
-        train_tune = TrainTune(model, train_loader, validation_loader, device=self.device)
+        train_tune = TrainTune(model, train_loader, validation_loader, device=self.device,
+                               similarity=self.similarity, treshold=self.treshold)
         train_tune.run(self.epochs)

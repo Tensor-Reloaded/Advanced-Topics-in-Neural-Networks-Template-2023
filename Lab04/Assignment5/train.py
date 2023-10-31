@@ -12,6 +12,7 @@ class TrainTune:
                  train_loader: DataLoader,
                  val_loader: DataLoader,
                  similarity=torch.nn.CosineSimilarity(),
+                 treshold: float = 0.95,
                  device: torch.device = torch.device('cpu')):
         self.model = cmodel
         self.train_loader = train_loader
@@ -19,6 +20,7 @@ class TrainTune:
         self.optimizers = []
         self.device = device
         self.similarity = similarity
+        self.treshold = treshold
         if cmodel.optimizers and len(cmodel.optimizers) > 0:
             for index, optimizer in enumerate(cmodel.optimizers):
                 if cmodel.optimizer_args and len(cmodel.optimizer_args) > index \
@@ -41,7 +43,7 @@ class TrainTune:
                 self.optimizers[index].zero_grad()
             outputs = self.model(features)
             labels = labels.to(self.device)
-            correct += (self.similarity(outputs, labels) > 0.95).sum()
+            correct += (self.similarity(outputs, labels) >= self.treshold).sum()
             loss = self.model.loss(outputs, labels)
             loss.backward()
             for index, optimizer in enumerate(self.optimizers):
@@ -61,7 +63,7 @@ class TrainTune:
                 features = features.to(self.device)
                 labels = labels.to(self.device)
                 outputs = self.model(features)
-                correct += (self.similarity(outputs, labels) > 0.95).sum()
+                correct += (self.similarity(outputs, labels) >= self.treshold).sum()
                 total_loss += self.model.loss(outputs, labels).item()
         return total_loss, correct
 

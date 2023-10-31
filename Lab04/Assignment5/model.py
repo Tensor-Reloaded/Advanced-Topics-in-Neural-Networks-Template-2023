@@ -53,7 +53,8 @@ class Model(nn.Module):  # only builds linear layers since this is all we learne
     def forward(self, features):
         # ask for batch normalization of that's the case
         if self.batch_normalization:
-            features = transforms.StandardNormalization()(features)
+            features = transforms.StandardNormalization(
+                mean=features.mean(), std=features.std())(features)
 
         # traverse the model and apply activations and dropouts
         for index, layer in enumerate(self.layers[:-1]):

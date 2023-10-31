@@ -53,13 +53,11 @@ class StandardNormalization:
             if self.instances == 'all':
                 self.instances = range(len(sample))
             for instance in self.instances:
-                std, mean = torch.std_mean(sample[instance])
-                sample[instance] -= mean
-                sample[instance] /= std
+                sample[instance] -= self.mean
+                sample[instance] /= self.std
         else:
-            std, mean = torch.std_mean(sample)
-            sample -= mean
-            sample /= std
+            sample -= self.mean
+            sample /= self.std
         return sample
 
 
@@ -273,16 +271,13 @@ class DecomposeChannels:
             if self.instances == 'all':
                 self.instances = range(len(sample))
             for instance in self.instances:
-                new_sample = Tensor(torch.stack([sample[instance][:, :, 0],
-                                                 sample[instance][:, :, 1],
-                                                 sample[instance][:, :, 2]]))
-                sample[instance] = Tensor(new_sample)
-
+                sample[instance] = Tensor(torch.stack([sample[instance][:, :, 0],
+                                                       sample[instance][:, :, 1],
+                                                       sample[instance][:, :, 2]]))
         else:
-            new_sample = Tensor(torch.stack([sample[:, :, 0],
-                                             sample[:, :, 1],
-                                             sample[:, :, 2]]))
-            sample = Tensor(new_sample)
+            sample = Tensor(torch.stack([sample[:, :, 0],
+                                         sample[:, :, 1],
+                                         sample[:, :, 2]]))
         return sample
 
 
@@ -299,13 +294,11 @@ class RecomposeChannels:
             if self.instances == 'all':
                 self.instances = [range(x, x + 3) for x in range(0, len(sample), 3)]
             for instance in self.instances:
-                new_sample = Tensor(torch.stack([sample[instance][0, :, :],
-                                                 sample[instance][1, :, :],
-                                                 sample[instance][2, :, :]], dim=2))
-                sample[instance] = Tensor(new_sample)
+                sample[instance] = Tensor(torch.stack([sample[instance][0, :, :],
+                                                       sample[instance][1, :, :],
+                                                       sample[instance][2, :, :]], dim=2))
         else:
-            new_sample = Tensor(torch.stack([sample[0, :, :],
-                                             sample[1, :, :],
-                                             sample[2, :, :]], dim=2))
-            sample = Tensor(new_sample)
+            sample = Tensor(torch.stack([sample[0, :, :],
+                                         sample[1, :, :],
+                                         sample[2, :, :]], dim=2))
         return sample
