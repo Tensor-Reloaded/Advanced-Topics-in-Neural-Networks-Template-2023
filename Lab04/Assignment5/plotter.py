@@ -25,10 +25,12 @@ class MetricsMemory:
         x_axis = list(range(1, self.epochs + 1))
         plt.plot(x_axis, self.metrics[:, 0])
         plt.plot(x_axis, self.t_metrics[:, 0])
-        plt.plot(x_axis, self.metrics[:, 1])
-        plt.plot(x_axis, self.t_metrics[:, 1])
-        plt.legend(['testing accuracy', 'training accuracy',
-                    'testing loss', 'training loss'], loc="lower right")
+        # plt.plot(x_axis, self.metrics[:, 1])
+        # plt.plot(x_axis, self.t_metrics[:, 1])
+        plt.legend(['testing accuracy', 'training accuracy'
+                    # 'testing loss', 'training loss'
+                    ],
+                   loc="lower right")
         plt.title('Evolution of accuracy')
         plt.xlabel('Epoch')
         plt.ylabel('Accuracy/Loss')

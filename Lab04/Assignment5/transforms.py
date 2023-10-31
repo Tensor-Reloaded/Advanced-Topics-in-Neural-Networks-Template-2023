@@ -66,18 +66,15 @@ class ChangeType:
         self.instances = instances
         self.desired_type = dtype
 
-    def __call__(self, sample_par: Union[Tensor, List[Tensor]]):
-        if type(sample_par) == list:
-            sample = list(sample_par)
-        else:
-            sample = Tensor(sample_par)
+    def __call__(self, sample: Union[Tensor, List[Tensor]]):
         if type(sample) == list:
             if self.instances == 'all':
                 self.instances = range(len(sample))
             for instance in self.instances:
-                sample[instance] = v2.ToDtype(dtype=self.desired_type, scale=True)(sample[instance])
+                sample[instance] = (v2.ToDtype(dtype=self.desired_type, scale=True)
+                                    (sample[instance]))
         else:
-            sample = v2.ToDtype(dtype=self.desired_type, scale=True)(sample)
+            sample = (v2.ToDtype(dtype=self.desired_type, scale=True)(sample))
         return sample
 
 
@@ -94,14 +91,14 @@ class Crop:
         if type(sample) == list:
             if self.instances == 'all':
                 self.instances = range(len(sample))
-            sample[self.instances[0]] = (v2.RandomResizedCrop(self.shape)
-                                         (sample[self.instances[0]]))
-            state = torch.get_rng_state()
-            for instance in self.instances[1:]:
-                torch.set_rng_state(state)
+            # sample[self.instances[0]] = (v2.RandomResizedCrop(self.shape)
+            #                              (sample[self.instances[0]]))
+            # state = torch.get_rng_state()
+            for instance in self.instances:
+                # torch.set_rng_state(state)
                 sample[instance] = v2.RandomResizedCrop(self.shape)(sample[instance])
         else:
-            sample = v2.RandomResizedCrop(sample.shape)(sample)
+            sample = v2.RandomResizedCrop(self.shape)(sample)
         return sample
 
 
@@ -149,8 +146,10 @@ class ColorChange:
 
 
 class ImageToTensor:
-    def __init__(self, instances: Union[str, List[int]] = 'all'):
+    def __init__(self, instances: Union[str, List[int]] = 'all',
+                 device=torch.device('cpu')):
         self.instances = instances
+        self.device = device
 
     def __call__(self, sample_par: Union[str, List[str]]):
         if type(sample_par) == list:
@@ -161,15 +160,18 @@ class ImageToTensor:
             if self.instances == 'all':
                 self.instances = range(len(sample))
             for instance in self.instances:
-                sample[instance] = torch.from_numpy(cv2.imread(sample[instance], cv2.IMREAD_COLOR))
+                sample[instance] = torch.from_numpy(cv2.imread(
+                    sample[instance], cv2.IMREAD_COLOR)).to(self.device)
         else:
-            sample = torch.from_numpy(cv2.imread(sample, cv2.IMREAD_COLOR))
+            sample = torch.from_numpy(cv2.imread(sample, cv2.IMREAD_COLOR)).to(self.device)
         return sample
 
 
 class NumberToTensor:
-    def __init__(self, instances: Union[str, List[int]] = 'all'):
+    def __init__(self, instances: Union[str, List[int]] = 'all',
+                 device=torch.device('cpu')):
         self.instances = instances
+        self.device = device
 
     def __call__(self, sample_par: Union[int, List[int]]):
         if type(sample_par) == list:
@@ -180,20 +182,25 @@ class NumberToTensor:
             if self.instances == 'all':
                 self.instances = range(len(sample))
             for instance in self.instances:
-                sample[instance] = Tensor([sample[instance]])
+                sample[instance] = Tensor([sample[instance]]).to(self.device)
         else:
-            sample = Tensor(sample)
+            sample = Tensor(sample).to(self.device)
         return sample
 
 
 class FeatureLabelsSplit:
-    def __init__(self, features: List[int], labels: List[int]):
+    def __init__(self, features: List[int], labels: List[int], device=torch.device('cpu')):
         self.features = features
         self.labels = labels
+        self.device = device
 
-    def __call__(self, sample):
-        features_tensor = Tensor(sample[self.features[0]])
-        labels_tensor = Tensor(sample[self.labels[0]])
+    def __call__(self, sample_par):
+        if type(sample_par) == list:
+            sample = list(sample_par)
+        else:
+            sample = Tensor(sample_par)
+        features_tensor = Tensor(sample[self.features[0]]).to(self.device)
+        labels_tensor = Tensor(sample[self.labels[0]]).to(self.device)
         for instance in self.features[1:]:
             features_tensor = torch.cat((features_tensor, sample[instance]))
         for instance in self.labels[1:]:
@@ -202,9 +209,11 @@ class FeatureLabelsSplit:
 
 
 class GroupTensors:
-    def __init__(self, instances: Union[str, List[int]] = 'all', position: int = 0):
+    def __init__(self, instances: Union[str, List[int]] = 'all', position: int = 0,
+                 device=torch.device('cpu')):
         self.instances = instances
         self.position = position
+        self.device = device
 
     def __call__(self, sample_par):
         if type(sample_par) == list:
@@ -213,7 +222,7 @@ class GroupTensors:
             sample = Tensor(sample_par)
         if self.instances == 'all':
             self.instances = range(len(sample))
-        result = Tensor(sample[self.instances[0]])
+        result = Tensor(sample[self.instances[0]]).to(self.device)
         for instance in self.instances[1:]:
             result = torch.cat((result, sample[instance]), dim=0)
         deleted = 0
@@ -262,8 +271,10 @@ class UngroupTensors:
 
 
 class DecomposeChannels:
-    def __init__(self, instances: Union[str, List[int]] = 'all'):
+    def __init__(self, instances: Union[str, List[int]] = 'all',
+                 device=torch.device('cpu')):
         self.instances = instances
+        self.device = device
 
     def __call__(self, sample_par):
         if type(sample_par) == list:
@@ -276,17 +287,19 @@ class DecomposeChannels:
             for instance in self.instances:
                 sample[instance] = Tensor(torch.stack([sample[instance][:, :, 0],
                                                        sample[instance][:, :, 1],
-                                                       sample[instance][:, :, 2]]))
+                                                       sample[instance][:, :, 2]])).to(self.device)
         else:
             sample = Tensor(torch.stack([sample[:, :, 0],
                                          sample[:, :, 1],
-                                         sample[:, :, 2]]))
+                                         sample[:, :, 2]])).to(self.device)
         return sample
 
 
 class RecomposeChannels:
-    def __init__(self, instances: Union[str, List[List]] = 'all'):
+    def __init__(self, instances: Union[str, List[List]] = 'all',
+                 device=torch.device('cpu')):
         self.instances = instances
+        self.device = device
 
     def __call__(self, sample_par):
         if type(sample_par) == list:
@@ -299,9 +312,9 @@ class RecomposeChannels:
             for instance in self.instances:
                 sample[instance] = Tensor(torch.stack([sample[instance][0, :, :],
                                                        sample[instance][1, :, :],
-                                                       sample[instance][2, :, :]], dim=2))
+                                                       sample[instance][2, :, :]], dim=2)).to(self.device)
         else:
             sample = Tensor(torch.stack([sample[0, :, :],
                                          sample[1, :, :],
-                                         sample[2, :, :]], dim=2))
+                                         sample[2, :, :]], dim=2)).to(self.device)
         return sample

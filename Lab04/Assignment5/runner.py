@@ -21,8 +21,8 @@ class Runner:  # corresponds to scenario when dataset needs to be loaded and pro
         self.treshold = treshold
 
     def run_model(self, model: Model, dataset_csv: bool = False, split_path='',
-                  transforms=None, transforms_test=None):
-        pin_memory = self.device.type == 'cuda'
+                  transforms=None, transforms_test=None, pin_memory=False):
+        # set pin_memory as true if GPU is not used for transformations
         urban_dataset = Dataset(self.dataset_path, self.dataset_builder)
 
         if not dataset_csv:
