@@ -10,6 +10,7 @@ Lab Assignment: [Assignment.pdf](./Assignment.pdf) (Deadline: PR by End-of-Day M
 For self-study:
 * [Neural Networks](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) (animated introduction to neural networks and backpropagation)
 * [Essence of calculus](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) (derivatives; chain rule)
+* Backpropagation example, from scratch: [Resource from previous years](https://drive.google.com/file/d/11pFnI-NvGjAPgBb2nZKVj2dtE3dVI8qe/view)
 
 Advanced:
 * TorchScript (PyTorch jit): https://pytorch.org/docs/stable/jit.html
@@ -19,9 +20,6 @@ Advanced:
   * `torch.compile` does not work on Windows systems!
   * Always measure whether compiling your model improves the performance or not! 
   
-***
-Please check the Lab 2 Assignment's solution: (will be uploaded after Lab 3).
-
 ***
 References:
  - MNIST: https://pytorch.org/vision/0.15/generated/torchvision.datasets.MNIST.html#torchvision.datasets.MNIST
