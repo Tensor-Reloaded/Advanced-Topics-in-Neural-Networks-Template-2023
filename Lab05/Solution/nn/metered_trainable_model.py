@@ -39,23 +39,36 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
         batched_validation_dataset: torch_data.DataLoader,
         epochs: int,
     ):
+        epochs_digits = len(str(epochs))
+
         for epoch in range(0, epochs):
-            training_loss, training_accuracy = self.run_training(batched_training_dataset)
-            validation_loss, validation_accuracy = self.run_validation(batched_validation_dataset)
+            training_loss, training_accuracy = self.run_training(
+                batched_training_dataset
+            )
+            validation_loss, validation_accuracy = self.run_validation(
+                batched_validation_dataset
+            )
 
             self.summary_writer.add_scalar("Training loss/epoch", training_loss, epoch)
-            self.summary_writer.add_scalar("Training accuracy/epoch", training_accuracy, epoch)
-            self.summary_writer.add_scalar("Validation loss/epoch", validation_loss, epoch)
-            self.summary_writer.add_scalar("Validation accuracy/epoch", validation_accuracy, epoch)
+            self.summary_writer.add_scalar(
+                "Training accuracy/epoch", training_accuracy, epoch
+            )
+            self.summary_writer.add_scalar(
+                "Validation loss/epoch", validation_loss, epoch
+            )
+            self.summary_writer.add_scalar(
+                "Validation accuracy/epoch", validation_accuracy, epoch
+            )
             self.summary_writer.add_scalar("Norm/epoch", self.get_norm(), epoch)
             # TODO: add logging for learning rate
             self.summary_writer.add_scalar(
-                "Batch size", next(iter(batched_training_dataset)).shape[0]
+                "Batch size", next(iter(batched_training_dataset))[0].shape[0]
             )
-            self.summary_writer.add_scalar("Optimiser", self.optimiser)
+            # TODO: add logging for optimiser
+            # self.summary_writer.add_scalar("Optimiser", self.optimiser.param_groups.)
 
             print(
-                f"Training epoch {epoch + 1}: training loss = {training_loss:>8.2f}, training accuracy = {training_accuracy * 100:>6.2f}%, validation loss = {validation_loss:>8.2f}, validation accuracy = {validation_accuracy * 100:>6.2f}%",
+                f"Training epoch {epoch + 1:>{epochs_digits}}: training loss = {training_loss:>8.2f}, training accuracy = {training_accuracy * 100:>6.2f}%, validation loss = {validation_loss:>8.2f}, validation accuracy = {validation_accuracy * 100:>6.2f}%",
                 end="\r",
             )
 

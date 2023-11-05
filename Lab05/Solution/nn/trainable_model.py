@@ -36,6 +36,8 @@ class TrainableNeuralNetwork(NeuralNetwork):
         batched_validation_dataset: torch_data.DataLoader,
         epochs: int,
     ):
+        epochs_digits = len(str(epochs))
+
         for epoch in range(0, epochs):
             training_loss, training_accuracy = self.run_training(
                 batched_training_dataset
@@ -45,7 +47,7 @@ class TrainableNeuralNetwork(NeuralNetwork):
             )
 
             print(
-                f"Training epoch {epoch + 1}: training loss = {training_loss:>8.2f}, training accuracy = {training_accuracy * 100:>6.2f}%, validation loss = {validation_loss:>8.2f}, validation accuracy = {validation_accuracy * 100:>6.2f}%",
+                f"Training epoch {epoch + 1:>{epochs_digits}}: training loss = {training_loss:>8.2f}, training accuracy = {training_accuracy * 100:>6.2f}%, validation loss = {validation_loss:>8.2f}, validation accuracy = {validation_accuracy * 100:>6.2f}%",
                 end="\r",
             )
 
