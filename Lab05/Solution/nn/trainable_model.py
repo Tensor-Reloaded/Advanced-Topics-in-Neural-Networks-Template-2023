@@ -38,10 +38,10 @@ class TrainableNeuralNetwork(NeuralNetwork):
     ):
         for epoch in range(0, epochs):
             training_loss = self.run_training(batched_training_dataset)
-            validation_loss = self.run_validation(batched_validation_dataset)
+            validation_loss, accuracy = self.run_validation(batched_validation_dataset)
 
             print(
-                f"Training epoch {epoch + 1}: training loss = {training_loss}, validation loss = {validation_loss}",
+                f"Training epoch {epoch + 1}: training loss = {training_loss}, validation loss = {validation_loss}, accuracy = {accuracy * 100:.2f}%",
                 end="\r",
             )
 
@@ -75,34 +75,20 @@ class TrainableNeuralNetwork(NeuralNetwork):
     def run_validation(
         self,
         batched_validation_dataset: torch_data.DataLoader,
-    ) -> float:
-        self.eval()
-        validation_loss = 0.0
-
-        for validation_image in batched_validation_dataset:
-            image, label = validation_image
-            image = image.to(self.device)
-            label = label.to(self.device)
-
-            y_hat = self(image)
-            loss = self.loss_function(y_hat, label)
-
-            validation_loss += loss.item()
-
-        return validation_loss
-
-    def run_test(self, test_dataloader: torch_data.DataLoader):
+    ) -> t.Tuple[float, float]:
         self.eval()
         total = 0
         correct = 0
+        validation_loss = 0.0
 
         with torch.no_grad():
-            for test_image in test_dataloader:
-                image, label = test_image
+            for validation_image in batched_validation_dataset:
+                image, label = validation_image
                 image = image.to(self.device)
                 label = label.to(self.device)
 
                 y_hat = self(image)
+                loss = self.loss_function(y_hat, label)
 
                 for i in range(label.shape[0]):
                     correct += (
@@ -110,6 +96,8 @@ class TrainableNeuralNetwork(NeuralNetwork):
                     )
                     total += 1
 
-                print(f"Testing: Accuracy = {correct / total:.2f}%", end="\r")
+                validation_loss += loss.item()
 
-        print()
+        accuracy = correct / total
+
+        return validation_loss, accuracy

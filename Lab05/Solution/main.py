@@ -75,14 +75,20 @@ def main():
     timer = Timer()
     epochs = 200
 
-    model.run_test(test_dataloader=batched_validation_dataset)
+    before_training_results = model.run_validation(
+        batched_validation_dataset=batched_validation_dataset
+    )
     model.run(
         batched_training_dataset=batched_train_dataset,
         batched_validation_dataset=batched_validation_dataset,
         epochs=epochs,
     )
-    model.run_test(test_dataloader=batched_validation_dataset)
+    after_training_results = model.run_validation(
+        batched_validation_dataset=batched_validation_dataset
+    )
 
+    print(f"Before training accuracy: {before_training_results * 100:.2f}%")
+    print(f"After training accuracy: {after_training_results * 100:.2f}%")
     print(f"Running: {timer()}s for {epochs} epochs")
 
 
