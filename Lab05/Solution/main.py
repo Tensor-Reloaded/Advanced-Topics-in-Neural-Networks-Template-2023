@@ -73,7 +73,7 @@ def main():
     )
 
     timer = Timer()
-    epochs = 200
+    epochs = 20
 
     before_training_results = model.run_validation(
         batched_validation_dataset=batched_validation_dataset
@@ -87,8 +87,8 @@ def main():
         batched_validation_dataset=batched_validation_dataset
     )
 
-    print(f"Before training accuracy: {before_training_results * 100:.2f}%")
-    print(f"After training accuracy: {after_training_results * 100:.2f}%")
+    print(f"Validation accuracy before training: {before_training_results[1] * 100:>6.2f}%")
+    print(f"Validation accuracy  after training: {after_training_results[1] * 100:>6.2f}%")
     print(f"Running: {timer()}s for {epochs} epochs")
 
 

@@ -41,7 +41,7 @@ class TrainableNeuralNetwork(NeuralNetwork):
             validation_loss, accuracy = self.run_validation(batched_validation_dataset)
 
             print(
-                f"Training epoch {epoch + 1}: training loss = {training_loss}, validation loss = {validation_loss}, accuracy = {accuracy * 100:.2f}%",
+                f"Training epoch {epoch + 1}: training loss = {training_loss:>8.2f}, validation loss = {validation_loss:>8.2f}, validation accuracy = {accuracy * 100:>6.2f}%",
                 end="\r",
             )
 
