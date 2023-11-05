@@ -64,7 +64,7 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
                 "Learning rate/epoch", self.optimiser.param_groups[0]["lr"], epoch
             )
             self.summary_writer.add_scalar(
-                "Batch size", next(iter(batched_training_dataset))[0].shape[0], epoch
+                "Batch size", next(iter(batched_training_dataset))[0].shape[0]
             )
             self.summary_writer.add_text(
                 "Optimiser",
