@@ -39,6 +39,8 @@ class NeuralNetwork(nn.Module):
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = x.to(device=self.device, non_blocking=self.device == "cuda")
+
         # FIXME: Before call, tensor is of shape [batch_size, input_size]. Here it is [input_size]...
         if len(x.shape) == 1:
             x = x.view(1, -1)

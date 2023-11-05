@@ -64,8 +64,8 @@ class TrainableNeuralNetwork(NeuralNetwork):
 
         for training_image in batched_training_dataset:
             image, label = training_image
-            image = image.to(self.device)
-            label = label.to(self.device)
+            image = image.to(device=self.device, non_blocking=self.device == "cuda")
+            label = label.to(device=self.device, non_blocking=self.device == "cuda")
 
             self.optimiser.zero_grad()
             y_hat = self(image)
@@ -96,8 +96,8 @@ class TrainableNeuralNetwork(NeuralNetwork):
         with torch.no_grad():
             for validation_image in batched_validation_dataset:
                 image, label = validation_image
-                image = image.to(self.device)
-                label = label.to(self.device)
+                image = image.to(device=self.device, non_blocking=self.device == "cuda")
+                label = label.to(device=self.device, non_blocking=self.device == "cuda")
 
                 y_hat = self(image)
                 loss = self.loss_function(y_hat, label)

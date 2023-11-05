@@ -66,8 +66,10 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
             self.summary_writer.add_scalar(
                 "Batch size", next(iter(batched_training_dataset))[0].shape[0]
             )
-            # TODO: add logging for optimiser
-            # self.summary_writer.add_scalar("Optimiser", self.optimiser.param_groups.)
+            self.summary_writer.add_text(
+                "Optimiser",
+                str(self.optimiser),
+            )
 
             print(
                 f"Training epoch {epoch + 1:>{epochs_digits}}: training loss = {training_loss:>8.2f}, training accuracy = {training_accuracy * 100:>6.2f}%, validation loss = {validation_loss:>8.2f}, validation accuracy = {validation_accuracy * 100:>6.2f}%",
@@ -89,8 +91,8 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
 
         for training_image in batched_training_dataset:
             image, label = training_image
-            image = image.to(self.device)
-            label = label.to(self.device)
+            image = image.to(device=self.device, non_blocking=self.device == "cuda")
+            label = label.to(device=self.device, non_blocking=self.device == "cuda")
 
             self.optimiser.zero_grad()
             y_hat = self(image)
@@ -125,8 +127,8 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
         with torch.no_grad():
             for validation_image in batched_validation_dataset:
                 image, label = validation_image
-                image = image.to(self.device)
-                label = label.to(self.device)
+                image = image.to(device=self.device, non_blocking=self.device == "cuda")
+                label = label.to(device=self.device, non_blocking=self.device == "cuda")
 
                 y_hat = self(image)
                 loss = self.loss_function(y_hat, label)
