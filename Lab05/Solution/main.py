@@ -74,7 +74,7 @@ def main():
     )
 
     timer = Timer()
-    epochs = 20
+    epochs = 50
 
     before_training_results = model.run_validation(
         batched_validation_dataset=batched_validation_dataset
