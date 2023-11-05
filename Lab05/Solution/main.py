@@ -3,6 +3,7 @@ import torch
 import torch.utils.data as torch_data
 import torchvision
 from torchvision.transforms import v2
+from nn.util import get_default_device
 from nn.dataset import CachedDataset
 from nn.trainable_model import TrainableNeuralNetwork
 from nn.transforms import OneHot
@@ -12,6 +13,7 @@ from util.util import Timer
 def main():
     timer = Timer()
 
+    device = get_default_device()
     dataset_path = "./data"
     transforms = torchvision.transforms.Compose(
         [
@@ -22,7 +24,7 @@ def main():
             torch.flatten,
         ]
     )
-    target_transforms = OneHot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    target_transforms = OneHot(range(0, 10))
 
     training_dataset = torchvision.datasets.CIFAR10(
         root=dataset_path,
@@ -43,10 +45,18 @@ def main():
     cached_validation_dataset = CachedDataset(dataset=validation_dataset, cache=True)
 
     batched_train_dataset = torch_data.DataLoader(
-        cached_training_dataset, batch_size=64, shuffle=True, num_workers=2
+        dataset=cached_training_dataset,
+        batch_size=64,
+        shuffle=True,
+        num_workers=2,
+        pin_memory=device == "cuda",
     )
     batched_validation_dataset = torch_data.DataLoader(
-        cached_validation_dataset, batch_size=256, shuffle=False, num_workers=2
+        dataset=cached_validation_dataset,
+        batch_size=256,
+        shuffle=False,
+        num_workers=2,
+        pin_memory=device == "cuda",
     )
 
     print(
@@ -56,18 +66,23 @@ def main():
     model = TrainableNeuralNetwork(
         input_size=784,
         output_size=10,
-        loss_function=torch.nn.MSELoss,
+        loss_function=torch.nn.CrossEntropyLoss,
         optimiser=torch.optim.SGD,
         learning_rate=0.03,
+        device=device,
     )
 
     timer = Timer()
-    epochs = 20
+    epochs = 200
+
+    model.run_test(test_dataloader=batched_validation_dataset)
     model.run(
         batched_training_dataset=batched_train_dataset,
         batched_validation_dataset=batched_validation_dataset,
         epochs=epochs,
     )
+    model.run_test(test_dataloader=batched_validation_dataset)
+
     print(f"Running: {timer()}s for {epochs} epochs")
 
 

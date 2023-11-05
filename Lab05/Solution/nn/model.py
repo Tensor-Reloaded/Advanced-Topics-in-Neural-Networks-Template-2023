@@ -4,9 +4,9 @@ import torch.nn as nn
 
 
 class NeuralNetwork(nn.Module):
-    __activation_function: t.Callable[[torch.Tensor], torch.Tensor]
-    __output_layer_activation_function: t.Callable[[torch.Tensor], torch.Tensor]
-    __device: str
+    activation_function: t.Callable[[torch.Tensor], torch.Tensor]
+    output_layer_activation_function: t.Callable[[torch.Tensor], torch.Tensor]
+    device: str
 
     def __init__(
         self,
@@ -18,21 +18,21 @@ class NeuralNetwork(nn.Module):
         device: str = "cpu",
     ) -> None:
         super(NeuralNetwork, self).__init__()
-        self.__device = device
+        self.device = device
 
         self.fc1 = nn.Linear(input_size, 256).to(
-            device=self.__device, non_blocking=self.__device == "cuda"
+            device=self.device, non_blocking=self.device == "cuda"
         )
         self.fc2 = nn.Linear(256, 128).to(
-            device=self.__device, non_blocking=self.__device == "cuda"
+            device=self.device, non_blocking=self.device == "cuda"
         )
         self.fc3 = nn.Linear(128, 64).to(
-            device=self.__device, non_blocking=self.__device == "cuda"
+            device=self.device, non_blocking=self.device == "cuda"
         )
         self.fc4 = nn.Linear(64, output_size)
 
-        self.__activation_function = nn.LeakyReLU()
-        self.__output_layer_activation_function = (
+        self.activation_function = nn.LeakyReLU()
+        self.output_layer_activation_function = (
             output_layer_activation_function
             if output_layer_activation_function is not None
             else nn.Identity()
@@ -43,9 +43,9 @@ class NeuralNetwork(nn.Module):
         if len(x.shape) == 1:
             x = x.view(1, -1)
 
-        x = self.__activation_function(self.fc1(x))
-        x = self.__activation_function(self.fc2(x))
-        x = self.__activation_function(self.fc3(x))
-        x = self.__output_layer_activation_function(self.fc4(x))
+        x = self.activation_function(self.fc1(x))
+        x = self.activation_function(self.fc2(x))
+        x = self.activation_function(self.fc3(x))
+        x = self.output_layer_activation_function(self.fc4(x))
 
         return x

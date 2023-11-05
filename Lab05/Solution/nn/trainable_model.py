@@ -56,6 +56,8 @@ class TrainableNeuralNetwork(NeuralNetwork):
 
         for training_image in batched_training_dataset:
             image, label = training_image
+            image = image.to(self.device)
+            label = label.to(self.device)
 
             self.optimiser.zero_grad()
             y_hat = self(image)
@@ -79,6 +81,8 @@ class TrainableNeuralNetwork(NeuralNetwork):
 
         for validation_image in batched_validation_dataset:
             image, label = validation_image
+            image = image.to(self.device)
+            label = label.to(self.device)
 
             y_hat = self(image)
             loss = self.loss_function(y_hat, label)
@@ -95,9 +99,16 @@ class TrainableNeuralNetwork(NeuralNetwork):
         with torch.no_grad():
             for test_image in test_dataloader:
                 image, label = test_image
+                image = image.to(self.device)
+                label = label.to(self.device)
 
                 y_hat = self(image)
-                correct += torch.argmax(y_hat).item() == torch.argmax(label).item()
+
+                for i in range(label.shape[0]):
+                    correct += (
+                        torch.argmax(y_hat[i]).item() == torch.argmax(label[i]).item()
+                    )
+                    total += 1
 
                 print(f"Testing: Accuracy = {correct / total:.2f}%", end="\r")
 
