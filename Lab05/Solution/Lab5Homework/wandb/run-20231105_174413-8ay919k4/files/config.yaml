@@ -1,0 +1,64 @@
+wandb_version: 1
+
+epochs:
+  desc: null
+  value: 50
+classes:
+  desc: null
+  value: 10
+batch_size_test:
+  desc: null
+  value: 100
+batch_size_val:
+  desc: null
+  value: 500
+input_dim:
+  desc: null
+  value: 784
+learning_rate:
+  desc: null
+  value: 0.01
+momentum:
+  desc: null
+  value: 0.0
+decay:
+  desc: null
+  value: 0.0
+dataset:
+  desc: null
+  value: CIFAR-10
+architecture:
+  desc: null
+  value: MLP
+optimizer:
+  desc: null
+  value: RMSProp
+_wandb:
+  desc: null
+  value:
+    python_version: 3.10.4
+    cli_version: 0.15.12
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1699199053.407439
+    t:
+      1:
+      - 1
+      - 41
+      - 55
+      2:
+      - 1
+      - 41
+      - 55
+      3:
+      - 1
+      - 2
+      - 16
+      - 23
+      4: 3.10.4
+      5: 0.15.12
+      8:
+      - 3
+      - 5
+      13: windows-amd64

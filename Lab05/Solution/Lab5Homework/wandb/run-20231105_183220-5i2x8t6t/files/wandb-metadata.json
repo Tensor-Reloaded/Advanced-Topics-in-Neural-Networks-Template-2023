@@ -1,0 +1,47 @@
+{
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.10.4",
+    "heartbeatAt": "2023-11-05T16:32:21.465379",
+    "startedAt": "2023-11-05T16:32:20.704640",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "C:\\Users\\nicol\\PycharmProjects\\pythonProject\\main.py",
+    "codePathLocal": "main.py",
+    "codePath": "main.py",
+    "host": "DESKTOP-TRD36P7",
+    "username": "nicol",
+    "executable": "C:\\Users\\nicol\\PycharmProjects\\pythonProject\\venv\\Scripts\\python.exe",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 3901.0,
+        "min": 0.0,
+        "max": 3901.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3901.0,
+            "min": 0.0,
+            "max": 3901.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 222.95800399780273,
+            "used": 90.91479873657227
+        }
+    },
+    "gpu": "NVIDIA GeForce GTX 1080",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce GTX 1080",
+            "memory_total": 8589934592
+        }
+    ],
+    "memory": {
+        "total": 23.923480987548828
+    }
+}
