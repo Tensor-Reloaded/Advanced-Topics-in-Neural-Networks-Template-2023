@@ -3,9 +3,9 @@ import torch
 import torch.utils.data as torch_data
 import torchvision
 from torchvision.transforms import v2
+from nn.metered_trainable_model import MeteredTrainableNeuralNetwork
 from nn.util import get_default_device
 from nn.dataset import CachedDataset
-from nn.trainable_model import TrainableNeuralNetwork
 from nn.transforms import OneHot
 from util.util import Timer
 
@@ -63,13 +63,14 @@ def main():
         f"Loading: {timer()}s for {len(training_dataset) + len(validation_dataset)} instances"
     )
 
-    model = TrainableNeuralNetwork(
+    model = MeteredTrainableNeuralNetwork(
         input_size=784,
         output_size=10,
         loss_function=torch.nn.CrossEntropyLoss,
         optimiser=torch.optim.SGD,
         learning_rate=0.03,
         device=device,
+        log_directory=dataset_path
     )
 
     timer = Timer()
