@@ -3,18 +3,23 @@ import torch
 import torch.utils.data as torch_data
 import torchvision
 from torchvision.transforms import v2
+from nn.trainable_model import TrainableNeuralNetwork
 from nn.metered_trainable_model import MeteredTrainableNeuralNetwork
 from nn.util import get_default_device
 from nn.dataset import CachedDataset
 from nn.transforms import OneHot
 from util.util import Timer
+import wandb
 
 
 def main():
+    wandb.init(project="atnn-homework-5")
+
     timer = Timer()
 
     device = get_default_device()
-    dataset_path = "./data"
+    dataset_path = "./data/datasets"
+    logs_path = "./data/logs"
     transforms = torchvision.transforms.Compose(
         [
             v2.ToImageTensor(),
@@ -63,18 +68,65 @@ def main():
         f"Loading: {timer()}s for {len(training_dataset) + len(validation_dataset)} instances"
     )
 
+    model_configurations = [
+        ("SGD", torch.optim.SGD, 0.01, 25, device, logs_path),
+        ("SGD", torch.optim.SGD, 0.001, 25, device, logs_path),
+        ("SGD", torch.optim.SGD, 0.0001, 25, device, logs_path),
+        ("Adam", torch.optim.Adam, 0.001, 25, device, logs_path),
+        ("Adam", torch.optim.Adam, 0.0001, 25, device, logs_path),
+        ("Adam", torch.optim.Adam, 0.00001, 25, device, logs_path),
+        ("RMSprop", torch.optim.RMSprop, 0.01, 25, device, logs_path),
+        ("RMSprop", torch.optim.RMSprop, 0.001, 25, device, logs_path),
+        ("RMSprop", torch.optim.RMSprop, 0.0001, 25, device, logs_path),
+        ("Adagrad", torch.optim.Adagrad, 0.001, 25, device, logs_path),
+        ("Adagrad", torch.optim.Adagrad, 0.0001, 25, device, logs_path),
+        ("Adagrad", torch.optim.Adagrad, 0.00001, 25, device, logs_path),
+    ]
+
+    for model_configuration in model_configurations:
+        model = build_model(
+            optimiser=model_configuration[1],
+            learning_rate=model_configuration[2],
+            device=model_configuration[4],
+            logs_path=model_configuration[5],
+        )
+        run(
+            name=model_configuration[0],
+            model=model,
+            epochs=model_configuration[3],
+            batched_train_dataset=batched_train_dataset,
+            batched_validation_dataset=batched_validation_dataset,
+        )
+
+
+def build_model(
+    optimiser: torch.optim.Optimizer,
+    learning_rate: float,
+    device: str,
+    logs_path: str,
+) -> TrainableNeuralNetwork:
     model = MeteredTrainableNeuralNetwork(
         input_size=784,
         output_size=10,
         loss_function=torch.nn.CrossEntropyLoss,
-        optimiser=torch.optim.SGD,
-        learning_rate=0.03,
+        optimiser=optimiser,
+        learning_rate=learning_rate,
         device=device,
-        log_directory=dataset_path
+        log_directory=logs_path,
     )
+    wandb.watch(models=model, criterion=model.loss_function)
 
+    return model
+
+
+def run(
+    name: str,
+    model: TrainableNeuralNetwork,
+    epochs: int,
+    batched_train_dataset: torch_data.DataLoader,
+    batched_validation_dataset: torch_data.DataLoader,
+):
     timer = Timer()
-    epochs = 50
 
     before_training_results = model.run_validation(
         batched_validation_dataset=batched_validation_dataset
@@ -88,9 +140,13 @@ def main():
         batched_validation_dataset=batched_validation_dataset
     )
 
-    print(f"Validation accuracy before training: {before_training_results[1] * 100:>6.2f}%")
-    print(f"Validation accuracy  after training: {after_training_results[1] * 100:>6.2f}%")
-    print(f"Running: {timer()}s for {epochs} epochs")
+    print(
+        f"{name} - Validation accuracy before training: {before_training_results[1] * 100:>6.2f}%"
+    )
+    print(
+        f"{name} - Validation accuracy  after training: {after_training_results[1] * 100:>6.2f}%"
+    )
+    print(f"{name} - Running: {timer()}s for {epochs} epochs")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 import typing as t
 import torch
 import torch.utils.data as torch_data
+import wandb
 from nn.trainable_model import TrainableNeuralNetwork
 from torch.utils.tensorboard import SummaryWriter
 
@@ -69,6 +70,15 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
             self.summary_writer.add_text(
                 "Optimiser",
                 str(self.optimiser),
+            )
+
+            wandb.log(
+                {
+                    "training_loss": training_loss,
+                    "training_accuracy": training_accuracy,
+                    "validation_loss": validation_loss,
+                    "validation_accuracy": validation_accuracy,
+                }
             )
 
             print(
