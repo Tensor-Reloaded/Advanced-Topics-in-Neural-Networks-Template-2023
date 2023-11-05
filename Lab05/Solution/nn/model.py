@@ -49,3 +49,11 @@ class NeuralNetwork(nn.Module):
         x = self.output_layer_activation_function(self.fc4(x))
 
         return x
+
+    def get_norm(self) -> float:
+        norm = 0.0
+
+        for parameter in self.parameters():
+            norm += torch.norm(parameter).item()
+
+        return norm
