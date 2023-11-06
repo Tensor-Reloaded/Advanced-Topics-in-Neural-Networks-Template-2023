@@ -6,6 +6,7 @@ from datasets import *
 from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 from torch.utils.tensorboard import SummaryWriter
+import datetime
 
 __all__ = ['TrainingPipeline']
 
@@ -15,6 +16,7 @@ class TrainingPipeline:
                  cache: bool = True,
                  train_batch_size: int = 32, validation_batch_size: int = 32, no_workers: int = 2):
         self.device = device
+        self.train_batch_size = train_batch_size
 
         train_dataset = CachedDataset(train_dataset, train_transformers, cache)
         validation_dataset = CachedDataset(validation_dataset, None, cache)
@@ -81,7 +83,7 @@ class TrainingPipeline:
             loss.backward()
 
             # TODO:How to use this together with Tensorboard in order to improve the model?
-            # torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), 5)
 
             optimizer.step()
             optimizer.zero_grad(set_to_none=True)
@@ -104,7 +106,13 @@ class TrainingPipeline:
     def run(self, no_epochs: int, model: nn.Module, criterion, optimizer):
         self.model = model
 
-        writer = SummaryWriter(log_dir="runs")
+        batch_size = self.train_batch_size
+        optimizer_name = type(optimizer).__name__
+        learning_rate = optimizer.param_groups[0]['lr']
+        time = datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S")
+        model_name = f"{time} {optimizer_name}, Batch Size={batch_size}, Lr={learning_rate}"
+        writer = SummaryWriter(log_dir=f"runs/train/{model_name}")
+
         current_batch = 1
         for epoch in range(no_epochs):
             pbar = tqdm(total=len(self.train_loader), desc=f"Epoch {epoch} ", dynamic_ncols=True)
