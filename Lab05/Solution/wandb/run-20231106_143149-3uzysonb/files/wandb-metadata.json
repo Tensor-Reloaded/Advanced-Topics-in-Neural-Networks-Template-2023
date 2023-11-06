@@ -1,0 +1,80 @@
+{
+    "os": "Linux-5.4.0-148-generic-x86_64-with-glibc2.31",
+    "python": "3.11.6",
+    "heartbeatAt": "2023-11-06T12:31:50.553412",
+    "startedAt": "2023-11-06T12:31:49.747474",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/home/paul/Facultate/Master/An1/Sem1/CARN/Advanced-Topics-in-Neural-Networks-Template-2023/Lab05/Solution/downsampled_cifar_training.py",
+    "codePathLocal": "downsampled_cifar_training.py",
+    "codePath": "Lab05/Solution/downsampled_cifar_training.py",
+    "git": {
+        "remote": "git@github.com:Paul513607/Advanced-Topics-in-Neural-Networks-Template-2023.git",
+        "commit": "8152dea4517733a37a3adc738146852f760e2a35"
+    },
+    "email": "79131709+Paul513607@users.noreply.github.com",
+    "root": "/home/paul/Facultate/Master/An1/Sem1/CARN/Advanced-Topics-in-Neural-Networks-Template-2023",
+    "host": "paul-VivoBook-ASUSLaptop-X509JA-X509JA",
+    "username": "paul",
+    "executable": "/home/paul/anaconda3/envs/carn_lab/bin/python",
+    "cpu_count": 4,
+    "cpu_count_logical": 8,
+    "cpu_freq": {
+        "current": 1800.7977500000002,
+        "min": 400.0,
+        "max": 3900.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2096.987,
+            "min": 400.0,
+            "max": 3900.0
+        },
+        {
+            "current": 1417.014,
+            "min": 400.0,
+            "max": 3900.0
+        },
+        {
+            "current": 1634.89,
+            "min": 400.0,
+            "max": 3900.0
+        },
+        {
+            "current": 1427.429,
+            "min": 400.0,
+            "max": 3900.0
+        },
+        {
+            "current": 2127.945,
+            "min": 400.0,
+            "max": 3900.0
+        },
+        {
+            "current": 2242.305,
+            "min": 400.0,
+            "max": 3900.0
+        },
+        {
+            "current": 1726.909,
+            "min": 400.0,
+            "max": 3900.0
+        },
+        {
+            "current": 1732.903,
+            "min": 400.0,
+            "max": 3900.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 84.4522705078125,
+            "used": 74.22697448730469
+        }
+    },
+    "memory": {
+        "total": 7.582469940185547
+    }
+}
