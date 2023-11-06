@@ -57,6 +57,7 @@ class MeteredTrainableSAMNeuralNetwork(MeteredTrainableNeuralNetwork):
             y_hat = self(image)
             loss = self.loss_function(y_hat, label)
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
             self.optimiser.second_step(zero_grad=True)
 
             self.summary_writer.add_scalar("Training loss/batch", loss, batch)
