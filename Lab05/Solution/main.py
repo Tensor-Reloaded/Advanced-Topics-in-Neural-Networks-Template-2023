@@ -3,6 +3,7 @@ import torch
 import torch.utils.data as torch_data
 import torchvision
 from torchvision.transforms import v2
+from nn.metered_trainable_sam_model import MeteredTrainableSAMNeuralNetwork
 from nn.trainable_model import TrainableNeuralNetwork
 from nn.metered_trainable_model import MeteredTrainableNeuralNetwork
 from nn.util import get_default_device
@@ -69,43 +70,49 @@ def main():
     )
 
     model_configurations = [
-        ("SGD", torch.optim.SGD, 0.01, 25, device, logs_path),
-        ("SGD", torch.optim.SGD, 0.001, 25, device, logs_path),
-        ("SGD", torch.optim.SGD, 0.0001, 25, device, logs_path),
-        ("Adam", torch.optim.Adam, 0.001, 25, device, logs_path),
-        ("Adam", torch.optim.Adam, 0.0001, 25, device, logs_path),
-        ("Adam", torch.optim.Adam, 0.00001, 25, device, logs_path),
-        ("RMSprop", torch.optim.RMSprop, 0.01, 25, device, logs_path),
-        ("RMSprop", torch.optim.RMSprop, 0.001, 25, device, logs_path),
-        ("RMSprop", torch.optim.RMSprop, 0.0001, 25, device, logs_path),
-        ("Adagrad", torch.optim.Adagrad, 0.001, 25, device, logs_path),
-        ("Adagrad", torch.optim.Adagrad, 0.0001, 25, device, logs_path),
-        ("Adagrad", torch.optim.Adagrad, 0.00001, 25, device, logs_path),
+        ("SGD", MeteredTrainableNeuralNetwork, torch.optim.SGD, 0.01, 25, device, logs_path),
+        ("SGD", MeteredTrainableNeuralNetwork, torch.optim.SGD, 0.001, 25, device, logs_path),
+        ("SGD", MeteredTrainableNeuralNetwork, torch.optim.SGD, 0.0001, 25, device, logs_path),
+        ("Adam", MeteredTrainableNeuralNetwork, torch.optim.Adam, 0.001, 25, device, logs_path),
+        ("Adam", MeteredTrainableNeuralNetwork, torch.optim.Adam, 0.0001, 25, device, logs_path),
+        ("Adam", MeteredTrainableNeuralNetwork, torch.optim.Adam, 0.00001, 25, device, logs_path),
+        ("RMSprop", MeteredTrainableNeuralNetwork, torch.optim.RMSprop, 0.01, 25, device, logs_path),
+        ("RMSprop", MeteredTrainableNeuralNetwork, torch.optim.RMSprop, 0.001, 25, device, logs_path),
+        ("RMSprop", MeteredTrainableNeuralNetwork, torch.optim.RMSprop, 0.0001, 25, device, logs_path),
+        ("Adagrad", MeteredTrainableNeuralNetwork, torch.optim.Adagrad, 0.001, 25, device, logs_path),
+        ("Adagrad", MeteredTrainableNeuralNetwork, torch.optim.Adagrad, 0.0001, 25, device, logs_path),
+        ("Adagrad", MeteredTrainableNeuralNetwork, torch.optim.Adagrad, 0.00001, 25, device, logs_path),
+        ("Adagrad", MeteredTrainableNeuralNetwork, torch.optim.Adagrad, 0.00001, 25, device, logs_path),
+        ("SGD with SAM", MeteredTrainableSAMNeuralNetwork, torch.optim.SGD, 0.01, 25, device, logs_path),
+        ("SGD with SAM", MeteredTrainableSAMNeuralNetwork, torch.optim.SGD, 0.001, 25, device, logs_path),
+        ("SGD with SAM", MeteredTrainableSAMNeuralNetwork, torch.optim.SGD, 0.0001, 25, device, logs_path),
     ]
 
     for model_configuration in model_configurations:
         model = build_model(
-            optimiser=model_configuration[1],
-            learning_rate=model_configuration[2],
-            device=model_configuration[4],
-            logs_path=model_configuration[5],
+            constructor=model_configuration[1],
+            optimiser=model_configuration[2],
+            learning_rate=model_configuration[3],
+            device=model_configuration[5],
+            logs_path=model_configuration[6],
         )
         run(
             name=model_configuration[0],
             model=model,
-            epochs=model_configuration[3],
+            epochs=model_configuration[4],
             batched_train_dataset=batched_train_dataset,
             batched_validation_dataset=batched_validation_dataset,
         )
 
 
 def build_model(
+    constructor: TrainableNeuralNetwork,
     optimiser: torch.optim.Optimizer,
     learning_rate: float,
     device: str,
     logs_path: str,
 ) -> TrainableNeuralNetwork:
-    model = MeteredTrainableNeuralNetwork(
+    model = constructor(
         input_size=784,
         output_size=10,
         loss_function=torch.nn.CrossEntropyLoss,
