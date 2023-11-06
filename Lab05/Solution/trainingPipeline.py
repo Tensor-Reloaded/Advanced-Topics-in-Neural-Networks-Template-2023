@@ -7,33 +7,65 @@ from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 from torch.utils.tensorboard import SummaryWriter
 import datetime
+import wandb
+from typing import Union
+from models import *
 
 __all__ = ['TrainingPipeline']
 
 
 class TrainingPipeline:
-    def __init__(self, device: torch.device, train_dataset: Dataset, validation_dataset: Dataset, train_transformers,
+    def __init__(self, device: torch.device, use_config_for_train: bool, train_dataset: Dataset,
+                 val_dataset: Union[None, Dataset], train_transformer,
                  cache: bool = True,
-                 train_batch_size: int = 32, validation_batch_size: int = 32, no_workers: int = 2):
+                 train_batch_size: Union[None, int] = 32, val_batch_size: Union[None, int] = 32, no_workers: int = 2):
         self.device = device
+
+        self.train_transformer = train_transformer
+        self.cache = cache
+        self.no_workers = no_workers
         self.train_batch_size = train_batch_size
 
-        train_dataset = CachedDataset(train_dataset, train_transformers, cache)
-        validation_dataset = CachedDataset(validation_dataset, None, cache)
+        self.train_loader = None
+        self.validation_loader = None
+        self.train_dataset = None
+        self.val_dataset = None
 
-        pin_memory = (device.type == 'cuda')
+        self.model = None
+
+        if not use_config_for_train:
+            self.build_data_loaders(train_dataset, val_dataset, train_transformer, cache, train_batch_size,
+                                    val_batch_size, no_workers)
+        else:
+            self.train_dataset = train_dataset
+            self.val_dataset = val_dataset
+
+    def build_data_loaders(self, train_dataset: Dataset, validation_dataset: Union[None, Dataset], train_transformers,
+                           cache: bool = True,
+                           train_batch_size: int = 32, validation_batch_size: Union[None, int] = 32,
+                           no_workers: int = 2,
+                           build_val_loader: bool = True):
+        train_dataset = CachedDataset(train_dataset, train_transformers, cache)
+
+        pin_memory = (self.device.type == 'cuda')
         persistent_workers = (no_workers != 0)
         self.train_loader = DataLoader(train_dataset, shuffle=True, pin_memory=pin_memory, num_workers=no_workers,
                                        batch_size=train_batch_size, drop_last=True,
                                        persistent_workers=persistent_workers)
-        self.validation_loader = DataLoader(validation_dataset, shuffle=False, pin_memory=True, num_workers=0,
-                                            batch_size=validation_batch_size, drop_last=False)
+        if build_val_loader:
+            validation_dataset = CachedDataset(validation_dataset, None, cache)
+            self.validation_loader = DataLoader(validation_dataset, shuffle=False, pin_memory=True, num_workers=0,
+                                                batch_size=validation_batch_size, drop_last=False)
 
-        self.model = None
-
-        # self.no_epochs = 0
-        # self.loss_training_per_epoch = []
-        # self.loss_validation_per_epoch = []
+    def build_optimizer(self, model: nn.Module, config) -> optim:
+        optimizer = None
+        if config.optimizer == 'sgd':
+            optimizer = optim.SGD(model.parameters(),
+                                  lr=config.learning_rate,
+                                  momentum=config.momentum,
+                                  weight_decay=config.weight_decay,
+                                  nesterov=config.nesterov)
+        return optimizer
 
     def accuracy_and_loss(self, loader_type: str, criterion) -> tuple[float, float]:
         self.model.eval()
@@ -135,3 +167,42 @@ class TrainingPipeline:
             writer.add_scalar("Model/Norm", self.get_model_norm(), epoch + 1)
 
         writer.close()
+
+    # Unlike the train() method,this should only be used for sweep by wandb
+    # Because of that,we simply train and only measure the loss
+    def train_epoch(self, criterion, optimizer):
+        total_loss = 0.0
+        no_instances = 0
+        for data, labels in self.train_loader:
+            data = data.to(self.device, non_blocking=True)
+            labels = labels.to(self.device, non_blocking=True)
+
+            loss = criterion(self.model(data), labels)
+
+            total_loss += loss.item()
+            no_instances += len(labels)
+
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad(set_to_none=True)
+
+            wandb.log({"batch loss": loss.item()})
+        return total_loss / no_instances
+
+    def run_config(self, config=None):
+        with wandb.init(config=config):
+            config = wandb.config
+
+            # Build train loader
+            self.build_data_loaders(self.train_dataset, None, self.train_transformer, self.cache, config.batch_size,
+                                    None, self.no_workers, False)
+
+            self.model = MLP(self.device, config.no_units_per_layer)
+            optimizer = self.build_optimizer(self.model, config)
+
+            # TODO:Allow generalization of criterion as a given parameter
+            criterion = nn.CrossEntropyLoss()
+
+            for epoch in range(config.epochs):
+                loss = self.train_epoch(criterion, optimizer)
+                wandb.log({"loss": loss, "epoch": epoch})

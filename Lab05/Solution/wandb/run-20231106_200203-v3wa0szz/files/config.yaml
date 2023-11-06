@@ -1,0 +1,54 @@
+wandb_version: 1
+
+batch_size:
+  desc: null
+  value: 96
+epochs:
+  desc: null
+  value: 1
+learning_rate:
+  desc: null
+  value: 0.007655272894104826
+no_units_per_layer:
+  desc: null
+  value:
+  - 784
+  - 128
+  - 64
+  - 10
+optimizer:
+  desc: null
+  value: adam
+_wandb:
+  desc: null
+  value:
+    python_version: 3.10.8
+    cli_version: 0.15.12
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1699293723.328933
+    t:
+      1:
+      - 1
+      - 2
+      - 3
+      - 41
+      - 51
+      - 55
+      2:
+      - 1
+      - 2
+      - 3
+      - 41
+      - 51
+      - 55
+      3:
+      - 23
+      - 37
+      4: 3.10.8
+      5: 0.15.12
+      8:
+      - 3
+      - 5
+      13: windows-amd64
