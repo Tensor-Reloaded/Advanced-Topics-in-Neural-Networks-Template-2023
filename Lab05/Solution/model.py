@@ -5,7 +5,6 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 from typing import List, Optional, Type
 from tqdm import tqdm
-import wandb
 
 class Model(nn.Module):
     def __init__(self, input_size: int, hidden_layers: List[int], output_size: int, activation_fns: List[Type[nn.Module]]):
@@ -31,9 +30,9 @@ class Model(nn.Module):
         
         self.layers.add_module('output', nn.Linear(hidden_layers[-1], output_size))
 
-    def to_device(self, device: torch.device):
+    def to(self, device):
         self.device = device
-        self.to(device)
+        return super().to(device)
         
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.layers(x)
@@ -114,9 +113,10 @@ class Trainer:
 
     def run(self, train_dataloader: DataLoader, validation_dataloader: DataLoader, epochs: int):
 
-        self.__logger__.log_config('Criterion', str(self.__criterion__))
-        self.__logger__.log_config('Optimizer', str(self.__optimizer__))
-        self.__logger__.log_config('Training batch size', str(train_dataloader.batch_size))
+        self.__logger__.log_text_config('Criterion', str(self.__criterion__))
+        self.__logger__.log_text_config('Optimizer', str(self.__optimizer__))
+        self.__logger__.log_text_config('Training batch size', str(train_dataloader.batch_size))
+        self.__logger__.log_scalar_config('Learning rate', self.__optimizer__.param_groups[0]['lr'])
 
         pbar = tqdm(range(epochs), desc="Training", unit="epoch")
         total_time = 0
@@ -129,7 +129,6 @@ class Trainer:
 
             model_norm = sum(p.norm().item() for p in self.__model__.parameters())
             self.__logger__.log_scalar_for_epoch('Model norm', model_norm, epoch)
-            self.__logger__.log_scalar_for_epoch('Learning rate', self.__optimizer__.param_groups[0]['lr'], epoch)
 
             end_time = time.time()
             epoch_time = end_time - start_time

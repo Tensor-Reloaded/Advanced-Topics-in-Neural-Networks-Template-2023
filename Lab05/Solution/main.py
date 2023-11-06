@@ -42,6 +42,6 @@ testset = CachedDataset(CIFAR10(root='./data', train=False, download=True, trans
 trainloader = DataLoader(trainset, batch_size=256, shuffle=True)
 testloader = DataLoader(testset, batch_size=512, shuffle=False)
 
-logger = Logger(project_name="XEntropy+Adam")
+logger = Logger(tensorboard_file_suffix="XEntropy+Adam")
 trainer = Trainer(model, criterion, optimizer, logger=logger)
 trainer.run(trainloader, testloader, epochs)
