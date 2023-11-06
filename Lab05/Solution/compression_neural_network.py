@@ -24,9 +24,9 @@ def recombine_chunks_into_matrix(chunks: torch.Tensor) -> torch.Tensor:
             .reshape(z, nr_of_slice_sqrt * h, nr_of_slice_sqrt * w))
 
 
-class CompressionLayer(torch.nn.Module):
+class CompressionNeuronLayer(torch.nn.Module):
     def __init__(self, input_size: tuple[int, int], kernel_size: tuple[int, int], output_size: tuple[int, int]):
-        super(CompressionLayer, self).__init__()
+        super(CompressionNeuronLayer, self).__init__()
 
         assert input_size[0] == input_size[1]
         assert kernel_size[0] == kernel_size[1]
@@ -60,11 +60,29 @@ class CompressionLayer(torch.nn.Module):
         return recombined_matrix.reshape(batches, h * w)
 
 
+class CompressionSVDLayer(torch.nn.Module):
+    def __init__(self, input_size: tuple[int, int], truncate: int):
+        super(CompressionSVDLayer, self).__init__()
+        self.input_size = input_size
+        self.truncate = truncate
+
+    def forward(self, x: torch.Tensor):
+        x = x.reshape(-1, self.input_size[0], self.input_size[1])
+        u_mat, s_vec, v_mat = torch.linalg.svd(x, full_matrices=False)
+        u_mat = u_mat[:, :, 0:self.truncate]
+        v_mat = v_mat[:, 0:self.truncate, :].swapaxes(1, 2)
+        s_vec = s_vec[:, 0:self.truncate].reshape(-1, 1, self.truncate)
+
+        x = torch.cat((u_mat, v_mat, s_vec), dim=1)
+        b, h, w = x.size()
+        return x.reshape(b, h * w)
+
+
 class CompressionNeuralNetwork(torch.nn.Module):
     def __init__(self, hidden_size: int, output_size: int):
         super(CompressionNeuralNetwork, self).__init__()
 
-        self.fc1 = CompressionLayer((28, 28), (4, 4), (2, 2))
+        self.fc1 = CompressionNeuronLayer((28, 28), (4, 4), (2, 2))
         self.fc2 = torch.nn.Linear(196, hidden_size)
         self.fc3 = torch.nn.Linear(hidden_size, output_size)
 

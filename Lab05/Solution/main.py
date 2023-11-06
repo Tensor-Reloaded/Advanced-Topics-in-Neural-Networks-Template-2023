@@ -21,11 +21,11 @@ def main():
     val_dataset = CIFAR10Dataset(False, transforms, True)
 
     #model, device = SimpleNeuralNetwork.for_device(784, 128, 10)
-    model, device = CompressionNeuralNetwork.for_device(100, 10)
+    model, device = CompressionNeuralNetwork.for_device(128, 10)
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.005)
     criterion = torch.nn.CrossEntropyLoss()
-    epochs = 100
+    epochs = 200
 
     batch_size = 64
     val_batch_size = 500
@@ -37,7 +37,7 @@ def main():
     val_loader = DataLoader(val_dataset, shuffle=False, pin_memory=True, num_workers=0, batch_size=val_batch_size,
                             drop_last=False)
 
-    train_epochs(epochs, model, train_loader, val_loader, criterion, optimizer, device)
+    train_epochs(epochs, model, train_loader, val_loader, criterion, optimizer, "Adam", batch_size, device)
 
 
 if __name__ == "__main__":
