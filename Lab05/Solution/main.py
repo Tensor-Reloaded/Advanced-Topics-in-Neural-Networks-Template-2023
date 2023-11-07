@@ -10,6 +10,9 @@ from models import *
 import wandb
 
 
+# TODO:General Cleanup
+
+
 def get_default_device():
     if torch.cuda.is_available():
         return torch.device('cuda')
@@ -29,7 +32,6 @@ def run_model(device=get_default_device()):
         v2.Resize(size, antialias=True),
         v2.Grayscale(),
         v2.Normalize((0.5,), (0.5,), inplace=True),
-        torch.flatten,
     ]
 
     data_path = '../data'
@@ -38,7 +40,9 @@ def run_model(device=get_default_device()):
 
     no_units_per_layer = [784, 128, 64, 10]
     model = MLP(device, no_units_per_layer)
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.001, weight_decay=0.05, nesterov=True)
+    # optimizer = torch.optim.SGD(model.parameters(), lr=0.026172624468404335, momentum=0.01964499304214733,
+    #                             weight_decay=0.090403235101392, nesterov=True)
+    optimizer = torch.optim.Adam(model.parameters())
     criterion = torch.nn.CrossEntropyLoss()
     no_epochs = 50
 
@@ -48,17 +52,27 @@ def run_model(device=get_default_device()):
     validation_batch_size = 500
     num_workers = 2
     train_transforms = None
-    # train_transforms = v2.Compose([
-    # ])
+    train_transforms = v2.Compose([
+        v2.RandomHorizontalFlip(),
+        v2.GaussianBlur(3, 0.1),
+        torch.flatten
+    ])
 
-    training_pipeline = TrainingPipeline(device, train_dataset, validation_dataset,
-                                         train_transformer=train_transforms, cache=True,
+    val_transforms = None
+    val_transforms = v2.Compose([
+        torch.flatten
+    ])
+
+    training_pipeline = TrainingPipeline(device, False, train_dataset, validation_dataset,
+                                         train_transformer=train_transforms, val_transformer=val_transforms,
+                                         cache=True,
                                          train_batch_size=train_batch_size, val_batch_size=validation_batch_size,
                                          no_workers=num_workers)
     print("Device: ", device)
     training_pipeline.run(no_epochs, model, criterion, optimizer)
 
 
+# TODO:Clean memory to ensure longer runs fight this lag
 def run_sweep(device=get_default_device()):
     # Set up the pipeline
     size = (28, 28)
@@ -143,10 +157,10 @@ def run_sweep(device=get_default_device()):
 
 
 if __name__ == '__main__':
-    # freeze_support()
-    # run_model()
+    freeze_support()
+    run_model()
 
-    run_sweep()
+    # run_sweep()
 
 # python -m tensorboard.main --logdir=runs
 # this commands works for me on Windows 10

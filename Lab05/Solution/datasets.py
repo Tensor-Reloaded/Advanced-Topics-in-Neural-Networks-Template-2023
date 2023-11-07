@@ -11,7 +11,7 @@ __all__ = ['CachedDataset']
 
 class CachedDataset(Dataset):
     def __init__(self, given_dataset: Dataset, transformer=None, cache: bool = True):
-        self.transformers = transformer
+        self.transformer = transformer
 
         if cache:
             given_dataset = tuple([x for x in given_dataset])
@@ -22,9 +22,10 @@ class CachedDataset(Dataset):
         return len(self.dataset)
 
     def __getitem__(self, idx):
+        # TODO:Make sure we aren't rewriting the features with the transformers
         features, label = self.dataset[idx]
-        if self.transformers is not None:
-            features = self.transformers(features)
+        if self.transformer is not None:
+            features = self.transformer(features)
         return features, label
 
 

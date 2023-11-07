@@ -15,13 +15,15 @@ __all__ = ['TrainingPipeline']
 
 
 class TrainingPipeline:
-    def __init__(self, device: torch.device, use_config_for_train: bool, train_dataset: Dataset,
-                 val_dataset: Union[None, Dataset], train_transformer,
+    def __init__(self, device: torch.device, use_config_for_train: bool,
+                 train_dataset: Dataset, val_dataset: Union[None, Dataset],
+                 train_transformer, val_transformer,
                  cache: bool = True,
                  train_batch_size: Union[None, int] = 32, val_batch_size: Union[None, int] = 32, no_workers: int = 2):
         self.device = device
 
         self.train_transformer = train_transformer
+        self.val_transformer = val_transformer
         self.cache = cache
         self.no_workers = no_workers
         self.train_batch_size = train_batch_size
@@ -34,13 +36,15 @@ class TrainingPipeline:
         self.model = None
 
         if not use_config_for_train:
-            self.build_data_loaders(train_dataset, val_dataset, train_transformer, cache, train_batch_size,
+            self.build_data_loaders(train_dataset, val_dataset, train_transformer, val_transformer, cache,
+                                    train_batch_size,
                                     val_batch_size, no_workers)
         else:
             self.train_dataset = train_dataset
             self.val_dataset = val_dataset
 
-    def build_data_loaders(self, train_dataset: Dataset, validation_dataset: Union[None, Dataset], train_transformers,
+    def build_data_loaders(self, train_dataset: Dataset, validation_dataset: Union[None, Dataset],
+                           train_transformers, val_transformer,
                            cache: bool = True,
                            train_batch_size: int = 32, validation_batch_size: Union[None, int] = 32,
                            no_workers: int = 2,
@@ -53,7 +57,7 @@ class TrainingPipeline:
                                        batch_size=train_batch_size, drop_last=True,
                                        persistent_workers=persistent_workers)
         if build_val_loader:
-            validation_dataset = CachedDataset(validation_dataset, None, cache)
+            validation_dataset = CachedDataset(validation_dataset, val_transformer, cache)
             self.validation_loader = DataLoader(validation_dataset, shuffle=False, pin_memory=True, num_workers=0,
                                                 batch_size=validation_batch_size, drop_last=False)
 
@@ -115,7 +119,7 @@ class TrainingPipeline:
             loss.backward()
 
             # TODO:How to use this together with Tensorboard in order to improve the model?
-            torch.nn.utils.clip_grad_norm_(self.model.parameters(), 5)
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), 2)
 
             optimizer.step()
             optimizer.zero_grad(set_to_none=True)

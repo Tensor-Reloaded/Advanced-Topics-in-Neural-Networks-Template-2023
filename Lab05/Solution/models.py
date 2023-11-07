@@ -21,6 +21,8 @@ class MLP(nn.Module):
             no_units_layer1 = no_units_per_layer[index]
             no_units_layer2 = no_units_per_layer[index + 1]
 
+            # TODO:Try with ELU instead
+
             layer = None
             if index != self.no_layers - 2:
                 layer = nn.Sequential(

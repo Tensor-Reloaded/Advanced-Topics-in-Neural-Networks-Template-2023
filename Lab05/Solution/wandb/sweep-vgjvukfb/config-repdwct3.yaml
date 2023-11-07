@@ -1,0 +1,22 @@
+wandb_version: 1
+
+batch_size:
+  value: 64
+epochs:
+  value: 3
+learning_rate:
+  value: 0.039532507636500694
+momentum:
+  value: 0.05236935592655627
+nesterov:
+  value: true
+no_units_per_layer:
+  value:
+  - 784
+  - 128
+  - 64
+  - 10
+optimizer:
+  value: sgd
+weight_decay:
+  value: 0.36562945618816306
