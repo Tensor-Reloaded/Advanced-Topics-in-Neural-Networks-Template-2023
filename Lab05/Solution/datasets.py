@@ -41,8 +41,19 @@ if __name__ == '__main__':
         v2.ToDtype(torch.float32, scale=True),
         v2.Resize((28, 28), antialias=True),
         v2.Grayscale(),
+        v2.AutoAugment(v2.AutoAugmentPolicy.CIFAR10)
         # torch.flatten,
     ]
+
+    # From testing,the following should be tested for augmentation:
+    # v2.Resize((20,20)),v2.Pad(4)
+    # v2.CenterCrop(20),v2.Pad(4)
+    # v2.RandomPerspective(distortion_scale=0.3, p=0.5)
+    # v2.RandomCrop((20, 20)),v2.Pad(4)
+    # v2.HorizontalFlip()
+    # v2.RandAugment(magnitude=2)
+
+    # TODO:Try Random Affine and Random Rotation
 
     data_path = '../data'
     val_dataset = CIFAR10(root=data_path, train=False, transform=v2.Compose(transforms), download=True)
@@ -55,6 +66,8 @@ if __name__ == '__main__':
 
     dataiter = iter(loader)
     images, labels = next(dataiter)
+
+    print(images[0].shape)
 
     imshow(torchvision.utils.make_grid(images))
 

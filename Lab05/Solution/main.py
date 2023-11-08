@@ -38,25 +38,33 @@ def run_model(device=get_default_device()):
     train_dataset = CIFAR10(root=data_path, train=True, transform=v2.Compose(transforms), download=True)
     validation_dataset = CIFAR10(root=data_path, train=False, transform=v2.Compose(transforms), download=True)
 
-    no_units_per_layer = [784, 128, 64, 10]
+    no_units_per_layer = [784, 256, 128, 64, 10]
     model = MLP(device, no_units_per_layer)
     # optimizer = torch.optim.SGD(model.parameters(), lr=0.026172624468404335, momentum=0.01964499304214733,
     #                             weight_decay=0.090403235101392, nesterov=True)
-    optimizer = torch.optim.Adam(model.parameters())
+    optimizer = torch.optim.Adam(model.parameters(), weight_decay=0.00025)
     criterion = torch.nn.CrossEntropyLoss()
     no_epochs = 50
 
-    # TODO:Add data augmentation
-
-    train_batch_size = 256
+    train_batch_size = 128
     validation_batch_size = 500
     num_workers = 2
     train_transforms = None
     train_transforms = v2.Compose([
         v2.RandomHorizontalFlip(),
-        v2.GaussianBlur(3, 0.1),
+        v2.RandomChoice([v2.RandomPerspective(distortion_scale=0.3),
+                         v2.Compose([v2.CenterCrop(22), v2.Pad(3)]),
+                         v2.GaussianBlur(3, (0.1, 1))
+                         ]),
         torch.flatten
     ])
+
+    # v2.RandAugment(magnitude=2), -> keeps learning ,but slowly and more costly getting at 46%
+    # v2.RandomHorizontalFlip(),
+    # v2.RandomChoice([v2.RandomPerspective(distortion_scale=0.3),
+    #                  v2.Compose([v2.CenterCrop(22), v2.Pad(3)]),
+    #                  v2.GaussianBlur(3, (0.1, 1))
+    #                  ]), -> 48% with 25 epochs
 
     val_transforms = None
     val_transforms = v2.Compose([

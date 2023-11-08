@@ -119,7 +119,7 @@ class TrainingPipeline:
             loss.backward()
 
             # TODO:How to use this together with Tensorboard in order to improve the model?
-            torch.nn.utils.clip_grad_norm_(self.model.parameters(), 2)
+            # torch.nn.utils.clip_grad_norm_(self.model.parameters(), 2)
 
             optimizer.step()
             optimizer.zero_grad(set_to_none=True)
@@ -155,6 +155,7 @@ class TrainingPipeline:
 
             current_batch = self.train(criterion, optimizer, pbar, current_batch, writer)
 
+            # TODO:Compute the training accuracy using a moving average instead for efficiency
             train_accuracy, train_loss = self.accuracy_and_loss("train_loader", criterion)
             validation_accuracy, validation_loss = self.accuracy_and_loss("val_loader", criterion)
 
@@ -194,6 +195,7 @@ class TrainingPipeline:
         return total_loss / no_instances
 
     def run_config(self, config=None):
+        # TODO:Also log the same metrics as before
         with wandb.init(config=config):
             config = wandb.config
 
