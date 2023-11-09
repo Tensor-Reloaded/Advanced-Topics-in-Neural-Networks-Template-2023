@@ -30,9 +30,11 @@ def run_model(device=get_default_device()):
         v2.ToImage(),
         v2.ToDtype(torch.float32, scale=True),
         v2.Resize(size, antialias=True),
+        v2.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261)),
         v2.Grayscale(),
-        v2.Normalize((0.5,), (0.5,), inplace=True),
     ]
+
+    # (0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261)
 
     data_path = '../data'
     train_dataset = CIFAR10(root=data_path, train=True, transform=v2.Compose(transforms), download=True)
@@ -42,9 +44,9 @@ def run_model(device=get_default_device()):
     model = MLP(device, no_units_per_layer)
     # optimizer = torch.optim.SGD(model.parameters(), lr=0.026172624468404335, momentum=0.01964499304214733,
     #                             weight_decay=0.090403235101392, nesterov=True)
-    optimizer = torch.optim.Adam(model.parameters(), weight_decay=0.00025)
+    optimizer = torch.optim.Adam(model.parameters(), weight_decay=0.00001)
     criterion = torch.nn.CrossEntropyLoss()
-    no_epochs = 50
+    no_epochs = 5
 
     train_batch_size = 128
     validation_batch_size = 500
@@ -52,10 +54,7 @@ def run_model(device=get_default_device()):
     train_transforms = None
     train_transforms = v2.Compose([
         v2.RandomHorizontalFlip(),
-        v2.RandomChoice([v2.RandomPerspective(distortion_scale=0.3),
-                         v2.Compose([v2.CenterCrop(22), v2.Pad(3)]),
-                         v2.GaussianBlur(3, (0.1, 1))
-                         ]),
+        v2.GaussianBlur(3),
         torch.flatten
     ])
 

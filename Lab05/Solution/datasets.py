@@ -41,7 +41,8 @@ if __name__ == '__main__':
         v2.ToDtype(torch.float32, scale=True),
         v2.Resize((28, 28), antialias=True),
         v2.Grayscale(),
-        v2.AutoAugment(v2.AutoAugmentPolicy.CIFAR10)
+        v2.RandomHorizontalFlip(),
+        v2.GaussianBlur(5)
         # torch.flatten,
     ]
 
