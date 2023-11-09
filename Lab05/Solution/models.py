@@ -30,7 +30,7 @@ class MLP(nn.Module):
             if index != self.no_layers - 2:
                 layer = nn.Sequential(
                     layer,
-                    nn.Dropout(p=0.2),
+                    nn.Dropout(p=0.15),
                     # nn.InstanceNorm1d(num_features=256, affine=True),
                     # nn.LeakyReLU(negative_slope=slope, inplace=True),
                     nn.ELU(alpha=alpha, inplace=True),

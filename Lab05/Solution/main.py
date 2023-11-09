@@ -44,9 +44,9 @@ def run_model(device=get_default_device()):
     model = MLP(device, no_units_per_layer)
     # optimizer = torch.optim.SGD(model.parameters(), lr=0.026172624468404335, momentum=0.01964499304214733,
     #                             weight_decay=0.090403235101392, nesterov=True)
-    optimizer = torch.optim.Adam(model.parameters(), weight_decay=0.00001)
+    optimizer = torch.optim.Adam(model.parameters(), weight_decay=0.00002)
     criterion = torch.nn.CrossEntropyLoss()
-    no_epochs = 5
+    no_epochs = 50
 
     train_batch_size = 128
     validation_batch_size = 500
@@ -54,7 +54,6 @@ def run_model(device=get_default_device()):
     train_transforms = None
     train_transforms = v2.Compose([
         v2.RandomHorizontalFlip(),
-        v2.GaussianBlur(3),
         torch.flatten
     ])
 
