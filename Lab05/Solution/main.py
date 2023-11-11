@@ -3,6 +3,7 @@ from torchvision.transforms import v2
 from dataset import CIFAR10Dataset
 from simple_neural_network import SimpleNeuralNetwork
 from compression_neural_network import CompressionNeuralNetwork
+from upscale_neural_network import UpscaleNeuralNetwork
 from torch.utils.data import DataLoader
 from trainer import train_epochs
 from wba_manager import WBAManager
@@ -24,7 +25,9 @@ def main():
     manager = WBAManager()
 
     #model, device = SimpleNeuralNetwork.for_device(784, 128, 10)
-    model, device = CompressionNeuralNetwork.for_device(128, 10)
+    #model, device = CompressionNeuralNetwork.for_device(128, 10)
+
+    model, device = UpscaleNeuralNetwork().for_device(784, 128, 10)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=manager.config["learning_rate"])
     criterion = torch.nn.CrossEntropyLoss()
