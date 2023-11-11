@@ -2,6 +2,7 @@ import torch
 from tqdm import tqdm
 from torch.utils.tensorboard import SummaryWriter
 from torch.utils.data import DataLoader
+from wba_manager import WBAManager
 
 
 def accuracy(output, labels):
@@ -90,8 +91,8 @@ def get_model_norm(model):
     return norm
 
 
-def train_epochs(epochs: int, model: torch.nn.Module, train_loader: DataLoader, val_loader: DataLoader,
-                 criterion,
+def train_epochs(wba_manager: WBAManager, epochs: int, model: torch.nn.Module, train_loader: DataLoader,
+                 val_loader: DataLoader, criterion,
                  optimizer: torch.optim.Optimizer, optimizer_name: str, batch_size: int,  device: torch.device):
 
     writer = SummaryWriter()
@@ -99,6 +100,11 @@ def train_epochs(epochs: int, model: torch.nn.Module, train_loader: DataLoader, 
 
     writer.add_text("Optimizer Name", optimizer_name)
     writer.add_scalar("Batch size", batch_size)
+
+    wba_manager.log({
+        "Optimizer Name": optimizer_name,
+        "Batch size": batch_size
+    })
 
     for epoch in tbar:
         acc, epoch_loss, batch_loses, acc_val, val_loss = do_epoch(model, train_loader, val_loader, criterion,
@@ -112,3 +118,14 @@ def train_epochs(epochs: int, model: torch.nn.Module, train_loader: DataLoader, 
 
         for it, individual_batch_loss in enumerate(batch_loses):
             writer.add_scalar("Batch Train/Loss", individual_batch_loss, epoch * epochs + it)
+
+        wba_manager.log({
+            "Train/Accuracy": acc,
+            "Epoch Train/Loss": epoch_loss,
+            "Val/Accuracy": acc_val,
+            "Val/Loss": val_loss,
+            "Model/Norm": get_model_norm(model),
+        })
+
+        for it, individual_batch_loss in enumerate(batch_loses):
+            wba_manager.log({"Batch Train/Loss": individual_batch_loss})

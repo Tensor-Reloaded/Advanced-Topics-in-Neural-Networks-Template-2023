@@ -5,6 +5,7 @@ from simple_neural_network import SimpleNeuralNetwork
 from compression_neural_network import CompressionNeuralNetwork
 from torch.utils.data import DataLoader
 from trainer import train_epochs
+from wba_manager import WBAManager
 
 
 def main():
@@ -20,24 +21,25 @@ def main():
     train_dataset = CIFAR10Dataset(True, transforms, True)
     val_dataset = CIFAR10Dataset(False, transforms, True)
 
+    manager = WBAManager()
+
     #model, device = SimpleNeuralNetwork.for_device(784, 128, 10)
     model, device = CompressionNeuralNetwork.for_device(128, 10)
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.005)
+    optimizer = torch.optim.Adam(model.parameters(), lr=manager.config["learning_rate"])
     criterion = torch.nn.CrossEntropyLoss()
-    epochs = 200
 
-    batch_size = 64
-    val_batch_size = 500
     num_workers = 2
     persistent_workers = (num_workers != 0)
     pin_memory = device.type == 'cuda'
     train_loader = DataLoader(train_dataset, shuffle=True, pin_memory=pin_memory, num_workers=num_workers,
-                              batch_size=batch_size, drop_last=True, persistent_workers=persistent_workers)
-    val_loader = DataLoader(val_dataset, shuffle=False, pin_memory=True, num_workers=0, batch_size=val_batch_size,
-                            drop_last=False)
+                              batch_size=manager.config["batch_size"], drop_last=True,
+                              persistent_workers=persistent_workers)
+    val_loader = DataLoader(val_dataset, shuffle=False, pin_memory=True, num_workers=0,
+                            batch_size=manager.config["val_batch_size"], drop_last=False)
 
-    train_epochs(epochs, model, train_loader, val_loader, criterion, optimizer, "Adam", batch_size, device)
+    train_epochs(manager, manager.config["epochs"], model, train_loader, val_loader, criterion, optimizer, "Adam",
+                 manager.config["batch_size"], device)
 
 
 if __name__ == "__main__":
