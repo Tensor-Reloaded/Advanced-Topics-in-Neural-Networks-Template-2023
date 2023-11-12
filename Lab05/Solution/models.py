@@ -5,7 +5,8 @@ __all__ = ['MLP']
 
 
 class MLP(nn.Module):
-    def __init__(self, device: torch.device, no_units_per_layer: list[int], output_activation=None):
+    def __init__(self, device: torch.device, no_units_per_layer: list[int], dropout_per_layer: list[float],
+                 output_activation=None):
         super(MLP, self).__init__()
 
         self.device = device
@@ -20,17 +21,17 @@ class MLP(nn.Module):
             no_units_layer1 = no_units_per_layer[index]
             no_units_layer2 = no_units_per_layer[index + 1]
 
-            # TODO:Ensure we don't get the Exploding Gradients problem(related to clip)
-
             # TODO:Add Instance Normalization
 
+            # Create linear layer and initialize weights and bias
             layer = nn.Linear(no_units_layer1, no_units_layer2)
             nn.init.kaiming_normal_(layer.weight)
             layer.bias.data.fill_(0)
+
             if index != self.no_layers - 2:
                 layer = nn.Sequential(
+                    nn.Dropout(p=dropout_per_layer[index]),
                     layer,
-                    nn.Dropout(p=0.15),
                     # nn.InstanceNorm1d(num_features=256, affine=True),
                     # nn.LeakyReLU(negative_slope=slope, inplace=True),
                     nn.ELU(alpha=alpha, inplace=True),

@@ -1,5 +1,6 @@
 import os
 from multiprocessing import freeze_support
+from sam import SAM
 
 import torch
 from torchvision.datasets import CIFAR10
@@ -23,7 +24,25 @@ def get_default_device():
     return torch.device('cpu')
 
 
-def run_model(device=get_default_device()):
+def get_optimizer(model: torch.nn.Module, optimizer_name: str, optimizer_params: dict = None) -> torch.optim:
+    optimizer = None
+    if optimizer_name == 'sgd':
+        optimizer = torch.optim.SGD(model.parameters(), **optimizer_params)
+    elif optimizer_name == 'adam':
+        optimizer = torch.optim.Adam(model.parameters(), **optimizer_params)
+    elif optimizer_name == 'rmsprop':
+        optimizer = torch.optim.RMSprop(model.parameters(), **optimizer_params)
+    elif optimizer_name == 'adagrad':
+        optimizer = torch.optim.Adagrad(model.parameters(), **optimizer_params)
+    elif optimizer_name == 'sam':
+        # TODO:Also try SAM with other base optimizers
+        base_optimizer = torch.optim.SGD
+        optimizer = SAM(model.parameters(), base_optimizer, **optimizer_params)
+
+    return optimizer
+
+
+def run_model(optimizer_name: str, optimizer_params: dict = None, device=get_default_device()):
     size = (28, 28)
 
     transforms = [
@@ -41,10 +60,11 @@ def run_model(device=get_default_device()):
     validation_dataset = CIFAR10(root=data_path, train=False, transform=v2.Compose(transforms), download=True)
 
     no_units_per_layer = [784, 256, 128, 64, 10]
-    model = MLP(device, no_units_per_layer)
+    dropout_per_layer = [0.15, 0.15, 0.15, 0.15]
+    model = MLP(device, no_units_per_layer, dropout_per_layer)
     # optimizer = torch.optim.SGD(model.parameters(), lr=0.026172624468404335, momentum=0.01964499304214733,
     #                             weight_decay=0.090403235101392, nesterov=True)
-    optimizer = torch.optim.Adam(model.parameters(), weight_decay=0.00002)
+    optimizer = get_optimizer(model, optimizer_name, optimizer_params)
     criterion = torch.nn.CrossEntropyLoss()
     no_epochs = 50
 
@@ -54,6 +74,7 @@ def run_model(device=get_default_device()):
     train_transforms = None
     train_transforms = v2.Compose([
         v2.RandomHorizontalFlip(),
+        v2.GaussianBlur(3),
         torch.flatten
     ])
 
@@ -164,7 +185,12 @@ def run_sweep(device=get_default_device()):
 
 if __name__ == '__main__':
     freeze_support()
-    run_model()
+
+    # run_model('sgd', {"lr": 1e-3, 'momentum': 0.0005, 'dampening': 0.0, 'weight_decay': 0.00001, 'nesterov': True})
+    run_model('adam', {'lr': 1e-3, 'weight_decay': 0.00001})
+    # run_model('rmsprop', {'lr': 1e-2, 'momentum': 0.0, 'centered': False, 'weight_decay': 0.0})
+    # run_model('adagrad', {'lr': 1e-2, 'lr_decay': 0, 'weight_decay': 0})
+    # run_model('sam', {'lr': 1e-2})
 
     # run_sweep()
 

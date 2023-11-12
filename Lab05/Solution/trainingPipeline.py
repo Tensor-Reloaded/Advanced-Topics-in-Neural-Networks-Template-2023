@@ -10,8 +10,25 @@ import datetime
 import wandb
 from typing import Union
 from models import *
+from sam import SAM
 
 __all__ = ['TrainingPipeline']
+
+
+# TODO:What about adding a different arhitecture,say we split the image in 4 corners and 1 piece and try
+#  combining the results at the end?
+
+
+# TODO:Would increasing the dropout layer as we learn more and more help the network generalize even better?
+
+def disable_bn(model):
+    for module in model.modules():
+        if isinstance(module, torch.nn.BatchNorm1d):
+            module.eval()
+
+
+def enable_bn(model):
+    model.train()
 
 
 class TrainingPipeline:
@@ -19,7 +36,8 @@ class TrainingPipeline:
                  train_dataset: Dataset, val_dataset: Union[None, Dataset],
                  train_transformer, val_transformer,
                  cache: bool = True,
-                 train_batch_size: Union[None, int] = 32, val_batch_size: Union[None, int] = 32, no_workers: int = 2):
+                 train_batch_size: Union[None, int] = 32, val_batch_size: Union[None, int] = 32,
+                 no_workers: int = 2):
         self.device = device
 
         self.train_transformer = train_transformer
@@ -91,8 +109,8 @@ class TrainingPipeline:
             loss = criterion(output, labels)
             total_loss += loss.item()
 
-            output = output.softmax(dim=1).cpu().squeeze()
-            labels = labels.squeeze()
+            output = output.softmax(dim=1).detach().cpu().squeeze()
+            labels = labels.cpu().squeeze()
             all_outputs.append(output)
             all_labels.append(labels)
 
@@ -100,37 +118,79 @@ class TrainingPipeline:
         all_labels = torch.cat(all_labels).to(self.device, non_blocking=True)
 
         fp_plus_fn = torch.logical_not(all_outputs == all_labels).sum().item()
-        all_elements = len(all_outputs)
+        all_elements = all_outputs.shape[0]
 
-        total_loss /= len(data_loader)
+        # TODO:Consider whether we should divide the loss by /no_instances
 
         return (all_elements - fp_plus_fn) / all_elements, total_loss
 
-    def train(self, criterion, optimizer, pbar, current_batch, writer) -> int:
+    def train(self, criterion, optimizer, pbar, current_batch, writer) -> tuple[int, float, float, float]:
+        # Returns the current_batch,accuracy and loss
+        # The last 2 are computed by a moving average,instead of computing them at the end of
+        # the train epoch for efficiency
         self.model.train()
+
+        total_loss = 0.0
+        all_outputs = []
+        all_labels = []
+
+        batch_grad_norm = 0.0
+        no_batches = 0.0
 
         for data, labels in self.train_loader:
             data = data.to(self.device, non_blocking=True)
             labels = labels.to(self.device, non_blocking=True)
 
             output = self.model(data)
-            loss = criterion(output, labels)
-
-            loss.backward()
+            loss = None
 
             # TODO:How to use this together with Tensorboard in order to improve the model?
-            # torch.nn.utils.clip_grad_norm_(self.model.parameters(), 2)
+            # torch.nn.utils.clip_grad_norm_(self.model.parameters(), 0.75)
 
-            optimizer.step()
-            optimizer.zero_grad(set_to_none=True)
+            if isinstance(optimizer, SAM):
+                # first forward-backward step
+                enable_bn(self.model)  # <- this is the important line
+                loss = criterion(output, labels)
+                loss.mean().backward()
+                optimizer.first_step(zero_grad=True)
+
+                # second forward-backward step
+                disable_bn(self.model)  # <- this is the important line
+                output = self.model(data)
+                criterion(output, labels).mean().backward()
+                optimizer.second_step(zero_grad=True)
+            else:
+                loss = criterion(output, labels)
+                loss.backward()
+
+                batch_grad_norm += self.model.layers[self.model.no_layers - 1].weight.grad.norm()
+                for index in range(self.model.no_layers - 1):
+                    batch_grad_norm += self.model.layers[index][1].weight.grad.norm()
+
+                optimizer.step()
+                optimizer.zero_grad(set_to_none=True)
 
             pbar.update()
 
             writer.add_scalar("Train/Batch Loss", loss.item() / len(labels), current_batch)
 
-            current_batch += 1
+            total_loss += loss
 
-        return current_batch
+            all_outputs.append(output.softmax(dim=1).detach().cpu().squeeze())
+            all_labels.append(labels.cpu().squeeze())
+
+            current_batch += 1
+            no_batches += 1
+
+        batch_grad_norm /= no_batches
+
+        all_outputs = torch.cat(all_outputs).argmax(dim=1).to(self.device, non_blocking=True)
+        all_labels = torch.cat(all_labels).to(self.device, non_blocking=True)
+
+        no_instances = all_outputs.shape[0]
+        fp_plus_fn = torch.logical_not(all_outputs == all_labels).sum().item()
+
+        return current_batch, (no_instances - fp_plus_fn) / no_instances, total_loss, batch_grad_norm
 
     def get_model_norm(self):
         norm = 0.0
@@ -139,11 +199,16 @@ class TrainingPipeline:
                 norm += torch.norm(param)
         return norm
 
-    def run(self, no_epochs: int, model: nn.Module, criterion, optimizer):
+    def run(self, no_epochs: int, model: nn.Module, criterion: nn.modules.loss, optimizer):
         self.model = model
 
         batch_size = self.train_batch_size
-        optimizer_name = type(optimizer).__name__
+        optimizer_name = None
+        if isinstance(optimizer, SAM):
+            optimizer_name = 'SAM with ' + str(type(optimizer.base_optimizer).__name__)
+        else:
+            optimizer_name = type(optimizer).__name__
+
         learning_rate = optimizer.param_groups[0]['lr']
         time = datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S")
         model_name = f"{time} {optimizer_name}, Batch Size={batch_size}, Lr={learning_rate}"
@@ -153,10 +218,9 @@ class TrainingPipeline:
         for epoch in range(no_epochs):
             pbar = tqdm(total=len(self.train_loader), desc=f"Epoch {epoch} ", dynamic_ncols=True)
 
-            current_batch = self.train(criterion, optimizer, pbar, current_batch, writer)
+            current_batch, train_accuracy, train_loss, batch_grad_norm = self.train(criterion, optimizer, pbar,
+                                                                                    current_batch, writer)
 
-            # TODO:Compute the training accuracy using a moving average instead for efficiency
-            train_accuracy, train_loss = self.accuracy_and_loss("train_loader", criterion)
             validation_accuracy, validation_loss = self.accuracy_and_loss("val_loader", criterion)
 
             pbar.set_postfix(
@@ -167,6 +231,7 @@ class TrainingPipeline:
 
             writer.add_scalar("Train/Loss", train_loss, epoch + 1)
             writer.add_scalar("Train/Accuracy", train_accuracy, epoch + 1)
+            writer.add_scalar("Train/Batch Grad Norm", batch_grad_norm, epoch + 1)
             writer.add_scalar("Val/Loss", validation_loss, epoch + 1)
             writer.add_scalar("Val/Accuracy", validation_accuracy, epoch + 1)
             writer.add_scalar("Model/Norm", self.get_model_norm(), epoch + 1)
