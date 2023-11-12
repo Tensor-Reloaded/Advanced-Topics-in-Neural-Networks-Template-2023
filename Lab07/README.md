@@ -9,6 +9,7 @@ For self-study:
  * https://sites.google.com/view/atnn/resources
  * [But what is a convolution?](https://www.youtube.com/watch?v=KuXjwB4LzSA) (convolution example; convolutions in image processing; convolutions and polynomial multiplication; FFT)
  * https://paperswithcode.com/method/1x1-convolution
+ * https://d2l.ai/chapter_computer-vision/rcnn.html
 
 ***
 References:
@@ -21,3 +22,4 @@ References:
  - R-CNN: https://arxiv.org/abs/1311.2524v5
  - Faster R-CNN: https://arxiv.org/pdf/1506.01497.pdf
  - YOLO: https://arxiv.org/abs/1506.02640
+ - R-CNN vs Fast R-CNN vs Faster R-CNN vs YOLO: https://towardsdatascience.com/r-cnn-fast-r-cnn-faster-r-cnn-yolo-object-detection-algorithms-36d53571365e
