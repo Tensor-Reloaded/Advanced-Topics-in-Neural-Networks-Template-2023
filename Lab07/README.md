@@ -7,7 +7,7 @@ Lab Assignment: [Assignment.pdf](./Assignment.pdf) (Deadline: PR by End-of-Day F
 ***
 For self-study:
  * https://sites.google.com/view/atnn/resources
- * [But what is a convolution?](https://www.youtube.com/watch?v=KuXjwB4LzSA)(convolution example; convolutions in image processing; convolutions and polynomial multiplication; FFT)
+ * [But what is a convolution?](https://www.youtube.com/watch?v=KuXjwB4LzSA) (convolution example; convolutions in image processing; convolutions and polynomial multiplication; FFT)
 
 ***
 References:
