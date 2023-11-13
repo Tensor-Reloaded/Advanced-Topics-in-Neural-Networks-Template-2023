@@ -1,0 +1,1 @@
+{"Train Loss": 2.303056912544446, "Epoch": 9, "_timestamp": 1699723834.8892171, "_runtime": 138.83360624313354, "_step": 39, "Val Loss": 2.3030637860298158, "Train Acc": 0.099, "Val Acc": 0.1, "_wandb": {"runtime": 137}}

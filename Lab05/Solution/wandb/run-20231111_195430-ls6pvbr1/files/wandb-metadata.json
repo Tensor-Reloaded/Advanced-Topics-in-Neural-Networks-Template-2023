@@ -1,0 +1,45 @@
+{
+    "os": "Windows-10-10.0.22621-SP0",
+    "python": "3.10.12",
+    "heartbeatAt": "2023-11-11T17:54:31.524209",
+    "startedAt": "2023-11-11T17:54:30.099717",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "c:\\Users\\prico\\Desktop\\Facultate\\ATNN_PricopTudor\\Lab05\\Solution\\Pipeline.py",
+    "codePathLocal": "Pipeline.py",
+    "codePath": "Lab05\\Solution\\Pipeline.py",
+    "git": {
+        "remote": "https://github.com/pricoptudor/ATNN_PricopTudor.git",
+        "commit": "bca3e8324ee45a132d27dda2d7283401e6abac65"
+    },
+    "email": "41987455+pricoptudor@users.noreply.github.com",
+    "root": "C:/Users/prico/Desktop/Facultate/ATNN_PricopTudor",
+    "host": "Thunder",
+    "username": "prico",
+    "executable": "C:\\Users\\prico\\.conda\\envs\\ATNN\\python.exe",
+    "cpu_count": 4,
+    "cpu_count_logical": 8,
+    "cpu_freq": {
+        "current": 2995.0,
+        "min": 0.0,
+        "max": 2995.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2995.0,
+            "min": 0.0,
+            "max": 2995.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 475.72167587280273,
+            "used": 256.13199615478516
+        }
+    },
+    "memory": {
+        "total": 15.845878601074219
+    }
+}
