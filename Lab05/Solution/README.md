@@ -1,36 +1,31 @@
 ## Lab 
 
 ***
-Lab Notebook: [Augmentations.ipynb](./Augmentations.ipynb)
+Weights and biases: [Sweep](https://wandb.ai/serban-doncean-team/CIFAR10-low?workspace=user-serban-doncean)
 
 ***
-Lab Assignment: [Assignment.pdf](./Assignment.pdf) (Deadline: PR by End-of-Day Monday, 13.11.2023).
+Tensorflow logs: [Logs](./runs) 
 
 ***
-For self-study:
- * SGD implementation: https://pytorch.org/docs/stable/_modules/torch/optim/sgd.html#SGD
- * Check the references (and past references if not done yet)
- * Adam paper: https://arxiv.org/abs/1412.6980
+Graphs for validation accuracy: [Graphs](./Graphs) 
 
 ***
-References:
- - RandAugment:
-   - [RandAugment: Practical automated data augmentation with a reduced search space](https://arxiv.org/abs/1909.13719)
-   - RandAugment in torchvision: https://pytorch.org/vision/main/generated/torchvision.transforms.v2.RandAugment.html
- - CutMix:
-   - [Regularization Strategy to Train Strong Classifiers with Localizable Features](https://arxiv.org/abs/1905.04899)
-   - CutMix in torchvision: https://pytorch.org/vision/main/generated/torchvision.transforms.v2.CutMix.html
- - MixUp:
-   - [mixup: Beyond Empirical Risk Minimization](https://arxiv.org/abs/1710.09412)
-   - MixUp in torchvision: https://pytorch.org/vision/main/generated/torchvision.transforms.v2.MixUp.html
- - How to use CutMix and MixUp: https://pytorch.org/vision/main/auto_examples/transforms/plot_cutmix_mixup.html
- - CIFAR-10:
-   - Dataset class: https://pytorch.org/vision/main/generated/torchvision.datasets.CIFAR10.html
-   - CIFAR-10 training example: https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html (you must not use convolutions in your homework!)
- - TorchVision transforms getting started: https://pytorch.org/vision/main/auto_examples/transforms/plot_transforms_getting_started.html
- - TorchVision examples: https://pytorch.org/vision/stable/auto_examples/transforms/plot_transforms_illustrations.html#sphx-glr-auto-examples-transforms-plot-transforms-illustrations-py
- - Optimizers:
-   - Optimizers, Learning Rate Schedulers \& other advanced techniques: https://pytorch.org/docs/stable/optim.html
-   - SAM implementation: https://github.com/davda54/sam
- - Tensorboard: https://pytorch.org/docs/stable/tensorboard.html
- - Weights and Biases: https://docs.wandb.ai/guides/integrations/pytorch
+Hyperparameters for each experiment: [Hyperparameters](./Graphs/Hyperparameters.png)
+
+***
+I have done several experiments with different models and hyperparameters. 
+I have logged the requiered information in Tensorflow log files.
+I used the sweep function in Weights and Biases to test randomly created configurations.
+I did three or more experiments using the requiered optimizers + AdamW.
+I modified the code to use One-Hot Encode. 
+I experimented with various augmentations from the Torchvision library.
+I used Dropout and a Scheduler to increase my results.
+
+In the end, the best model we obtained using a Dropout with probability 0.3 and the Leaky-ReLu activation function, the maximum validation accuracy on the validation set being 0.647.
+
+I expect 7 out of 7 points because I completed all the requierements plus 1 point bonus because I achieved a score better than 0.6 on the validation set.
+
+
+
+***
+
