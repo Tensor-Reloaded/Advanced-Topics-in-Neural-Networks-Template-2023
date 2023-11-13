@@ -1,0 +1,1 @@
+{"Epoch": 49, "_timestamp": 1699908327.557649, "_runtime": 239.83391094207764, "_step": 19599, "Batch": 194, "Batch_loss:": 2.1370396614074707, "Train_accuracy": 0.23559695512820514, "Average_epoch_loss": 2.1233944058418275, "Evaluate_accuracy": 0.2343, "_wandb": {"runtime": 241}}

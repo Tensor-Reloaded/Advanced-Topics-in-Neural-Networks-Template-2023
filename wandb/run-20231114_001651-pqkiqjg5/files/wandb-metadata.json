@@ -1,0 +1,45 @@
+{
+    "os": "Windows-10-10.0.22621-SP0",
+    "python": "3.10.12",
+    "heartbeatAt": "2023-11-13T22:16:54.386020",
+    "startedAt": "2023-11-13T22:16:51.916167",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "c:\\Users\\ami24\\OneDrive\\Desktop\\MAIO\\ATNN\\Advanced-Topics-in-Neural-Networks-Template-2023\\Lab05\\Lab5-ATNN-PostolacheAmalia\\cifar.py",
+    "codePathLocal": "Lab05\\Lab5-ATNN-PostolacheAmalia\\cifar.py",
+    "codePath": "Lab05\\Lab5-ATNN-PostolacheAmalia\\cifar.py",
+    "git": {
+        "remote": "https://github.com/amaliuts/Advanced-Topics-in-Neural-Networks-Template-2023.git",
+        "commit": "f9ad1241717b159dd801594249a66ccda278acdf"
+    },
+    "email": "ami24amalia@gmail.com",
+    "root": "C:/Users/ami24/OneDrive/Desktop/MAIO/ATNN/Advanced-Topics-in-Neural-Networks-Template-2023",
+    "host": "DESKTOP-KT0HP0M",
+    "username": "ami24",
+    "executable": "C:\\Users\\ami24\\miniconda3\\python.exe",
+    "cpu_count": 4,
+    "cpu_count_logical": 8,
+    "cpu_freq": {
+        "current": 1600.0,
+        "min": 0.0,
+        "max": 1800.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 1600.0,
+            "min": 0.0,
+            "max": 1800.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 475.69237899780273,
+            "used": 325.8721466064453
+        }
+    },
+    "memory": {
+        "total": 7.877658843994141
+    }
+}
