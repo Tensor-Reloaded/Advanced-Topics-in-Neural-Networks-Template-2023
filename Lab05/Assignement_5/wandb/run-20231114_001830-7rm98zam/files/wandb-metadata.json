@@ -1,0 +1,47 @@
+{
+    "os": "Windows-10-10.0.19041-SP0",
+    "python": "3.8.5",
+    "heartbeatAt": "2023-11-13T22:18:30.855368",
+    "startedAt": "2023-11-13T22:18:30.026716",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "D:/Master_UAIC/Facultate_Discipline/Anul_1/Sem_I/Capitole_AvansateDeRetele_Neuronale/Laborator/Lab_5/Homework_5/main.py",
+    "codePathLocal": "main.py",
+    "codePath": "main.py",
+    "host": "DESKTOP-EKU3OOL",
+    "username": "Joe",
+    "executable": "D:\\Master_UAIC\\Facultate_Discipline\\Anul_1\\Sem_I\\Capitole_AvansateDeRetele_Neuronale\\Laborator\\Lab_5\\Homework_5\\venv\\Scripts\\python.exe",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 2900.0,
+        "min": 0.0,
+        "max": 2900.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2900.0,
+            "min": 0.0,
+            "max": 2900.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 232.79784774780273,
+            "used": 136.73046112060547
+        }
+    },
+    "gpu": "NVIDIA GeForce GTX 1650 Ti",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce GTX 1650 Ti",
+            "memory_total": 4294967296
+        }
+    ],
+    "memory": {
+        "total": 15.872268676757812
+    }
+}

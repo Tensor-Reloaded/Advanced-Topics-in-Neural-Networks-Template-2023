@@ -1,0 +1,49 @@
+wandb_version: 1
+
+dataset:
+  desc: null
+  value: CIFAR-100
+epochs:
+  desc: null
+  value: 100
+Optimizer SGD with SAM - learning_rate:
+  desc: null
+  value: 1.0e-05
+Train Batch size:
+  desc: null
+  value: 256
+Validation Batch size:
+  desc: null
+  value: 500
+_wandb:
+  desc: null
+  value:
+    python_version: 3.8.5
+    cli_version: 0.16.0
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1699914320.617253
+    t:
+      1:
+      - 1
+      - 2
+      - 3
+      - 41
+      - 55
+      2:
+      - 1
+      - 2
+      - 3
+      - 41
+      - 55
+      3:
+      - 2
+      - 16
+      - 23
+      4: 3.8.5
+      5: 0.16.0
+      8:
+      - 3
+      - 5
+      13: windows-amd64

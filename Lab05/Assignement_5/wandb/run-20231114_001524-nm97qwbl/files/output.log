@@ -1,0 +1,149 @@
+
+Epoch:  0
+
+  1%|          | 1/100 [00:29<49:14, 29.84s/it, Acc: 0.1986, Train loss: 2.1774, Acc_val: 0.2176, Validation loss: 2.1567]
+Epoch:  1
+Epoch:  2
+
+
+  5%|▌         | 5/100 [00:33<05:23,  3.41s/it, Acc: 0.226, Train loss: 2.2548, Acc_val: 0.2271, Validation loss: 2.3629]
+Epoch:  4
+
+  7%|▋         | 7/100 [00:36<03:07,  2.02s/it, Acc: 0.2274, Train loss: 2.195, Acc_val: 0.2298, Validation loss: 2.3181]
+Epoch:  6
+
+ 10%|█         | 10/100 [00:38<01:55,  1.28s/it, Acc: 0.2276, Train loss: 2.1777, Acc_val: 0.229, Validation loss: 2.2963]
+Epoch:  8
+Epoch:  9
+
+ 12%|█▏        | 12/100 [00:39<01:37,  1.11s/it, Acc: 0.2291, Train loss: 2.1624, Acc_val: 0.2293, Validation loss: 2.2795]
+Epoch:  11
+
+ 14%|█▍        | 14/100 [00:41<01:26,  1.00s/it, Acc: 0.2293, Train loss: 2.1526, Acc_val: 0.2289, Validation loss: 2.261]
+Epoch:  13
+
+ 16%|█▌        | 16/100 [00:43<01:19,  1.05it/s, Acc: 0.2291, Train loss: 2.1408, Acc_val: 0.2315, Validation loss: 2.2508]
+Epoch:  15
+
+ 19%|█▉        | 19/100 [00:46<01:14,  1.08it/s, Acc: 0.2301, Train loss: 2.1283, Acc_val: 0.2311, Validation loss: 2.241]
+Epoch:  17
+Epoch:  18
+
+ 21%|██        | 21/100 [00:48<01:13,  1.08it/s, Acc: 0.2301, Train loss: 2.1229, Acc_val: 0.2302, Validation loss: 2.2356]
+Epoch:  20
+
+ 23%|██▎       | 23/100 [00:50<01:11,  1.08it/s, Acc: 0.2309, Train loss: 2.1201, Acc_val: 0.2301, Validation loss: 2.2336]
+Epoch:  22
+
+ 25%|██▌       | 25/100 [00:51<01:08,  1.09it/s, Acc: 0.2305, Train loss: 2.1176, Acc_val: 0.23, Validation loss: 2.2303]
+Epoch:  24
+
+ 27%|██▋       | 27/100 [00:53<01:06,  1.10it/s, Acc: 0.2305, Train loss: 2.115, Acc_val: 0.2309, Validation loss: 2.2257]
+Epoch:  26
+
+ 29%|██▉       | 29/100 [00:55<01:04,  1.10it/s, Acc: 0.2311, Train loss: 2.1129, Acc_val: 0.2314, Validation loss: 2.2211]
+Epoch:  28
+
+ 31%|███       | 31/100 [00:57<01:03,  1.08it/s, Acc: 0.2314, Train loss: 2.1105, Acc_val: 0.23, Validation loss: 2.2191]
+Epoch:  30
+
+ 33%|███▎      | 33/100 [00:59<01:02,  1.08it/s, Acc: 0.2315, Train loss: 2.1082, Acc_val: 0.2312, Validation loss: 2.2176]
+Epoch:  32
+
+ 36%|███▌      | 36/100 [01:01<00:58,  1.09it/s, Acc: 0.2322, Train loss: 2.1052, Acc_val: 0.231, Validation loss: 2.2169]
+Epoch:  34
+Epoch:  35
+
+ 38%|███▊      | 38/100 [01:03<00:56,  1.09it/s, Acc: 0.232, Train loss: 2.1033, Acc_val: 0.2324, Validation loss: 2.2151]
+Epoch:  37
+
+ 40%|████      | 40/100 [01:05<00:54,  1.10it/s, Acc: 0.2331, Train loss: 2.1018, Acc_val: 0.2343, Validation loss: 2.2138]
+Epoch:  39
+
+ 42%|████▏     | 42/100 [01:07<00:53,  1.09it/s, Acc: 0.2329, Train loss: 2.1005, Acc_val: 0.2335, Validation loss: 2.2152]
+Epoch:  41
+
+ 44%|████▍     | 44/100 [01:09<00:55,  1.01it/s, Acc: 0.2336, Train loss: 2.0991, Acc_val: 0.2331, Validation loss: 2.2138]
+Epoch:  43
+
+ 46%|████▌     | 46/100 [01:11<00:51,  1.05it/s, Acc: 0.2333, Train loss: 2.098, Acc_val: 0.2335, Validation loss: 2.2122]
+Epoch:  45
+
+ 49%|████▉     | 49/100 [01:14<00:47,  1.08it/s, Acc: 0.2341, Train loss: 2.0962, Acc_val: 0.2341, Validation loss: 2.2107]
+Epoch:  47
+Epoch:  48
+
+ 51%|█████     | 51/100 [01:16<00:44,  1.09it/s, Acc: 0.2346, Train loss: 2.0953, Acc_val: 0.2345, Validation loss: 2.2088]
+Epoch:  50
+
+ 53%|█████▎    | 53/100 [01:17<00:43,  1.08it/s, Acc: 0.2355, Train loss: 2.094, Acc_val: 0.2369, Validation loss: 2.2077]
+Epoch:  52
+
+ 55%|█████▌    | 55/100 [01:19<00:41,  1.08it/s, Acc: 0.2351, Train loss: 2.0931, Acc_val: 0.2355, Validation loss: 2.2102]
+Epoch:  54
+
+ 57%|█████▋    | 57/100 [01:21<00:39,  1.08it/s, Acc: 0.2357, Train loss: 2.0923, Acc_val: 0.2361, Validation loss: 2.2104]
+Epoch:  56
+
+ 60%|██████    | 60/100 [01:24<00:36,  1.09it/s, Acc: 0.2362, Train loss: 2.091, Acc_val: 0.2371, Validation loss: 2.208]
+Epoch:  58
+Epoch:  59
+Epoch:  60
+Epoch:  61
+
+
+ 64%|██████▍   | 64/100 [01:27<00:32,  1.10it/s, Acc: 0.237, Train loss: 2.0894, Acc_val: 0.2377, Validation loss: 2.2042]
+Epoch:  63
+
+ 66%|██████▌   | 66/100 [01:29<00:31,  1.08it/s, Acc: 0.2376, Train loss: 2.0883, Acc_val: 0.2384, Validation loss: 2.2034]
+Epoch:  65
+Epoch:  66
+Epoch:  67
+
+ 68%|██████▊   | 68/100 [01:31<00:29,  1.08it/s, Acc: 0.2373, Train loss: 2.0874, Acc_val: 0.2385, Validation loss: 2.2047]
+Epoch:  69
+Epoch:  70
+
+ 71%|███████   | 71/100 [01:34<00:26,  1.09it/s, Acc: 0.2379, Train loss: 2.0863, Acc_val: 0.2392, Validation loss: 2.2046]
+Epoch:  72
+
+
+ 75%|███████▌  | 75/100 [01:38<00:22,  1.10it/s, Acc: 0.2388, Train loss: 2.0849, Acc_val: 0.2396, Validation loss: 2.2071]
+Epoch:  74
+
+ 77%|███████▋  | 77/100 [01:39<00:21,  1.08it/s, Acc: 0.2389, Train loss: 2.0841, Acc_val: 0.2436, Validation loss: 2.2083]
+Epoch:  76
+
+ 79%|███████▉  | 79/100 [01:41<00:19,  1.07it/s, Acc: 0.2435, Train loss: 2.0826, Acc_val: 0.2435, Validation loss: 2.2075]
+Epoch:  78
+
+ 82%|████████▏ | 82/100 [01:44<00:16,  1.09it/s, Acc: 0.2443, Train loss: 2.0814, Acc_val: 0.2442, Validation loss: 2.2001]
+Epoch:  80
+Epoch:  81
+
+ 83%|████████▎ | 83/100 [01:45<00:15,  1.09it/s, Acc: 0.2439, Train loss: 2.0811, Acc_val: 0.2442, Validation loss: 2.1986]
+Epoch:  83
+
+ 85%|████████▌ | 85/100 [01:47<00:13,  1.08it/s, Acc: 0.2439, Train loss: 2.0803, Acc_val: 0.2424, Validation loss: 2.1992]
+Epoch:  85
+
+ 88%|████████▊ | 88/100 [01:50<00:11,  1.06it/s, Acc: 0.2439, Train loss: 2.0792, Acc_val: 0.2436, Validation loss: 2.1963]
+Epoch:  87
+
+ 90%|█████████ | 90/100 [01:52<00:09,  1.06it/s, Acc: 0.2443, Train loss: 2.0784, Acc_val: 0.2448, Validation loss: 2.1947]
+Epoch:  89
+
+ 92%|█████████▏| 92/100 [01:53<00:07,  1.08it/s, Acc: 0.2451, Train loss: 2.0778, Acc_val: 0.2436, Validation loss: 2.1944]
+Epoch:  91
+
+ 94%|█████████▍| 94/100 [01:55<00:05,  1.05it/s, Acc: 0.2448, Train loss: 2.0771, Acc_val: 0.2448, Validation loss: 2.1924]
+Epoch:  93
+
+ 96%|█████████▌| 96/100 [01:57<00:03,  1.06it/s, Acc: 0.2452, Train loss: 2.0747, Acc_val: 0.2445, Validation loss: 2.1908]
+Epoch:  95
+
+ 98%|█████████▊| 98/100 [01:59<00:01,  1.06it/s, Acc: 0.2462, Train loss: 2.0739, Acc_val: 0.2447, Validation loss: 2.1911]
+Epoch:  97
+
+100%|██████████| 100/100 [02:01<00:00,  1.22s/it, Acc: 0.2463, Train loss: 2.0733, Acc_val: 0.246, Validation loss: 2.1899]
+Epoch:  99
