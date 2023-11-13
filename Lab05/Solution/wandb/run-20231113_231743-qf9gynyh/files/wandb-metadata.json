@@ -1,0 +1,125 @@
+{
+    "os": "Linux-6.1.60-1-lts-x86_64-with-glibc2.38",
+    "python": "3.11.5",
+    "heartbeatAt": "2023-11-13T21:17:44.352020",
+    "startedAt": "2023-11-13T21:17:43.585700",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--batch_size=16",
+        "--epochs=10",
+        "--learning_rate=0.001",
+        "--optimiser=Adam"
+    ],
+    "state": "running",
+    "program": "/home/mihai/Documents/Personal/Facultate/Master Anul 1/Advanced topics in neural networks/Seminar/Lab05/Solution/main.py",
+    "codePathLocal": "main.py",
+    "codePath": "Lab05/Solution/main.py",
+    "git": {
+        "remote": "git@Github-Personal:MihaiBojescu/Advanced-Topics-in-Neural-Networks-2023.git",
+        "commit": "8c28823149f34fa3bffa1f042cd381791a102a25"
+    },
+    "email": "bojescu.mihai@gmail.com",
+    "root": "/home/mihai/Documents/Personal/Facultate/Master Anul 1/Advanced topics in neural networks/Seminar",
+    "host": "mihais-framework",
+    "username": "mihai",
+    "executable": "/usr/bin/python",
+    "cpu_count": 12,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 1755.2691250000003,
+        "min": 400.0,
+        "max": 3400.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2177.1,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1963.467,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1967.734,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 400.0,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1694.807,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 400.0,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 2108.376,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 2132.676,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1900.252,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1900.126,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1900.005,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1900.063,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1835.357,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1436.189,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1892.014,
+            "min": 400.0,
+            "max": 3400.0
+        },
+        {
+            "current": 1864.619,
+            "min": 400.0,
+            "max": 3400.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 931.010440826416,
+            "used": 577.5288734436035
+        }
+    },
+    "memory": {
+        "total": 31.0640869140625
+    }
+}

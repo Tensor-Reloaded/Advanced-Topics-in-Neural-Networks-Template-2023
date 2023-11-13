@@ -9,6 +9,8 @@ This project contains the solution for homework 5. The solution relies on the fo
 - `tensorboard`
 - [a premade implementation of SAM](https://github.com/davda54/sam)
 
+The project _aims_ to be easy to read, building on top of classes in order to separate concerns.
+
 ## Visualisations
 
 Most of the visualisations can be checked on my Weights & Biases project here: [link](https://wandb.ai/bojescu-mihai/atnn-homework-5). Sweeps for the project could be viewed here: [link](https://wandb.ai/bojescu-mihai/atnn-homework-5/sweeps/uqpsyb1u). 

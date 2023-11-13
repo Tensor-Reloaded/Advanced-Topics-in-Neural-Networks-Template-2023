@@ -8,10 +8,10 @@ epochs:
   value: 10
 learning_rate:
   desc: null
-  value: 0.001
+  value: 0.25
 optimiser:
   desc: null
-  value: RMSprop
+  value: SGD
 _wandb:
   desc: null
   value:
@@ -20,7 +20,7 @@ _wandb:
     framework: torch
     is_jupyter_run: false
     is_kaggle_kernel: false
-    start_time: 1699910083.940709
+    start_time: 1699912851.516021
     t:
       1:
       - 1
@@ -32,7 +32,6 @@ _wandb:
       - 55
       3:
       - 1
-      - 2
       - 23
       - 37
       4: 3.11.5
