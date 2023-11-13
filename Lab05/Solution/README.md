@@ -9,6 +9,7 @@ I tried multiple configurations for each optimizer required in the assignment. T
 In order to increase the accuracy and to avoid overfitting, I used Dropout layers and Batch Normalization.
 
 The highest accuracy on the validation dataset was achieved using the SAM optimizer with a learning rate of 0.17, exceeding 0.5, as it can be seen in the graph below.
-<img src="./SAM_Val_Acc.png" width="350" height="300">
+
+<img src="./SAM_Val_Acc.png" >
 
 Expected points: 7 - as I completed all the mandatory requirements.

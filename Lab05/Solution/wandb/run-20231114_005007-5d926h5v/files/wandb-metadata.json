@@ -1,8 +1,8 @@
 {
     "os": "macOS-13.5.2-arm64-arm-64bit",
     "python": "3.9.6",
-    "heartbeatAt": "2023-11-13T22:04:44.657226",
-    "startedAt": "2023-11-13T22:04:43.731679",
+    "heartbeatAt": "2023-11-13T22:50:08.496820",
+    "startedAt": "2023-11-13T22:50:07.684870",
     "docker": null,
     "cuda": null,
     "args": [],
@@ -12,7 +12,7 @@
     "codePath": "Lab05/Solution/main.py",
     "git": {
         "remote": "https://github.com/anamarialupoaea/ATNN_Lupoaea.git",
-        "commit": "ef76dfca1b6d7ce4564967f11dbdc2fd31c8547e"
+        "commit": "05509b7fc7a58cab9c5adc7c9855f3a88c3a68b6"
     },
     "email": "alupoaea@amazon.com",
     "root": "/Users/alupoaea/Personal/Master/ATNN/ATNN_Lupoaea",

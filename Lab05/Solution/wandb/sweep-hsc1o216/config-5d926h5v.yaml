@@ -1,8 +1,8 @@
 wandb_version: 1
 
 batch_size:
-  value: 128
+  value: 64
 learning_rate:
-  value: 0.07337789273745525
+  value: 0.06325741844091773
 num_epochs:
-  value: 50
+  value: 150

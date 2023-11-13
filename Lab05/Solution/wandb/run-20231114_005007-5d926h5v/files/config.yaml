@@ -2,13 +2,13 @@ wandb_version: 1
 
 batch_size:
   desc: null
-  value: 128
+  value: 64
 learning_rate:
   desc: null
-  value: 0.07337789273745525
+  value: 0.06325741844091773
 num_epochs:
   desc: null
-  value: 50
+  value: 150
 dataset:
   desc: null
   value: CIFAR-10
@@ -23,7 +23,7 @@ _wandb:
     framework: torch
     is_jupyter_run: false
     is_kaggle_kernel: false
-    start_time: 1699913083.744378
+    start_time: 1699915807.699587
     t:
       1:
       - 1
