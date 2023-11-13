@@ -31,6 +31,31 @@ def enable_bn(model):
     model.train()
 
 
+def build_optimizer(model: torch.nn.Module, config) -> torch.optim:
+    optimizer = None
+    optimizer_name = config.optimizer_name
+    if optimizer_name == 'SGD':
+        optimizer = torch.optim.SGD(model.parameters(),
+                                    lr=config.lr, momentum=config.momentum,
+                                    weight_decay=config.weight_decay, nesterov=config.nesterov)
+    elif optimizer_name == 'Adam':
+        optimizer = torch.optim.Adam(model.parameters(), lr=config.lr,
+                                     weight_decay=config.weight_decay)
+    elif optimizer_name == 'RMSprop':
+        optimizer = torch.optim.RMSprop(model.parameters(), lr=config.lr, momentum=config.momentum,
+                                        weight_decay=config.weight_decay)
+    elif optimizer_name == 'Adagrad':
+        optimizer = torch.optim.Adagrad(model.parameters(), lr=config.lr,
+                                        weight_decay=config.weight_decay, lr_decay=config.lr_decay)
+    elif optimizer_name == 'SAM with SGD':
+        base_optimizer = torch.optim.SGD
+        optimizer = SAM(model.parameters(), base_optimizer,
+                        lr=config.lr, momentum=config.momentum,
+                        weight_decay=config.weight_decay, nesterov=config.nesterov)
+
+    return optimizer
+
+
 class TrainingPipeline:
     def __init__(self, device: torch.device, use_config_for_train: bool,
                  train_dataset: Dataset, val_dataset: Union[None, Dataset],
@@ -79,16 +104,6 @@ class TrainingPipeline:
             self.validation_loader = DataLoader(validation_dataset, shuffle=False, pin_memory=True, num_workers=0,
                                                 batch_size=validation_batch_size, drop_last=False)
 
-    def build_optimizer(self, model: nn.Module, config) -> optim:
-        optimizer = None
-        if config.optimizer == 'sgd':
-            optimizer = optim.SGD(model.parameters(),
-                                  lr=config.learning_rate,
-                                  momentum=config.momentum,
-                                  weight_decay=config.weight_decay,
-                                  nesterov=config.nesterov)
-        return optimizer
-
     def accuracy_and_loss(self, loader_type: str, criterion) -> tuple[float, float]:
         self.model.eval()
 
@@ -124,7 +139,7 @@ class TrainingPipeline:
 
         return (all_elements - fp_plus_fn) / all_elements, total_loss
 
-    def train(self, criterion, optimizer, pbar, current_batch, writer) -> tuple[int, float, float, float]:
+    def train(self, criterion, optimizer, pbar, current_batch, writer) -> tuple[int, float, float]:
         # Returns the current_batch,accuracy and loss
         # The last 2 are computed by a moving average,instead of computing them at the end of
         # the train epoch for efficiency
@@ -134,9 +149,6 @@ class TrainingPipeline:
         all_outputs = []
         all_labels = []
 
-        batch_grad_norm = 0.0
-        no_batches = 0.0
-
         for data, labels in self.train_loader:
             data = data.to(self.device, non_blocking=True)
             labels = labels.to(self.device, non_blocking=True)
@@ -144,8 +156,7 @@ class TrainingPipeline:
             output = self.model(data)
             loss = None
 
-            # TODO:How to use this together with Tensorboard in order to improve the model?
-            # torch.nn.utils.clip_grad_norm_(self.model.parameters(), 0.75)
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), 4)
 
             if isinstance(optimizer, SAM):
                 # first forward-backward step
@@ -163,10 +174,6 @@ class TrainingPipeline:
                 loss = criterion(output, labels)
                 loss.backward()
 
-                batch_grad_norm += self.model.layers[self.model.no_layers - 1].weight.grad.norm()
-                for index in range(self.model.no_layers - 1):
-                    batch_grad_norm += self.model.layers[index][1].weight.grad.norm()
-
                 optimizer.step()
                 optimizer.zero_grad(set_to_none=True)
 
@@ -180,9 +187,6 @@ class TrainingPipeline:
             all_labels.append(labels.cpu().squeeze())
 
             current_batch += 1
-            no_batches += 1
-
-        batch_grad_norm /= no_batches
 
         all_outputs = torch.cat(all_outputs).argmax(dim=1).to(self.device, non_blocking=True)
         all_labels = torch.cat(all_labels).to(self.device, non_blocking=True)
@@ -190,7 +194,7 @@ class TrainingPipeline:
         no_instances = all_outputs.shape[0]
         fp_plus_fn = torch.logical_not(all_outputs == all_labels).sum().item()
 
-        return current_batch, (no_instances - fp_plus_fn) / no_instances, total_loss, batch_grad_norm
+        return current_batch, (no_instances - fp_plus_fn) / no_instances, total_loss
 
     def get_model_norm(self):
         norm = 0.0
@@ -218,8 +222,8 @@ class TrainingPipeline:
         for epoch in range(no_epochs):
             pbar = tqdm(total=len(self.train_loader), desc=f"Epoch {epoch} ", dynamic_ncols=True)
 
-            current_batch, train_accuracy, train_loss, batch_grad_norm = self.train(criterion, optimizer, pbar,
-                                                                                    current_batch, writer)
+            current_batch, train_accuracy, train_loss = self.train(criterion, optimizer, pbar,
+                                                                   current_batch, writer)
 
             validation_accuracy, validation_loss = self.accuracy_and_loss("val_loader", criterion)
 
@@ -231,7 +235,6 @@ class TrainingPipeline:
 
             writer.add_scalar("Train/Loss", train_loss, epoch + 1)
             writer.add_scalar("Train/Accuracy", train_accuracy, epoch + 1)
-            writer.add_scalar("Train/Batch Grad Norm", batch_grad_norm, epoch + 1)
             writer.add_scalar("Val/Loss", validation_loss, epoch + 1)
             writer.add_scalar("Val/Accuracy", validation_accuracy, epoch + 1)
             writer.add_scalar("Model/Norm", self.get_model_norm(), epoch + 1)
@@ -239,41 +242,82 @@ class TrainingPipeline:
         writer.close()
 
     # Unlike the train() method,this should only be used for sweep by wandb
-    # Because of that,we simply train and only measure the loss
-    def train_epoch(self, criterion, optimizer):
+    # Because of that,we simply train and only measure the loss and accuracy via moving average
+    def train_epoch(self, criterion, optimizer) -> tuple[float, float]:
+        # Returns the current_batch,accuracy and loss
+        # The last 2 are computed by a moving average,instead of computing them at the end of
+        # the train epoch for efficiency
+        self.model.train()
+
         total_loss = 0.0
-        no_instances = 0
+        all_outputs = []
+        all_labels = []
+
         for data, labels in self.train_loader:
             data = data.to(self.device, non_blocking=True)
             labels = labels.to(self.device, non_blocking=True)
 
-            loss = criterion(self.model(data), labels)
+            output = self.model(data)
+            loss = None
 
-            total_loss += loss.item()
-            no_instances += len(labels)
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), 4)
 
-            loss.backward()
-            optimizer.step()
-            optimizer.zero_grad(set_to_none=True)
+            if isinstance(optimizer, SAM):
+                # first forward-backward step
+                enable_bn(self.model)  # <- this is the important line
+                loss = criterion(output, labels)
+                total_loss += loss.item()
 
-            wandb.log({"batch loss": loss.item()})
-        return total_loss / no_instances
+                loss.mean().backward()
+                optimizer.first_step(zero_grad=True)
+
+                # second forward-backward step
+                disable_bn(self.model)  # <- this is the important line
+                output = self.model(data)
+                criterion(output, labels).mean().backward()
+                optimizer.second_step(zero_grad=True)
+            else:
+                loss = criterion(output, labels)
+                total_loss += loss.item()
+                loss.backward()
+
+                optimizer.step()
+                optimizer.zero_grad(set_to_none=True)
+
+            all_outputs.append(output.softmax(dim=1).detach().cpu().squeeze())
+            all_labels.append(labels.cpu().squeeze())
+
+        all_outputs = torch.cat(all_outputs).argmax(dim=1).to(self.device, non_blocking=True)
+        all_labels = torch.cat(all_labels).to(self.device, non_blocking=True)
+
+        no_instances = all_outputs.shape[0]
+        fp_plus_fn = torch.logical_not(all_outputs == all_labels).sum().item()
+
+        return (no_instances - fp_plus_fn) / no_instances, total_loss
 
     def run_config(self, config=None):
-        # TODO:Also log the same metrics as before
         with wandb.init(config=config):
             config = wandb.config
 
             # Build train loader
-            self.build_data_loaders(self.train_dataset, None, self.train_transformer, self.cache, config.batch_size,
-                                    None, self.no_workers, False)
+            self.build_data_loaders(self.train_dataset, self.val_dataset, self.train_transformer,
+                                    self.val_transformer,
+                                    self.cache,
+                                    config.batch_size, 500,
+                                    self.no_workers, True)
 
-            self.model = MLP(self.device, config.no_units_per_layer)
-            optimizer = self.build_optimizer(self.model, config)
+            self.model = MLP(self.device, **config.model)
+            optimizer = build_optimizer(self.model, config)
 
-            # TODO:Allow generalization of criterion as a given parameter
             criterion = nn.CrossEntropyLoss()
 
-            for epoch in range(config.epochs):
-                loss = self.train_epoch(criterion, optimizer)
-                wandb.log({"loss": loss, "epoch": epoch})
+            for epoch in range(1, config.epochs + 1):
+                train_accuracy, train_loss = self.train_epoch(criterion, optimizer)
+
+                validation_accuracy, validation_loss = self.accuracy_and_loss("val_loader", criterion)
+
+                wandb.log({"train_accuracy": train_accuracy, "epoch": epoch})
+                wandb.log({"train_loss": train_loss, "epoch": epoch})
+
+                wandb.log({"validation_accuracy": validation_accuracy, "epoch": epoch})
+                wandb.log({"validation_loss": validation_loss, "epoch": epoch})

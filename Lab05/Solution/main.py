@@ -42,14 +42,14 @@ def get_optimizer(model: torch.nn.Module, optimizer_name: str, optimizer_params:
     return optimizer
 
 
-def run_model(optimizer_name: str, optimizer_params: dict = None, device=get_default_device()):
+def run_model(optimizer_name: str, optimizer_params: dict = None, device: torch.device = get_default_device()):
     size = (28, 28)
 
     transforms = [
         v2.ToImage(),
         v2.ToDtype(torch.float32, scale=True),
         v2.Resize(size, antialias=True),
-        v2.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261)),
+        v2.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261), inplace=True),
         v2.Grayscale(),
     ]
 
@@ -59,14 +59,18 @@ def run_model(optimizer_name: str, optimizer_params: dict = None, device=get_def
     train_dataset = CIFAR10(root=data_path, train=True, transform=v2.Compose(transforms), download=True)
     validation_dataset = CIFAR10(root=data_path, train=False, transform=v2.Compose(transforms), download=True)
 
-    no_units_per_layer = [784, 256, 128, 64, 10]
-    dropout_per_layer = [0.15, 0.15, 0.15, 0.15]
-    model = MLP(device, no_units_per_layer, dropout_per_layer)
+    no_epochs = 50
+
+    no_units_per_layer = [784, 512, 256, 128, 64, 10]
+    dropout_per_layer = [0.15, 0.15, 0.15, 0.15, 0.15]
+    skip_connections = []
+    model = MLP(device, no_units_per_layer, dropout_per_layer, skip_connections)
     # optimizer = torch.optim.SGD(model.parameters(), lr=0.026172624468404335, momentum=0.01964499304214733,
     #                             weight_decay=0.090403235101392, nesterov=True)
+
     optimizer = get_optimizer(model, optimizer_name, optimizer_params)
+
     criterion = torch.nn.CrossEntropyLoss()
-    no_epochs = 50
 
     train_batch_size = 128
     validation_batch_size = 500
@@ -77,13 +81,6 @@ def run_model(optimizer_name: str, optimizer_params: dict = None, device=get_def
         v2.GaussianBlur(3),
         torch.flatten
     ])
-
-    # v2.RandAugment(magnitude=2), -> keeps learning ,but slowly and more costly getting at 46%
-    # v2.RandomHorizontalFlip(),
-    # v2.RandomChoice([v2.RandomPerspective(distortion_scale=0.3),
-    #                  v2.Compose([v2.CenterCrop(22), v2.Pad(3)]),
-    #                  v2.GaussianBlur(3, (0.1, 1))
-    #                  ]), -> 48% with 25 epochs
 
     val_transforms = None
     val_transforms = v2.Compose([
@@ -99,8 +96,113 @@ def run_model(optimizer_name: str, optimizer_params: dict = None, device=get_def
     training_pipeline.run(no_epochs, model, criterion, optimizer)
 
 
+def get_sweep_params(optimizer_name: str) -> dict:
+    parameters_dict = {
+        'epochs': {
+            'value': 10
+        },
+        'model': {
+            'value': {
+                'no_units_per_layer': [784, 512, 256, 128, 64, 10],
+                'dropout_per_layer': [0.15, 0.15, 0.15, 0.15, 0.15],
+                'skip_connections': []
+            }
+        },
+        'batch_size': {
+            'values': [32, 64, 128, 256]
+        },
+        'optimizer_name': {
+            'value': optimizer_name
+        }
+    }
+
+    if optimizer_name == 'SGD':
+        parameters_dict.update({
+            'lr': {
+                'distribution': 'uniform',
+                'min': 1e-4,
+                'max': 1e-2
+            },
+            'momentum': {
+                'distribution': 'uniform',
+                'min': 1e-4,
+                'max': 1e-1
+            },
+            'weight_decay': {
+                'values': [0.01, 0.005, 0.001, 0.0005, 0.0001, 0.00005, 0.00001, 0.0]
+            },
+            'nesterov': {
+                'values': [False, True]
+            },
+        })
+    elif optimizer_name == 'Adam':
+        parameters_dict.update({
+            'lr': {
+                'distribution': 'uniform',
+                'min': 1e-4,
+                'max': 1e-2
+            },
+            'weight_decay': {
+                'values': [0.01, 0.005, 0.001, 0.0005, 0.0001, 0.00005, 0.00001, 0.0]
+            }
+        })
+    elif optimizer_name == 'RMSprop':
+        parameters_dict.update({
+            'lr': {
+                'distribution': 'uniform',
+                'min': 1e-4,
+                'max': 1e-2
+            },
+            'momentum': {
+                'distribution': 'uniform',
+                'min': 1e-4,
+                'max': 1e-1
+            },
+            'weight_decay': {
+                'values': [0.01, 0.005, 0.001, 0.0005, 0.0001, 0.00005, 0.00001, 0.0]
+            }
+        })
+    elif optimizer_name == 'Adagrad':
+        parameters_dict.update({
+            'lr': {
+                'distribution': 'uniform',
+                'min': 1e-4,
+                'max': 1e-2
+            },
+            'lr_decay': {
+                'distribution': 'uniform',
+                'min': 0.9,
+                'max': 1
+            },
+            'weight_decay': {
+                'values': [0.01, 0.005, 0.001, 0.0005, 0.0001, 0.00005, 0.00001, 0.0]
+            }
+        })
+    elif optimizer_name == 'SAM with SGD':
+        parameters_dict.update({
+            'lr': {
+                'distribution': 'uniform',
+                'min': 1e-4,
+                'max': 1e-2
+            },
+            'momentum': {
+                'distribution': 'uniform',
+                'min': 1e-4,
+                'max': 1e-1
+            },
+            'weight_decay': {
+                'values': [0.01, 0.005, 0.001, 0.0005, 0.0001, 0.00005, 0.00001, 0.0]
+            },
+            'nesterov': {
+                'values': [False, True]
+            },
+        })
+
+    return parameters_dict
+
+
 # TODO:Clean memory to ensure longer runs fight this lag
-def run_sweep(device=get_default_device()):
+def run_sweep(optimizer_name: str, sweep_id: str = None, device: torch.device = get_default_device()):
     # Set up the pipeline
     size = (28, 28)
 
@@ -108,23 +210,30 @@ def run_sweep(device=get_default_device()):
         v2.ToImage(),
         v2.ToDtype(torch.float32, scale=True),
         v2.Resize(size, antialias=True),
+        v2.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261), inplace=True),
         v2.Grayscale(),
-        v2.Normalize((0.5,), (0.5,), inplace=True),
-        torch.flatten,
     ]
 
     data_path = '../data'
     train_dataset = CIFAR10(root=data_path, train=True, transform=v2.Compose(transforms), download=True)
+    validation_dataset = CIFAR10(root=data_path, train=False, transform=v2.Compose(transforms), download=True)
 
     train_transforms = None
-    # train_transforms = v2.Compose([
-    # ])
+    train_transforms = v2.Compose([
+        v2.RandomHorizontalFlip(),
+        v2.GaussianBlur(3),
+        torch.flatten
+    ])
+    val_transforms = v2.Compose([
+        torch.flatten
+    ])
 
-    training_pipeline = TrainingPipeline(device, use_config_for_train=True, train_dataset=train_dataset,
-                                         val_dataset=None,
-                                         train_transformer=train_transforms, cache=True,
+    training_pipeline = TrainingPipeline(device, use_config_for_train=True,
+                                         train_dataset=train_dataset, val_dataset=validation_dataset,
+                                         train_transformer=train_transforms, val_transformer=val_transforms,
+                                         cache=True,
                                          train_batch_size=None, val_batch_size=None,
-                                         no_workers=8)
+                                         no_workers=4)
 
     # Step 1
     wandb.login()
@@ -134,65 +243,36 @@ def run_sweep(device=get_default_device()):
     }
 
     metric = {
-        'name': 'loss',
-        'goal': 'minimize'
+        'name': 'validation_accuracy',
+        'goal': 'maximize'
     }
 
     sweep_config['metric'] = metric
 
-    parameters_dict = {
-        'epochs': {
-            'value': 3
-        },
-        'optimizer': {
-            'value': 'sgd'
-        },
-        'no_units_per_layer': {
-            'value': [784, 128, 64, 10]
-        },
-        'batch_size': {
-            'values': [32, 64, 128, 256]
-        },
-        'learning_rate': {
-            # a flat distribution between 0 and 0.1
-            'distribution': 'uniform',
-            'min': 0.0001,
-            'max': 0.1
-        },
-        'momentum': {
-            'distribution': 'uniform',
-            'min': 0.0001,
-            'max': 0.1
-        },
-        'weight_decay': {
-            'distribution': 'uniform',
-            'min': 0.001,
-            'max': 0.5
-        },
-        'nesterov': {
-            'value': True
-        }
-    }
-
-    sweep_config['parameters'] = parameters_dict
+    sweep_config['parameters'] = get_sweep_params(optimizer_name)
 
     # Step 2
-    sweep_id = wandb.sweep(sweep_config, project="H5 SGD Hyper-parameters tuning")
+    project_name = "H5 " + optimizer_name + " Fine Tuning"
+    if sweep_id is None:
+        sweep_id = wandb.sweep(sweep_config, project=project_name)
+
+    print("Project name: ", project_name)
+    print("Sweep Id: ", sweep_id)
 
     # Step 3
-    wandb.agent(sweep_id, training_pipeline.run_config, count=40)
+    wandb.agent(sweep_id, training_pipeline.run_config, count=5)
 
 
 if __name__ == '__main__':
     freeze_support()
 
     # run_model('sgd', {"lr": 1e-3, 'momentum': 0.0005, 'dampening': 0.0, 'weight_decay': 0.00001, 'nesterov': True})
-    run_model('adam', {'lr': 1e-3, 'weight_decay': 0.00001})
+    # run_model('adam', {'lr': 1e-3, 'weight_decay': 0.00002})
     # run_model('rmsprop', {'lr': 1e-2, 'momentum': 0.0, 'centered': False, 'weight_decay': 0.0})
     # run_model('adagrad', {'lr': 1e-2, 'lr_decay': 0, 'weight_decay': 0})
     # run_model('sam', {'lr': 1e-2})
 
-    # run_sweep()
+    run_sweep('SGD', sweep_id='hkybkioh')
 
 # python -m tensorboard.main --logdir=runs
 # this commands works for me on Windows 10
