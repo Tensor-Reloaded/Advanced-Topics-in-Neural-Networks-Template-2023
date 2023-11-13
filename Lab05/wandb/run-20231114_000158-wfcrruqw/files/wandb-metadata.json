@@ -1,0 +1,53 @@
+{
+    "os": "Windows-10-10.0.22621-SP0",
+    "python": "3.11.4",
+    "heartbeatAt": "2023-11-13T22:01:59.289624",
+    "startedAt": "2023-11-13T22:01:58.396225",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "D:\\school\\ATNN\\Advanced-Topics-in-Neural-Networks-Template-2023\\Lab05\\Homework5.py",
+    "codePathLocal": "Homework5.py",
+    "codePath": "Lab05\\Homework5.py",
+    "git": {
+        "remote": "https://github.com/galaxy-hero/Advanced-Topics-in-Neural-Networks-Template-2023.git",
+        "commit": "96cdb62bb6622974d954eea3f72a7398d0603fe7"
+    },
+    "email": "arseneandreea08@gmail.com",
+    "root": "D:/school/ATNN/Advanced-Topics-in-Neural-Networks-Template-2023",
+    "host": "DESKTOP-2R17HBG",
+    "username": "Andra",
+    "executable": "C:\\Program Files\\Python311\\python.exe",
+    "cpu_count": 14,
+    "cpu_count_logical": 20,
+    "cpu_freq": {
+        "current": 2300.0,
+        "min": 0.0,
+        "max": 2300.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2300.0,
+            "min": 0.0,
+            "max": 2300.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 1862.9999961853027,
+            "used": 257.30810928344727
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 3060 Laptop GPU",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3060 Laptop GPU",
+            "memory_total": 6442450944
+        }
+    ],
+    "memory": {
+        "total": 31.629501342773438
+    }
+}

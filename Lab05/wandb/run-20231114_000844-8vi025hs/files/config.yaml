@@ -1,0 +1,77 @@
+wandb_version: 1
+
+epochs:
+  desc: null
+  value: 100
+dropout_rate:
+  desc: null
+  value: 0.3
+batch_size_train:
+  desc: null
+  value: 512
+batch_size_val:
+  desc: null
+  value: 512
+layer_sizes:
+  desc: null
+  value:
+  - 512
+  - 256
+learning_rate:
+  desc: null
+  value: 0.001
+momentum:
+  desc: null
+  value: 0.9
+weight_decay:
+  desc: null
+  value: 0.001
+base_lr:
+  desc: null
+  value: 0.0005
+max_lr:
+  desc: null
+  value: 0.001
+step_size_up:
+  desc: null
+  value: 100
+optimizer_params:
+  desc: null
+  value:
+    lr: 0.001
+    weight_decay: 0.0001
+architecture:
+  desc: null
+  value: MLP
+dataset:
+  desc: null
+  value: CIFAR-10
+_wandb:
+  desc: null
+  value:
+    python_version: 3.11.4
+    cli_version: 0.16.0
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1699913324.33108
+    t:
+      1:
+      - 1
+      - 41
+      - 55
+      2:
+      - 1
+      - 41
+      - 55
+      3:
+      - 1
+      - 2
+      - 16
+      - 23
+      4: 3.11.4
+      5: 0.16.0
+      8:
+      - 3
+      - 5
+      13: windows-amd64
