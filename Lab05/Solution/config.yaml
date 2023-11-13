@@ -1,0 +1,15 @@
+project: atnn-homework-5
+method: grid
+program: main.py
+metric:
+  name: validation_loss
+  goal: minimize
+parameters:
+  optimiser:
+    values: ["SGD", "RMSprop", "Adam", "Adagrad", "SGD with SAM"]
+  learning_rate:
+    values: [0.001, 0.01, 0.1, 0.25]
+  batch_size:
+    values: [16, 32, 64, 128, 256]
+  epochs:
+    values: [10, 25, 100, 200]
