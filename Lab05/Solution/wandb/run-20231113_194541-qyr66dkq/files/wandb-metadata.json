@@ -1,0 +1,45 @@
+{
+    "os": "Windows-10-10.0.22621-SP0",
+    "python": "3.10.0",
+    "heartbeatAt": "2023-11-13T17:45:42.467444",
+    "startedAt": "2023-11-13T17:45:41.648002",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "C:\\Users\\KENR\\PycharmProjects\\Lab5\\main.py",
+    "codePathLocal": "main.py",
+    "codePath": "main.py",
+    "git": {
+        "remote": null,
+        "commit": null
+    },
+    "email": "zero6305@gmail.com",
+    "root": "C:/Users/KENR/PycharmProjects/Lab5",
+    "host": "DESKTOP-N3LW7Z0",
+    "username": "KENR",
+    "executable": "C:\\Users\\KENR\\PycharmProjects\\Lab5\\venv\\Scripts\\python.exe",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 3801.0,
+        "min": 0.0,
+        "max": 3801.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3801.0,
+            "min": 0.0,
+            "max": 3801.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 953.0956993103027,
+            "used": 222.22374725341797
+        }
+    },
+    "memory": {
+        "total": 31.192249298095703
+    }
+}
