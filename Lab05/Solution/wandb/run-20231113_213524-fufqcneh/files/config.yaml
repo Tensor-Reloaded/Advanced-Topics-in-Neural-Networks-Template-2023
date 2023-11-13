@@ -8,7 +8,7 @@ epochs:
   value: 10
 lr:
   desc: null
-  value: 0.002199960958991488
+  value: 0.0007987597508501654
 model:
   desc: null
   value:
@@ -28,7 +28,7 @@ model:
     skip_connections: []
 momentum:
   desc: null
-  value: 0.04608665332639496
+  value: 0.017382093453173958
 nesterov:
   desc: null
   value: true
@@ -46,7 +46,7 @@ _wandb:
     framework: torch
     is_jupyter_run: false
     is_kaggle_kernel: false
-    start_time: 1699903431.39702
+    start_time: 1699904124.355846
     t:
       1:
       - 1

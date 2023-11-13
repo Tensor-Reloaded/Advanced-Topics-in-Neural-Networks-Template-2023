@@ -1,0 +1,53 @@
+{
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.10.8",
+    "heartbeatAt": "2023-11-13T20:48:24.065485",
+    "startedAt": "2023-11-13T20:48:22.990655",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "D:\\Facultate\\Master\\Anul 1\\Capitole avansate de retele neuronale\\Laboratoare\\ATNN-Labs\\Lab05\\Solution\\main.py",
+    "codePathLocal": "main.py",
+    "codePath": "Lab05\\Solution\\main.py",
+    "git": {
+        "remote": "https://github.com/IvanRemus1B2/ATNN-Labs.git",
+        "commit": "911142c39dfd775d5d4c6c516230c60958154520"
+    },
+    "email": "ivan.remus101@gmail.com",
+    "root": "D:/Facultate/Master/Anul 1/Capitole avansate de retele neuronale/Laboratoare/ATNN-Labs",
+    "host": "DESKTOP-4AJOCL6",
+    "username": "simio",
+    "executable": "C:\\Users\\simio\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 2592.0,
+        "min": 0.0,
+        "max": 2592.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2592.0,
+            "min": 0.0,
+            "max": 2592.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 195.80077743530273,
+            "used": 170.34339141845703
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 2060",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 2060",
+            "memory_total": 6442450944
+        }
+    ],
+    "memory": {
+        "total": 15.790481567382812
+    }
+}

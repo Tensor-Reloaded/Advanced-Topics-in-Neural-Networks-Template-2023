@@ -1,0 +1,30 @@
+wandb_version: 1
+
+batch_size:
+  value: 32
+epochs:
+  value: 10
+lr:
+  value: 0.001165019600382318
+model:
+  value:
+    dropout_per_layer:
+    - 0.15
+    - 0.15
+    - 0.15
+    - 0.15
+    - 0.15
+    no_units_per_layer:
+    - 784
+    - 512
+    - 256
+    - 128
+    - 64
+    - 10
+    skip_connections: []
+momentum:
+  value: 0.05578243523968897
+optimizer_name:
+  value: RMSprop
+weight_decay:
+  value: 0.0001

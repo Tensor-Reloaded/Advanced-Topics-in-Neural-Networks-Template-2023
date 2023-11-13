@@ -1,0 +1,32 @@
+wandb_version: 1
+
+batch_size:
+  value: 32
+epochs:
+  value: 10
+lr:
+  value: 0.005004444813223014
+model:
+  value:
+    dropout_per_layer:
+    - 0.15
+    - 0.15
+    - 0.15
+    - 0.15
+    - 0.15
+    no_units_per_layer:
+    - 784
+    - 512
+    - 256
+    - 128
+    - 64
+    - 10
+    skip_connections: []
+momentum:
+  value: 0.08934143828809044
+nesterov:
+  value: false
+optimizer_name:
+  value: SGD
+weight_decay:
+  value: 0.005

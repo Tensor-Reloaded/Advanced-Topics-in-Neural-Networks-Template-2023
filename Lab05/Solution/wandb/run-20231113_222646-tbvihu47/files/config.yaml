@@ -2,13 +2,13 @@ wandb_version: 1
 
 batch_size:
   desc: null
-  value: 256
+  value: 128
 epochs:
   desc: null
   value: 10
 lr:
   desc: null
-  value: 0.002199960958991488
+  value: 0.009474133071481415
 model:
   desc: null
   value:
@@ -28,13 +28,10 @@ model:
     skip_connections: []
 momentum:
   desc: null
-  value: 0.04608665332639496
-nesterov:
-  desc: null
-  value: true
+  value: 0.008469687204356518
 optimizer_name:
   desc: null
-  value: SGD
+  value: RMSprop
 weight_decay:
   desc: null
   value: 0.01
@@ -46,7 +43,7 @@ _wandb:
     framework: torch
     is_jupyter_run: false
     is_kaggle_kernel: false
-    start_time: 1699903431.39702
+    start_time: 1699907206.746882
     t:
       1:
       - 1

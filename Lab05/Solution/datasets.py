@@ -22,7 +22,6 @@ class CachedDataset(Dataset):
         return len(self.dataset)
 
     def __getitem__(self, idx):
-        # TODO:Make sure we aren't rewriting the features with the transformers
         features, label = self.dataset[idx]
         if self.transformer is not None:
             features = self.transformer(features)

@@ -137,8 +137,6 @@ class TrainingPipeline:
         fp_plus_fn = torch.logical_not(all_outputs == all_labels).sum().item()
         all_elements = all_outputs.shape[0]
 
-        # TODO:Consider whether we should divide the loss by /no_instances
-
         return (all_elements - fp_plus_fn) / all_elements, total_loss
 
     def train(self, criterion, optimizer, pbar, current_batch, writer) -> tuple[int, float, float]:

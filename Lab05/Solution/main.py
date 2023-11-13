@@ -11,9 +11,6 @@ from models import *
 import wandb
 
 
-# TODO:General Cleanup
-
-
 def get_default_device():
     if torch.cuda.is_available():
         return torch.device('cuda')
@@ -42,7 +39,8 @@ def get_optimizer(model: torch.nn.Module, optimizer_name: str, optimizer_params:
     return optimizer
 
 
-def run_model(optimizer_name: str, optimizer_params: dict = None, device: torch.device = get_default_device()):
+def run_model(optimizer_name: str, optimizer_params: dict = None, train_batch_size: int = None,
+              device: torch.device = get_default_device()):
     size = (28, 28)
 
     transforms = [
@@ -201,7 +199,7 @@ def get_sweep_params(optimizer_name: str) -> dict:
     return parameters_dict
 
 
-# TODO:Clean memory to ensure longer runs fight this lag
+# TODO:Clean memory to ensure longer runs
 def run_sweep(optimizer_name: str, sweep_id: str = None, device: torch.device = get_default_device()):
     # Set up the pipeline
     size = (28, 28)
@@ -266,13 +264,22 @@ def run_sweep(optimizer_name: str, sweep_id: str = None, device: torch.device = 
 if __name__ == '__main__':
     freeze_support()
 
-    # run_model('sgd', {"lr": 1e-3, 'momentum': 0.0005, 'dampening': 0.0, 'weight_decay': 0.00001, 'nesterov': True})
+    # These are the parameters for the best runs
+    run_model('sgd',
+              {"lr": 0.00910, 'momentum': 0.0348287254025958, 'dampening': 0.0, 'weight_decay': 1e-5,
+               'nesterov': True}, train_batch_size=32)
+    #
     # run_model('adam', {'lr': 1e-3, 'weight_decay': 0.00002})
-    # run_model('rmsprop', {'lr': 1e-2, 'momentum': 0.0, 'centered': False, 'weight_decay': 0.0})
-    # run_model('adagrad', {'lr': 1e-2, 'lr_decay': 0, 'weight_decay': 0})
-    # run_model('sam', {'lr': 1e-2})
 
-    run_sweep('SGD')
+    # run_model('rmsprop', {'lr': 0.00062, 'momentum': 0.006331417928678274, 'weight_decay': 0.0},
+    #           train_batch_size=128)
+    #
+    # run_model('adagrad', {'lr': 0.00436, 'lr_decay': 0.95, 'weight_decay': 0.001}, train_batch_size=256)
+
+    # run_model('sam', {"lr": 0.00865860767880207, 'momentum': 0.017413258272960617, 'dampening': 0.0, 'weight_decay': 0.0005,
+    #         'nesterov': False})
+
+    # run_sweep('RMSprop')
 
 # python -m tensorboard.main --logdir=runs
 # this commands works for me on Windows 10
