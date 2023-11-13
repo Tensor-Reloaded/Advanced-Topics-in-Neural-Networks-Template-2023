@@ -1,4 +1,6 @@
 # TODO:Define types of each parameters for every function,as well as return type
+import gc
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -321,3 +323,6 @@ class TrainingPipeline:
 
                 wandb.log({"validation_accuracy": validation_accuracy, "epoch": epoch})
                 wandb.log({"validation_loss": validation_loss, "epoch": epoch})
+
+        torch.cuda.empty_cache()
+        gc.collect()

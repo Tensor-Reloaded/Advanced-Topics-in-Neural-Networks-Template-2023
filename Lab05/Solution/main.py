@@ -260,7 +260,7 @@ def run_sweep(optimizer_name: str, sweep_id: str = None, device: torch.device = 
     print("Sweep Id: ", sweep_id)
 
     # Step 3
-    wandb.agent(sweep_id, training_pipeline.run_config, count=5)
+    wandb.agent(sweep_id, training_pipeline.run_config, count=10)
 
 
 if __name__ == '__main__':
@@ -272,7 +272,7 @@ if __name__ == '__main__':
     # run_model('adagrad', {'lr': 1e-2, 'lr_decay': 0, 'weight_decay': 0})
     # run_model('sam', {'lr': 1e-2})
 
-    run_sweep('SGD', sweep_id='hkybkioh')
+    run_sweep('SGD')
 
 # python -m tensorboard.main --logdir=runs
 # this commands works for me on Windows 10
