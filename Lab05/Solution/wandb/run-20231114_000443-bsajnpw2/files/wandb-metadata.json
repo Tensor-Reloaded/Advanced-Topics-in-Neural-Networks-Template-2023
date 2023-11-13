@@ -1,0 +1,37 @@
+{
+    "os": "macOS-13.5.2-arm64-arm-64bit",
+    "python": "3.9.6",
+    "heartbeatAt": "2023-11-13T22:04:44.657226",
+    "startedAt": "2023-11-13T22:04:43.731679",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/Users/alupoaea/Personal/Master/ATNN/ATNN_Lupoaea/Lab05/Solution/main.py",
+    "codePathLocal": "main.py",
+    "codePath": "Lab05/Solution/main.py",
+    "git": {
+        "remote": "https://github.com/anamarialupoaea/ATNN_Lupoaea.git",
+        "commit": "ef76dfca1b6d7ce4564967f11dbdc2fd31c8547e"
+    },
+    "email": "alupoaea@amazon.com",
+    "root": "/Users/alupoaea/Personal/Master/ATNN/ATNN_Lupoaea",
+    "host": "bcd0745c3af7",
+    "username": "alupoaea",
+    "executable": "/Library/Developer/CommandLineTools/usr/bin/python3",
+    "cpu_count": 10,
+    "cpu_count_logical": 10,
+    "disk": {
+        "/": {
+            "total": 460.4317207336426,
+            "used": 8.537101745605469
+        }
+    },
+    "gpuapple": {
+        "type": "arm",
+        "vendor": "Apple"
+    },
+    "memory": {
+        "total": 32.0
+    }
+}
