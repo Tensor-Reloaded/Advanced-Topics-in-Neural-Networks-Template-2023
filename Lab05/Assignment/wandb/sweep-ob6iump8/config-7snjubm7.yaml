@@ -1,0 +1,12 @@
+wandb_version: 1
+
+batch_size:
+  value: 309
+epochs:
+  value: 92
+learning_rate:
+  value: 0.005
+optimizer:
+  value: 0
+poly_lr:
+  value: 1

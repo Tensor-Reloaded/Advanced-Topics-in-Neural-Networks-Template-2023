@@ -1,0 +1,882 @@
+{
+    "entry_0": {
+        "Acc Val": 0.5194,
+        "config": {
+            "batch_size": 480,
+            "epochs": 100,
+            "learning_rate": 0.0005,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_1": {
+        "Acc Val": 0.5216,
+        "config": {
+            "batch_size": 316,
+            "epochs": 101,
+            "learning_rate": 0.05,
+            "optimizer": 1,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_2": {
+        "Acc Val": 0.5064,
+        "config": {
+            "batch_size": 314,
+            "epochs": 81,
+            "learning_rate": 0.05,
+            "optimizer": 2,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_3": {
+        "Acc Val": 0.5222,
+        "config": {
+            "batch_size": 296,
+            "epochs": 97,
+            "learning_rate": 0.01,
+            "optimizer": 2,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_4": {
+        "Acc Val": 0.4918,
+        "config": {
+            "batch_size": 494,
+            "epochs": 110,
+            "learning_rate": 0.0005,
+            "optimizer": 0,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_5": {
+        "Acc Val": 0.4316,
+        "config": {
+            "batch_size": 385,
+            "epochs": 114,
+            "learning_rate": 0.005,
+            "optimizer": 0,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_6": {
+        "Acc Val": 0.5054,
+        "config": {
+            "batch_size": 417,
+            "epochs": 96,
+            "learning_rate": 0.0005,
+            "optimizer": 3,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_7": {
+        "Acc Val": 0.5364,
+        "config": {
+            "batch_size": 467,
+            "epochs": 122,
+            "learning_rate": 0.0005,
+            "optimizer": 2,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_8": {
+        "Acc Val": 0.5102,
+        "config": {
+            "batch_size": 500,
+            "epochs": 101,
+            "learning_rate": 0.05,
+            "optimizer": 2,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_9": {
+        "Acc Val": 0.5223,
+        "config": {
+            "batch_size": 503,
+            "epochs": 123,
+            "learning_rate": 0.0001,
+            "optimizer": 2,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_10": {
+        "Acc Val": 0.5297,
+        "config": {
+            "batch_size": 493,
+            "epochs": 95,
+            "learning_rate": 0.01,
+            "optimizer": 3,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_11": {
+        "Acc Val": 0.5283,
+        "config": {
+            "batch_size": 486,
+            "epochs": 123,
+            "learning_rate": 0.001,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_12": {
+        "Acc Val": 0.5331,
+        "config": {
+            "batch_size": 417,
+            "epochs": 80,
+            "learning_rate": 0.0001,
+            "optimizer": 2,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_13": {
+        "Acc Val": 0.5303,
+        "config": {
+            "batch_size": 302,
+            "epochs": 121,
+            "learning_rate": 0.01,
+            "optimizer": 3,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_14": {
+        "Acc Val": 0.5092,
+        "config": {
+            "batch_size": 258,
+            "epochs": 114,
+            "learning_rate": 0.0001,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_15": {
+        "Acc Val": 0.5321,
+        "config": {
+            "batch_size": 404,
+            "epochs": 92,
+            "learning_rate": 0.005,
+            "optimizer": 1,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_16": {
+        "Acc Val": 0.5161,
+        "config": {
+            "batch_size": 356,
+            "epochs": 78,
+            "learning_rate": 0.001,
+            "optimizer": 3,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_17": {
+        "Acc Val": 0.5073,
+        "config": {
+            "batch_size": 387,
+            "epochs": 125,
+            "learning_rate": 0.05,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_18": {
+        "Acc Val": 0.4017,
+        "config": {
+            "batch_size": 337,
+            "epochs": 112,
+            "learning_rate": 0.01,
+            "optimizer": 0,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_19": {
+        "Acc Val": 0.5091,
+        "config": {
+            "batch_size": 282,
+            "epochs": 114,
+            "learning_rate": 0.0001,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_20": {
+        "Acc Val": 0.5288,
+        "config": {
+            "batch_size": 273,
+            "epochs": 122,
+            "learning_rate": 0.01,
+            "optimizer": 3,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_21": {
+        "Acc Val": 0.5365,
+        "config": {
+            "batch_size": 273,
+            "epochs": 103,
+            "learning_rate": 0.0001,
+            "optimizer": 0,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_22": {
+        "Acc Val": 0.5121,
+        "config": {
+            "batch_size": 289,
+            "epochs": 95,
+            "learning_rate": 0.0001,
+            "optimizer": 0,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_23": {
+        "Acc Val": 0.5309,
+        "config": {
+            "batch_size": 484,
+            "epochs": 115,
+            "learning_rate": 0.005,
+            "optimizer": 3,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_24": {
+        "Acc Val": 0.5241,
+        "config": {
+            "batch_size": 260,
+            "epochs": 101,
+            "learning_rate": 0.0005,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_25": {
+        "Acc Val": 0.513,
+        "config": {
+            "batch_size": 296,
+            "epochs": 110,
+            "learning_rate": 0.01,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_26": {
+        "Acc Val": 0.4232,
+        "config": {
+            "batch_size": 378,
+            "epochs": 91,
+            "learning_rate": 0.005,
+            "optimizer": 0,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_27": {
+        "Acc Val": 0.4957,
+        "config": {
+            "batch_size": 495,
+            "epochs": 87,
+            "learning_rate": 0.001,
+            "optimizer": 0,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_28": {
+        "Acc Val": 0.5165,
+        "config": {
+            "batch_size": 291,
+            "epochs": 105,
+            "learning_rate": 0.01,
+            "optimizer": 2,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_29": {
+        "Acc Val": 0.4336,
+        "config": {
+            "batch_size": 315,
+            "epochs": 104,
+            "learning_rate": 0.005,
+            "optimizer": 0,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_30": {
+        "Acc Val": 0.2551,
+        "config": {
+            "batch_size": 352,
+            "epochs": 124,
+            "learning_rate": 0.01,
+            "optimizer": 0,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_31": {
+        "Acc Val": 0.5085,
+        "config": {
+            "batch_size": 465,
+            "epochs": 98,
+            "learning_rate": 0.05,
+            "optimizer": 2,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_32": {
+        "Acc Val": 0.5025,
+        "config": {
+            "batch_size": 352,
+            "epochs": 108,
+            "learning_rate": 0.0005,
+            "optimizer": 3,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_33": {
+        "Acc Val": 0.4871,
+        "config": {
+            "batch_size": 370,
+            "epochs": 120,
+            "learning_rate": 0.0005,
+            "optimizer": 0,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_34": {
+        "Acc Val": 0.533,
+        "config": {
+            "batch_size": 396,
+            "epochs": 83,
+            "learning_rate": 0.01,
+            "optimizer": 1,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_35": {
+        "Acc Val": 0.535,
+        "config": {
+            "batch_size": 280,
+            "epochs": 120,
+            "learning_rate": 0.0001,
+            "optimizer": 0,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_36": {
+        "Acc Val": 0.4044,
+        "config": {
+            "batch_size": 321,
+            "epochs": 114,
+            "learning_rate": 0.01,
+            "optimizer": 0,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_37": {
+        "Acc Val": 0.5214,
+        "config": {
+            "batch_size": 354,
+            "epochs": 79,
+            "learning_rate": 0.0001,
+            "optimizer": 2,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_38": {
+        "Acc Val": 0.5043,
+        "config": {
+            "batch_size": 358,
+            "epochs": 79,
+            "learning_rate": 0.05,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_39": {
+        "Acc Val": 0.509,
+        "config": {
+            "batch_size": 405,
+            "epochs": 118,
+            "learning_rate": 0.05,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_40": {
+        "Acc Val": 0.5045,
+        "config": {
+            "batch_size": 436,
+            "epochs": 116,
+            "learning_rate": 0.0001,
+            "optimizer": 0,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_41": {
+        "Acc Val": 0.5111,
+        "config": {
+            "batch_size": 275,
+            "epochs": 104,
+            "learning_rate": 0.01,
+            "optimizer": 2,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_42": {
+        "Acc Val": 0.5248,
+        "config": {
+            "batch_size": 328,
+            "epochs": 114,
+            "learning_rate": 0.01,
+            "optimizer": 3,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_43": {
+        "Acc Val": 0.5079,
+        "config": {
+            "batch_size": 419,
+            "epochs": 117,
+            "learning_rate": 0.0005,
+            "optimizer": 3,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_44": {
+        "Acc Val": 0.2772,
+        "config": {
+            "batch_size": 417,
+            "epochs": 98,
+            "learning_rate": 0.05,
+            "optimizer": 0,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_45": {
+        "Acc Val": 0.4345,
+        "config": {
+            "batch_size": 382,
+            "epochs": 97,
+            "learning_rate": 0.001,
+            "optimizer": 0,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_46": {
+        "Acc Val": 0.5047,
+        "config": {
+            "batch_size": 410,
+            "epochs": 82,
+            "learning_rate": 0.0005,
+            "optimizer": 3,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_47": {
+        "Acc Val": 0.5163,
+        "config": {
+            "batch_size": 436,
+            "epochs": 100,
+            "learning_rate": 0.01,
+            "optimizer": 2,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_48": {
+        "Acc Val": 0.5274,
+        "config": {
+            "batch_size": 352,
+            "epochs": 100,
+            "learning_rate": 0.0005,
+            "optimizer": 1,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_49": {
+        "Acc Val": 0.5277,
+        "config": {
+            "batch_size": 282,
+            "epochs": 88,
+            "learning_rate": 0.001,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_50": {
+        "Acc Val": 0.3011,
+        "config": {
+            "batch_size": 310,
+            "epochs": 111,
+            "learning_rate": 0.005,
+            "optimizer": 0,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_51": {
+        "Acc Val": 0.5208,
+        "config": {
+            "batch_size": 267,
+            "epochs": 91,
+            "learning_rate": 0.01,
+            "optimizer": 2,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_52": {
+        "Acc Val": 0.5279,
+        "config": {
+            "batch_size": 328,
+            "epochs": 111,
+            "learning_rate": 0.01,
+            "optimizer": 3,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_53": {
+        "Acc Val": 0.5314,
+        "config": {
+            "batch_size": 342,
+            "epochs": 105,
+            "learning_rate": 0.005,
+            "optimizer": 1,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_54": {
+        "Acc Val": 0.507,
+        "config": {
+            "batch_size": 450,
+            "epochs": 91,
+            "learning_rate": 0.05,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_55": {
+        "Acc Val": 0.4874,
+        "config": {
+            "batch_size": 270,
+            "epochs": 82,
+            "learning_rate": 0.001,
+            "optimizer": 0,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_56": {
+        "Acc Val": 0.5061,
+        "config": {
+            "batch_size": 410,
+            "epochs": 88,
+            "learning_rate": 0.0005,
+            "optimizer": 3,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_57": {
+        "Acc Val": 0.5055,
+        "config": {
+            "batch_size": 348,
+            "epochs": 81,
+            "learning_rate": 0.0005,
+            "optimizer": 3,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_58": {
+        "Acc Val": 0.4452,
+        "config": {
+            "batch_size": 275,
+            "epochs": 116,
+            "learning_rate": 0.0001,
+            "optimizer": 3,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_59": {
+        "Acc Val": 0.4206,
+        "config": {
+            "batch_size": 309,
+            "epochs": 92,
+            "learning_rate": 0.005,
+            "optimizer": 0,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_60": {
+        "Acc Val": 0.5185,
+        "config": {
+            "batch_size": 268,
+            "epochs": 102,
+            "learning_rate": 0.01,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_61": {
+        "Acc Val": 0.4272,
+        "config": {
+            "batch_size": 285,
+            "epochs": 119,
+            "learning_rate": 0.0001,
+            "optimizer": 3,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_62": {
+        "Acc Val": 0.5239,
+        "config": {
+            "batch_size": 348,
+            "epochs": 125,
+            "learning_rate": 0.005,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_63": {
+        "Acc Val": 0.5276,
+        "config": {
+            "batch_size": 420,
+            "epochs": 114,
+            "learning_rate": 0.001,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_64": {
+        "Acc Val": 0.5172,
+        "config": {
+            "batch_size": 348,
+            "epochs": 105,
+            "learning_rate": 0.05,
+            "optimizer": 3,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_65": {
+        "Acc Val": 0.4894,
+        "config": {
+            "batch_size": 468,
+            "epochs": 102,
+            "learning_rate": 0.0001,
+            "optimizer": 1,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_66": {
+        "Acc Val": 0.5244,
+        "config": {
+            "batch_size": 454,
+            "epochs": 101,
+            "learning_rate": 0.001,
+            "optimizer": 3,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_67": {
+        "Acc Val": 0.1591,
+        "config": {
+            "batch_size": 416,
+            "epochs": 77,
+            "learning_rate": 0.05,
+            "optimizer": 0,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_68": {
+        "Acc Val": 0.4406,
+        "config": {
+            "batch_size": 467,
+            "epochs": 88,
+            "learning_rate": 0.001,
+            "optimizer": 0,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_69": {
+        "Acc Val": 0.5065,
+        "config": {
+            "batch_size": 395,
+            "epochs": 116,
+            "learning_rate": 0.05,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_70": {
+        "Acc Val": 0.5089,
+        "config": {
+            "batch_size": 374,
+            "epochs": 105,
+            "learning_rate": 0.0005,
+            "optimizer": 0,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_71": {
+        "Acc Val": 0.4894,
+        "config": {
+            "batch_size": 418,
+            "epochs": 122,
+            "learning_rate": 0.0005,
+            "optimizer": 0,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_72": {
+        "Acc Val": 0.5168,
+        "config": {
+            "batch_size": 303,
+            "epochs": 101,
+            "learning_rate": 0.01,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_73": {
+        "Acc Val": 0.5249,
+        "config": {
+            "batch_size": 499,
+            "epochs": 98,
+            "learning_rate": 0.01,
+            "optimizer": 3,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_74": {
+        "Acc Val": 0.5153,
+        "config": {
+            "batch_size": 373,
+            "epochs": 85,
+            "learning_rate": 0.005,
+            "optimizer": 2,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_75": {
+        "Acc Val": 0.5149,
+        "config": {
+            "batch_size": 296,
+            "epochs": 82,
+            "learning_rate": 0.0001,
+            "optimizer": 0,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_76": {
+        "Acc Val": 0.5219,
+        "config": {
+            "batch_size": 496,
+            "epochs": 125,
+            "learning_rate": 0.01,
+            "optimizer": 1,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_77": {
+        "Acc Val": 0.5116,
+        "config": {
+            "batch_size": 262,
+            "epochs": 88,
+            "learning_rate": 0.01,
+            "optimizer": 2,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_78": {
+        "Acc Val": 0.5114,
+        "config": {
+            "batch_size": 300,
+            "epochs": 86,
+            "learning_rate": 0.01,
+            "optimizer": 2,
+            "poly_lr": 0,
+            "dataset": "CIFAR-10"
+        }
+    },
+    "entry_79": {
+        "Acc Val": 0.4986,
+        "config": {
+            "batch_size": 284,
+            "epochs": 117,
+            "learning_rate": 0.0001,
+            "optimizer": 1,
+            "poly_lr": 1,
+            "dataset": "CIFAR-10"
+        }
+    }
+}
