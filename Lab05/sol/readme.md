@@ -8,3 +8,5 @@ exalted-flower-4    --->  SGD     (39.4% acc)
 rich-fog-3          --->  ADAM    (31.51% acc)
 amber-terrain-2     --->  ADAGRAD (41.15% acc)
 clear-wildflower-1  --->  RMSprop (34.88% acc)
+
+I ran multiple times with different values, in the end I tried to increase the number of epochs and decrease the learning rate, but I couldn't surpass 50% accuracy
