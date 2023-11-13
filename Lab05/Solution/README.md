@@ -1,4 +1,6 @@
-[![Open in Colab]](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Nick24-hub/Advanced-Topics-in-Neural-Networks-Template-2023/blob/main/Lab05/Solution/lab5_assignment.ipynb)
+<a target="_blank" href="https://colab.research.google.com/github/Nick24-hub/Advanced-Topics-in-Neural-Networks-Template-2023/blob/main/Lab05/Solution/lab5_assignment.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
 
 - implemented logging system using Tensorboard
 - evaluated the performance of SGD, Adam, RMSprop, AdaGrad
