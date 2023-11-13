@@ -6,7 +6,7 @@ import pandas as pd
 import cv2
 
 
-class PhotoDataset(Dataset):
+class MyDataset(Dataset):
     def __init__(self, dataset_folder_location):
         self.dict = {}
         self.photo = []

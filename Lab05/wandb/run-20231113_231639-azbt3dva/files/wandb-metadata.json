@@ -1,0 +1,47 @@
+{
+    "os": "Windows-10-10.0.22621-SP0",
+    "python": "3.10.9",
+    "heartbeatAt": "2023-11-13T21:16:40.239090",
+    "startedAt": "2023-11-13T21:16:39.355589",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "d:\\Master\\Advanced-Topics-in-Neural-Networks-Template-2023\\Lab05\\sol\\test.py",
+    "codePathLocal": "sol\\test.py",
+    "codePath": "sol\\test.py",
+    "host": "Adi",
+    "username": "adiio",
+    "executable": "C:\\Users\\adiio\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+    "cpu_count": 16,
+    "cpu_count_logical": 24,
+    "cpu_freq": {
+        "current": 2300.0,
+        "min": 0.0,
+        "max": 2300.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2300.0,
+            "min": 0.0,
+            "max": 2300.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 1907.7119102478027,
+            "used": 231.31292724609375
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 3080 Ti Laptop GPU",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3080 Ti Laptop GPU",
+            "memory_total": 17179869184
+        }
+    ],
+    "memory": {
+        "total": 63.629573822021484
+    }
+}
