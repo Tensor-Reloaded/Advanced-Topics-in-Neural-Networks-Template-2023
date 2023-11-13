@@ -11,6 +11,8 @@ from augmentations import CutOrMixUp
 from cached_dataset import CachedDataset
 from models import CifraMLP
 from torch.utils.tensorboard import SummaryWriter
+from sam import SAM
+from torch.utils.data import default_collate
 
 
 def get_default_device():
@@ -27,7 +29,7 @@ def accuracy(output, labels):
     return (all_elements - fp_plus_fn) / all_elements
 
 
-def train(model, train_loader, criterion, optimizer, device, cutmix_or_mixup, writer, nr_epoch):
+def train(model, train_loader, criterion, optimizer, device, cutmix_or_mixup, writer, nr_epoch, optimizer_name):
 
     model.train()
 
@@ -40,14 +42,27 @@ def train(model, train_loader, criterion, optimizer, device, cutmix_or_mixup, wr
         #data = data.reshape(len(data), -1) # !!!
         data = data.to(device, non_blocking=True)
         labels = labels.to(device, non_blocking=True)
-        output = model(data)
-        loss = criterion(output, labels)
-        writer.add_scalar("batch_train_loss", loss, nr_epoch * length + step)
-        loss_per_epoch += loss.item()
-        loss.backward()
+        if optimizer_name == "SGD+SAM":
+            def closure():
+                loss = criterion(model(data), labels)
+                loss.backward()
+                return loss
 
-        optimizer.step()
-        optimizer.zero_grad(set_to_none=True)
+            output = model(data)
+            loss = criterion(output, labels)
+            loss_per_epoch += loss.item()
+            loss.backward()
+            optimizer.step(closure)
+            optimizer.zero_grad()
+        else:
+            output = model(data)
+            loss = criterion(output, labels)
+            writer.add_scalar("batch_train_loss", loss, nr_epoch * length + step)
+            loss_per_epoch += loss.item()
+            loss.backward()
+
+            optimizer.step()
+            optimizer.zero_grad(set_to_none=True)
 
         output = output.softmax(dim=1).detach().cpu().squeeze()
         labels = labels.cpu().squeeze()
@@ -87,8 +102,8 @@ def val(model, val_loader, device, criterion):
     return round(accuracy(all_outputs, all_labels), 4), loss_per_epoch / len(val_loader)
 
 
-def do_epoch(model, train_loader, val_loader, criterion, optimizer, device, cutmix_or_mixup, writer, nr_epoch):
-    acc, loss_per_train_epoch = train(model, train_loader, criterion, optimizer, device, cutmix_or_mixup, writer, nr_epoch)
+def do_epoch(model, train_loader, val_loader, criterion, optimizer, device, cutmix_or_mixup, writer, nr_epoch, optimizer_name):
+    acc, loss_per_train_epoch = train(model, train_loader, criterion, optimizer, device, cutmix_or_mixup, writer,  nr_epoch, optimizer_name)
     acc_val, loss_per_val_epoch = val(model, val_loader, device, criterion)
     return acc, acc_val, loss_per_train_epoch, loss_per_val_epoch
 
@@ -101,6 +116,7 @@ def get_model_norm(model):
 
 
 def create_components(config, device):
+
     transforms = [
         v2.ToImage(),
         v2.ToDtype(torch.float32, scale=True),
@@ -115,35 +131,37 @@ def create_components(config, device):
     train_dataset = CachedDataset(train_dataset)
     val_dataset = CachedDataset(val_dataset)
 
-    model = CifraMLP(config.input_dim, 392, 196, config.classes)
+    model = CifraMLP(config["input_dim"], 300, 150, config["classes"])
     model = model.to(device)
-    if config.optimizer == "RMSProp":
-        optimizer = torch.optim.RMSprop(model.parameters(), config.learning_rate, weight_decay=config.decay, momentum=config.momentum)
-    elif config.optimizer == "Adam":
-        optimizer = torch.optim.Adam(model.parameters(), config.learning_rate, weight_decay=config.decay)
-    elif config.optimizer == "SGD":
-        optimizer = torch.optim.SGD(model.parameters(), config.learning_rate, weight_decay=config.decay, momentum=config.momentum)
-    elif config.optimizer == "AdaGrad":
-        optimizer = torch.optim.Adagrad(model.parameters(), config.learning_rate, weight_decay=config.decay)
+    if config["optimizer"] == "RMSProp":
+        optimizer = torch.optim.RMSprop(model.parameters(), config["learning_rate"], weight_decay=config["decay"], momentum=config["momentum"])
+    elif config["optimizer"] == "Adam":
+        optimizer = torch.optim.Adam(model.parameters(), config["learning_rate"], weight_decay=config["decay"])
+    elif config["optimizer"] == "SGD":
+        optimizer = torch.optim.SGD(model.parameters(), config["learning_rate"], weight_decay=config["decay"], momentum=config["momentum"])
+    elif config["optimizer"] == "AdaGrad":
+        optimizer = torch.optim.Adagrad(model.parameters(), config["learning_rate"], weight_decay=config["decay"])
+    elif config["optimizer"] == "SGD+SAM":
+        base_optimizer = torch.optim.SGD
+        optimizer = SAM(model.parameters(), base_optimizer, lr=config["learning_rate"], weight_decay=config["decay"], momentum=config["momentum"])
     else:
-        optimizer = torch.optim.SGD(model.parameters(), config.learning_rate)
+        optimizer = torch.optim.SGD(model.parameters(), config["learning_rate"])
     criterion = torch.nn.CrossEntropyLoss()
     num_workers = 2
     persistent_workers = (num_workers != 0)
     pin_memory = device.type == 'cuda'
     train_loader = DataLoader(train_dataset, shuffle=True, pin_memory=pin_memory, num_workers=num_workers,
-                              batch_size=config.batch_size_test, drop_last=False, persistent_workers=persistent_workers)
-    val_loader = DataLoader(val_dataset, shuffle=False, pin_memory=True, num_workers=0, batch_size=config.batch_size_val,
+                              batch_size=config["batch_size_test"], drop_last=False, persistent_workers=persistent_workers)
+    val_loader = DataLoader(val_dataset, shuffle=False, pin_memory=True, num_workers=0, batch_size=config["batch_size_val"],
                             drop_last=False)
 
     return model, train_loader, val_loader, criterion, optimizer
 
 
 def main(hyperparameters, device=get_default_device()):
-
     cutmix_or_mixup = CutOrMixUp()
     writer = SummaryWriter("runs/Lab5_" + hyperparameters["optimizer"])
-    with wandb.init(project="Lab5_"+hyperparameters["optimizer"], config=hyperparameters):
+    with wandb.init(project="Lab5_" + hyperparameters["optimizer"], config=hyperparameters):
         config = wandb.config
         model, train_loader, val_loader, criterion, optimizer = create_components(config, device)
 
@@ -155,10 +173,13 @@ def main(hyperparameters, device=get_default_device()):
         wandb.watch(model, criterion, log="all", log_freq=10)
         tbar = tqdm(tuple(range(config.epochs)))
         for epoch in tbar:
-            acc, acc_val, loss_per_train_epoch, loss_per_val_epoch = do_epoch(model, train_loader, val_loader, criterion, optimizer, device, cutmix_or_mixup, writer, epoch)
+            acc, acc_val, loss_per_train_epoch, loss_per_val_epoch = do_epoch(model, train_loader, val_loader,
+                                                                              criterion, optimizer, device,
+                                                                              cutmix_or_mixup, writer, epoch, config["optimizer"])
 
             tbar.set_postfix_str(f"Acc: {acc}, Acc_val: {acc_val}")
-            wandb.log({"epoch": epoch, "train_loss": loss_per_train_epoch, "train_accuracy": acc, "validation_loss": loss_per_val_epoch, "validation_accuracy": acc_val})
+            wandb.log({"epoch": epoch, "train_loss": loss_per_train_epoch, "train_accuracy": acc,
+                       "validation_loss": loss_per_val_epoch, "validation_accuracy": acc_val})
             writer.add_scalar("epoch_train_accuracy", acc, epoch)
             writer.add_scalar("epoch_train_loss", loss_per_train_epoch, epoch)
             writer.add_scalar("epoch_val_accuracy", acc_val, epoch)
@@ -252,6 +273,33 @@ if __name__ == '__main__':
     AdaGrad_conf3["optimizer"] = "AdaGrad"
     configs.append(AdaGrad_conf3)
 
+    SGD_SAM1 = dict(
+        epochs=150,
+        classes=10,
+        batch_size_test=100,
+        batch_size_val=500,
+        input_dim=784,
+        learning_rate=0.005,
+        momentum=0.9,
+        decay=0.0,
+        dataset="CIFAR-10",
+        architecture="MLP",
+        optimizer="SGD+SAM",
+    )
+    configs.append(SGD_SAM1)
+
+    SGD_SAM2 = SGD_SAM1.copy()
+    SGD_SAM2["decay"] = 0.0005
+    SGD_SAM2["learning_rate"] = 0.01
+    configs.append(SGD_SAM2)
+
+    SGD_SAM3 = SGD_SAM1.copy()
+    SGD_SAM3["epochs"] = 85
+    SGD_SAM3["learning_rate"] = 0.01
+    SGD_SAM3["batch_size_test"] = 85
+    configs.append(SGD_SAM3)
+
     freeze_support()
     for config in configs:
         main(config)
+    
