@@ -12,8 +12,33 @@ from nn.transforms import OneHot
 from util.util import Timer
 import wandb
 
+models = {
+    "SGD": {"constructor": MeteredTrainableNeuralNetwork, "optimiser": torch.optim.SGD},
+    "RMSprop": {
+        "constructor": MeteredTrainableNeuralNetwork,
+        "optimiser": torch.optim.RMSprop,
+    },
+    "Adam": {
+        "constructor": MeteredTrainableNeuralNetwork,
+        "optimiser": torch.optim.Adam,
+    },
+    "Adagrad": {
+        "constructor": MeteredTrainableNeuralNetwork,
+        "optimiser": torch.optim.Adagrad,
+    },
+    "SGD with SAM": {
+        "constructor": MeteredTrainableSAMNeuralNetwork,
+        "optimiser": torch.optim.SGD,
+    },
+}
+
 
 def main():
+    wandb.init(
+        project="atnn-homework-5",
+        # name=f"{wandb.config.optimiser}: batch_size = {wandb.config.batch_size}, learning rate = {wandb.config.learning_rate}, epochs = {wandb.config.learning_rate}",
+        reinit=True,
+    )
     timer = Timer()
 
     device = get_default_device()
@@ -50,7 +75,7 @@ def main():
 
     batched_train_dataset = torch_data.DataLoader(
         dataset=cached_training_dataset,
-        batch_size=64,
+        batch_size=wandb.config.batch_size,
         shuffle=True,
         num_workers=2,
         pin_memory=device == "cuda",
@@ -67,168 +92,22 @@ def main():
         f"Loading: {timer()}s for {len(training_dataset) + len(validation_dataset)} instances"
     )
 
-    model_configurations = [
-        (
-            "SGD",
-            MeteredTrainableNeuralNetwork,
-            torch.optim.SGD,
-            0.01,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "SGD",
-            MeteredTrainableNeuralNetwork,
-            torch.optim.SGD,
-            0.001,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "SGD",
-            MeteredTrainableNeuralNetwork,
-            torch.optim.SGD,
-            0.0001,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "Adam",
-            MeteredTrainableNeuralNetwork,
-            torch.optim.Adam,
-            0.001,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "Adam",
-            MeteredTrainableNeuralNetwork,
-            torch.optim.Adam,
-            0.0001,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "Adam",
-            MeteredTrainableNeuralNetwork,
-            torch.optim.Adam,
-            0.00001,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "RMSprop",
-            MeteredTrainableNeuralNetwork,
-            torch.optim.RMSprop,
-            0.01,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "RMSprop",
-            MeteredTrainableNeuralNetwork,
-            torch.optim.RMSprop,
-            0.001,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "RMSprop",
-            MeteredTrainableNeuralNetwork,
-            torch.optim.RMSprop,
-            0.0001,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "Adagrad",
-            MeteredTrainableNeuralNetwork,
-            torch.optim.Adagrad,
-            0.001,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "Adagrad",
-            MeteredTrainableNeuralNetwork,
-            torch.optim.Adagrad,
-            0.0001,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "Adagrad",
-            MeteredTrainableNeuralNetwork,
-            torch.optim.Adagrad,
-            0.00001,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "Adagrad",
-            MeteredTrainableNeuralNetwork,
-            torch.optim.Adagrad,
-            0.00001,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "SGD with SAM",
-            MeteredTrainableSAMNeuralNetwork,
-            torch.optim.SGD,
-            0.01,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "SGD with SAM",
-            MeteredTrainableSAMNeuralNetwork,
-            torch.optim.SGD,
-            0.001,
-            25,
-            device,
-            logs_path,
-        ),
-        (
-            "SGD with SAM",
-            MeteredTrainableSAMNeuralNetwork,
-            torch.optim.SGD,
-            0.0001,
-            25,
-            device,
-            logs_path,
-        ),
-    ]
-
-    for model_configuration in model_configurations:
-        model = build_model(
-            constructor=model_configuration[1],
-            optimiser=model_configuration[2],
-            learning_rate=model_configuration[3],
-            device=model_configuration[5],
-            logs_path=model_configuration[6],
-        )
-        run(
-            name=model_configuration[0],
-            model=model,
-            epochs=model_configuration[4],
-            batched_train_dataset=batched_train_dataset,
-            batched_validation_dataset=batched_validation_dataset,
-        )
+    model = build_model(
+        constructor=models[wandb.config.optimiser]["constructor"],
+        optimiser=models[wandb.config.optimiser]["optimiser"],
+        learning_rate=wandb.config.learning_rate,
+        device=device,
+        logs_path=logs_path,
+    )
+    wandb.watch(models=model, criterion=model.loss_function)
+    run(
+        name=wandb.config.optimiser,
+        model=model,
+        epochs=wandb.config.epochs,
+        batched_train_dataset=batched_train_dataset,
+        batched_validation_dataset=batched_validation_dataset,
+    )
+    wandb.finish(0)
 
 
 def build_model(
@@ -258,9 +137,6 @@ def run(
     batched_train_dataset: torch_data.DataLoader,
     batched_validation_dataset: torch_data.DataLoader,
 ):
-    wandb.init(project="atnn-homework-5", name=f"{name}: learning rate = {model.optimiser.param_groups[0]['lr']}, epochs = {epochs}", reinit=True)
-    wandb.watch(models=model, criterion=model.loss_function)
-
     timer = Timer()
 
     before_training_results = model.run_validation(
@@ -282,8 +158,6 @@ def run(
         f"{name} - Validation accuracy  after training: {after_training_results[1] * 100:>6.2f}%"
     )
     print(f"{name} - Running: {timer()}s for {epochs} epochs")
-
-    wandb.finish(0)
 
 
 if __name__ == "__main__":
