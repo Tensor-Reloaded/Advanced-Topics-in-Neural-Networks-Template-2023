@@ -6,6 +6,8 @@ from torch.utils.data import DataLoader
 from typing import List, Optional, Type
 from tqdm import tqdm
 
+# TODO: normalization? See lab6 OptimizationRelatedMisc.ipynb
+
 class Model(nn.Module):
     def __init__(self, input_size: int, hidden_layers: List[int], output_size: int, activation_fns: List[Type[nn.Module]]):
         super(Model, self).__init__()
@@ -22,10 +24,12 @@ class Model(nn.Module):
         self.layers = nn.Sequential()
 
         self.layers.add_module('input', nn.Linear(input_size, hidden_layers[0]))
+        self.layers.add_module('normalization_input', nn.BatchNorm1d(hidden_layers[0]))
         self.layers.add_module('activation_input', activation_fns[0])
 
         for i in range(len(hidden_layers) - 1):
             self.layers.add_module(f'hidden{i}', nn.Linear(hidden_layers[i], hidden_layers[i+1]))
+            self.layers.add_module(f'normalization_{i}', nn.BatchNorm1d(hidden_layers[i+1]))
             self.layers.add_module(f'activation{i}', activation_fns[i+1])
         
         self.layers.add_module('output', nn.Linear(hidden_layers[-1], output_size))
@@ -62,10 +66,16 @@ class Trainer:
             inputs = inputs.to(self.__model__.device)
             targets = targets.to(self.__model__.device)
 
-            self.__optimizer__.zero_grad()
             outputs = self.__model__(inputs)
-            loss = self.__criterion__(outputs, targets)
-            loss.backward()
+
+            def get_loss():
+                self.__optimizer__.zero_grad()
+                loss = self.__criterion__(outputs, targets)
+                loss.backward()
+                return loss
+            
+            loss = get_loss()
+
             self.__optimizer__.step()
 
             total_loss += loss.item()
@@ -112,11 +122,6 @@ class Trainer:
         return avg_loss, accuracy
 
     def run(self, train_dataloader: DataLoader, validation_dataloader: DataLoader, epochs: int):
-
-        self.__logger__.log_text_config('Criterion', str(self.__criterion__))
-        self.__logger__.log_text_config('Optimizer', str(self.__optimizer__))
-        self.__logger__.log_text_config('Training batch size', str(train_dataloader.batch_size))
-        self.__logger__.log_scalar_config('Learning rate', self.__optimizer__.param_groups[0]['lr'])
 
         pbar = tqdm(range(epochs), desc="Training", unit="epoch")
         total_time = 0

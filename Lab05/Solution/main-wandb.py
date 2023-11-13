@@ -18,14 +18,12 @@ else:
 
 #constants
 input_size = 28 * 28
-hidden_layers = [512, 256, 128]
+# hidden_layers = [512, 256, 128]
 output_size = 10 
-epochs = 10
+epochs = 20
 nesterov = True
 momentum = 0.9
 
-activation_fns = [torch.nn.ReLU() for _ in hidden_layers]
-    
 cachedTransforms = v2.Compose([
         v2.ToPILImage(),
         v2.ToImage(), 
@@ -58,15 +56,19 @@ wandb_sweep_config = {
     },
     'parameters': {
         'learning_rate': {
-            'min': 1e-5,
-            'max': 1e-2
+            'min': 0.00001,
+            'max': 0.01
         },
         'batch_size': {
             'values': [64, 128, 256, 512]
         },
         'optimizer':{
-            'values': ['adam', 'sgd', 'rmsprop', 'adagrad', 'samsgd']
+            'values': ['adam', 'sgd', 'rmsprop', 'adagrad']
+            # 'values': ['samsgd']
         },
+        'hidden_layers':{
+            'values': [[512, 256, 128], [512, 256, 128, 64], [1024, 512, 256, 128, 64, 32]]
+        }
     }
 }
 
@@ -99,8 +101,11 @@ def wandb_run():
         learning_rate = wandb.config.learning_rate
         training_batch_size = wandb.config.batch_size
         optimizer_name = wandb.config.optimizer
+        hidden_layers = wandb.config.hidden_layers
 
+        activation_fns = [torch.nn.ReLU() for _ in hidden_layers]
         model = Model(input_size, hidden_layers, output_size, activation_fns)
+
         model.to(device)
 
         criterion = torch.nn.CrossEntropyLoss()
@@ -110,8 +115,14 @@ def wandb_run():
         testloader = DataLoader(testset, batch_size=512, shuffle=False)
 
 
-        logger_name = f".XEntropy+Adam.lr={learning_rate}.batch_size={training_batch_size}"
-        logger = Logger(tensorboard_file_suffix=logger_name)
+        log_file_suffix = f".optimizer={optimizer_name}.lr={learning_rate}.batch_size={training_batch_size}"
+        logger = Logger(tensorboard_file_suffix=log_file_suffix)
+
+        logger.log_text_config('Criterion', "cross entropy")
+        logger.log_text_config('Optimizer', optimizer_name)
+        logger.log_scalar_config('Training batch size', training_batch_size)
+        logger.log_scalar_config('Learning rate', learning_rate)
+
         trainer = Trainer(model, criterion, optimizer, logger=logger)
         trainer.run(trainloader, testloader, epochs)
 
