@@ -4,7 +4,7 @@
 Lab Notebook: [Augmentations.ipynb](./Augmentations.ipynb)
 
 ***
-Lab Assignment: [Assignment.pdf](./Assignment.pdf) (Deadline: PR by End-of-Day Monday, 06.11.2023).
+Lab Assignment: [Assignment.pdf](./Assignment.pdf) (Deadline: PR by End-of-Day Monday, 13.11.2023).
 
 ***
 For self-study:
