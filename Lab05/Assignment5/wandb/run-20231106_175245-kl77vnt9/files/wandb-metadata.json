@@ -1,0 +1,47 @@
+{
+    "os": "Windows-10-10.0.22621-SP0",
+    "python": "3.10.4",
+    "heartbeatAt": "2023-11-06T15:52:45.963246",
+    "startedAt": "2023-11-06T15:52:45.340054",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "D:\\Facultate\\Retele_Neuronale_Avansate\\Mediu_de_Lucru\\Assignment5\\main.py",
+    "codePathLocal": "main.py",
+    "codePath": "main.py",
+    "host": "CorinaLaptop",
+    "username": "dimit",
+    "executable": "D:\\Facultate\\Retele_Neuronale_Avansate\\Mediu_de_Lucru\\venv\\Scripts\\python.exe",
+    "cpu_count": 16,
+    "cpu_count_logical": 32,
+    "cpu_freq": {
+        "current": 2007.0,
+        "min": 0.0,
+        "max": 2501.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2007.0,
+            "min": 0.0,
+            "max": 2501.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 599.9990196228027,
+            "used": 99.0263442993164
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+            "memory_total": 8585740288
+        }
+    ],
+    "memory": {
+        "total": 31.18801498413086
+    }
+}

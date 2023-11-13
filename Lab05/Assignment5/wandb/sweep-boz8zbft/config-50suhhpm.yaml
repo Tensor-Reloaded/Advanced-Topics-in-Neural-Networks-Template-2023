@@ -1,0 +1,44 @@
+wandb_version: 1
+
+Nesterov:
+  value: true
+batch_norm:
+  value: false
+batch_size:
+  value: 32
+dropout_1:
+  value:
+  - b
+  - 0.4
+dropout_2:
+  value:
+  - b
+  - 0.5
+dropout_3:
+  value:
+  - a
+  - 0.4
+dropout_4:
+  value:
+  - a
+  - 0
+epochs:
+  value: 5
+fc_layer_size_1:
+  value: 256
+fc_layer_size_2:
+  value: 4000
+fc_layer_size_3:
+  value: 4000
+gradient_clipping:
+  value: true
+lr:
+  value: 0.1
+lr_scheduler:
+  value: false
+momentum:
+  value: 0
+optimizer:
+  value: sam_sgd
+weight_decay:
+  value: 0.1

@@ -1,0 +1,93 @@
+wandb_version: 1
+
+Nesterov:
+  desc: null
+  value: false
+batch_norm:
+  desc: null
+  value: false
+batch_size:
+  desc: null
+  value: 64
+dropout_1:
+  desc: null
+  value:
+  - a
+  - 0
+dropout_2:
+  desc: null
+  value:
+  - a
+  - 0.5
+dropout_3:
+  desc: null
+  value:
+  - a
+  - 0
+dropout_4:
+  desc: null
+  value:
+  - b
+  - 0
+epochs:
+  desc: null
+  value: 5
+fc_layer_size_1:
+  desc: null
+  value: 1024
+fc_layer_size_2:
+  desc: null
+  value: 256
+fc_layer_size_3:
+  desc: null
+  value: 128
+gradient_clipping:
+  desc: null
+  value: true
+lr:
+  desc: null
+  value: 0.0005
+lr_scheduler:
+  desc: null
+  value: false
+momentum:
+  desc: null
+  value: 0
+optimizer:
+  desc: null
+  value: rmsprop
+weight_decay:
+  desc: null
+  value: 0.001
+_wandb:
+  desc: null
+  value:
+    python_version: 3.10.4
+    cli_version: 0.15.12
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1699284926.612325
+    t:
+      1:
+      - 1
+      - 5
+      - 41
+      - 53
+      - 55
+      2:
+      - 1
+      - 5
+      - 41
+      - 53
+      - 55
+      3:
+      - 2
+      - 23
+      - 37
+      4: 3.10.4
+      5: 0.15.12
+      8:
+      - 3
+      - 5
+      13: windows-amd64
