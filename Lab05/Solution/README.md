@@ -1,4 +1,4 @@
-# Solution detials
+# Solution details
 
 Weight and Biases latest runs: [here](https://wandb.ai/kenr123/lab5/table?workspace=user-zero6305)
 Tensorboard logs available locally in `tensorboard_logs_out/`: train and eval folders
