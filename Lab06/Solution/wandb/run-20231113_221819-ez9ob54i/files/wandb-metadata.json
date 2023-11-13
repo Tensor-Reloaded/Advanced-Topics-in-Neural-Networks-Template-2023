@@ -1,0 +1,45 @@
+{
+    "os": "Windows-10-10.0.22621-SP0",
+    "python": "3.10.4",
+    "heartbeatAt": "2023-11-13T20:18:20.908995",
+    "startedAt": "2023-11-13T20:18:19.979829",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "C:\\Advanced\\Advanced-Topics-in-Neural-Networks-Template-2023\\Lab06\\main.py",
+    "codePathLocal": "main.py",
+    "codePath": "Lab06\\main.py",
+    "git": {
+        "remote": "https://github.com/smocgeorgemarian/Advanced-Topics-in-Neural-Networks-Template-2023.git",
+        "commit": "29be09a915f85687fce0e58b8184efa7734bbfec"
+    },
+    "email": "george.smoc13@gmail.com",
+    "root": "C:/Advanced/Advanced-Topics-in-Neural-Networks-Template-2023",
+    "host": "gsmoc-l",
+    "username": "georg",
+    "executable": "C:\\Advanced\\Advanced-Topics-in-Neural-Networks-Template-2023\\Lab02\\venv\\Scripts\\python.exe",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 2003.0,
+        "min": 0.0,
+        "max": 2701.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2003.0,
+            "min": 0.0,
+            "max": 2701.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 432.5139808654785,
+            "used": 141.15371704101562
+        }
+    },
+    "memory": {
+        "total": 15.248218536376953
+    }
+}
