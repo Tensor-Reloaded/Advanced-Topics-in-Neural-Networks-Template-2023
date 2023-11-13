@@ -33,7 +33,7 @@ I experimented with various augmentations from the Torchvision library.
 
 I used Dropout and a Scheduler to increase my results.
 
-In the end, the best model we obtained using a Dropout with probability 0.3 and the Leaky-ReLu activation function, the maximum validation accuracy on the validation set being 0.647.
+In the end, the best model we obtained using a Dropout with probability 0.3 and the Leaky-ReLu activation function, the maximum validation accuracy on the validation set being 0.647 : [Best run](./Graphs/Best_validation_acc.png).
 
 I expect 7 out of 7 points because I completed all the requierements plus 1 point bonus because I achieved a score better than 0.6 on the validation set.
 
