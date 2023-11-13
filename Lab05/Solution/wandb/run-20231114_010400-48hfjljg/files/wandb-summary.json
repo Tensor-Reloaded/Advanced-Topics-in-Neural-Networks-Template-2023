@@ -1,0 +1,1 @@
+{"Optimizer Name": "Adagrad", "Batch size": 128, "_timestamp": 1699916808.5470886, "_runtime": 168.16063451766968, "_step": 2737, "Train/Accuracy": 0.3423, "Epoch Train/Loss": 2.1177, "Val/Accuracy": 0.3382, "Val/Loss": 2.2742, "Model/Norm": 20.23701286315918, "Batch Train/Loss": 2.0444326400756836, "_wandb": {"runtime": 167}}

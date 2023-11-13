@@ -11,7 +11,7 @@ def accuracy(output, labels):
     return (all_elements - fp_plus_fn) / all_elements
 
 
-def train(model, train_loader, criterion, optimizer, device) -> tuple[float, float, list[float]]:
+def train(model, train_loader, criterion, optimizer, optimizer_name: str, device) -> tuple[float, float, list[float]]:
     model.train()
 
     all_outputs = []
@@ -23,6 +23,12 @@ def train(model, train_loader, criterion, optimizer, device) -> tuple[float, flo
     for data, labels in train_loader:
         data = data.to(device, non_blocking=True)
         labels = labels.to(device, non_blocking=True)
+
+        def closure():
+            closure_loss = criterion(model(data), labels)
+            closure_loss.backward()
+            return closure_loss
+
         output = model(data)
         loss = criterion(output, labels)
         total_loss += loss.item()
@@ -32,8 +38,12 @@ def train(model, train_loader, criterion, optimizer, device) -> tuple[float, flo
 
         # torch.nn.utils.clip_grad_norm_(model.parameters(), 5)
 
-        optimizer.step()
-        optimizer.zero_grad(set_to_none=True)
+        if optimizer_name == "SGD_SAM":
+            optimizer.step(closure)
+            optimizer.zero_grad()
+        else:
+            optimizer.step()
+            optimizer.zero_grad(set_to_none=True)
 
         output = output.softmax(dim=1).detach().cpu().squeeze()
         labels = labels.cpu().squeeze()
@@ -75,10 +85,10 @@ def val(model, val_loader, criterion, device) -> tuple[float, float]:
     return round(accuracy(all_outputs, all_labels), 4), round(total_loss / len(val_loader), 4)
 
 
-def do_epoch(model, train_loader, val_loader, criterion, optimizer, device) \
+def do_epoch(model, train_loader, val_loader, criterion, optimizer, optimizer_name: str, device) \
         -> tuple[float, float, list[float], float, float]:
 
-    acc, epoch_loss, batch_loses = train(model, train_loader, criterion, optimizer, device)
+    acc, epoch_loss, batch_loses = train(model, train_loader, criterion, optimizer, optimizer_name, device)
     acc_val, val_loss = val(model, val_loader, criterion, device)
     # torch.cuda.empty_cache()
     return acc, epoch_loss, batch_loses, acc_val, val_loss
@@ -108,7 +118,7 @@ def train_epochs(wba_manager: WBAManager, epochs: int, model: torch.nn.Module, t
 
     for epoch in tbar:
         acc, epoch_loss, batch_loses, acc_val, val_loss = do_epoch(model, train_loader, val_loader, criterion,
-                                                                   optimizer, device)
+                                                                   optimizer, optimizer_name, device)
         tbar.set_postfix_str(f"Acc: {acc}, Acc_val: {acc_val}")
         writer.add_scalar("Train/Accuracy", acc, epoch)
         writer.add_scalar("Epoch Train/Loss", epoch_loss, epoch)

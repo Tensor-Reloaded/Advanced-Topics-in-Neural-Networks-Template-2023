@@ -1,0 +1,53 @@
+{
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.11.1",
+    "heartbeatAt": "2023-11-13T22:56:40.420478",
+    "startedAt": "2023-11-13T22:56:38.691766",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "D:\\personal\\CARN\\Advanced-Topics-in-Neural-Networks-2023\\Lab05\\Solution\\main.py",
+    "codePathLocal": "main.py",
+    "codePath": "Lab05\\Solution\\main.py",
+    "git": {
+        "remote": "https://github.com/RaduStefan999/Advanced-Topics-in-Neural-Networks-2023.git",
+        "commit": "29db8988d5bc8c74c4c8678f1d41d3b32459fc02"
+    },
+    "email": "rmihalache@bitdefender.com",
+    "root": "D:/personal/CARN/Advanced-Topics-in-Neural-Networks-2023",
+    "host": "rmihalache-l",
+    "username": "rmihalache",
+    "executable": "C:\\Users\\rmihalache\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 2712.0,
+        "min": 0.0,
+        "max": 2712.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2712.0,
+            "min": 0.0,
+            "max": 2712.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 638.5439414978027,
+            "used": 607.9301109313965
+        }
+    },
+    "gpu": "NVIDIA GeForce MX250",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce MX250",
+            "memory_total": 2147483648
+        }
+    ],
+    "memory": {
+        "total": 15.611190795898438
+    }
+}

@@ -1,0 +1,1 @@
+{"Optimizer Name": "SGD_SAM", "Batch size": 128, "_timestamp": 1699918296.358648, "_runtime": 181.58752012252808, "_step": 2737, "Train/Accuracy": 0.2114, "Epoch Train/Loss": 2.2347, "Val/Accuracy": 0.2176, "Val/Loss": 2.2918, "Model/Norm": 47.29269790649414, "Batch Train/Loss": 2.1866254806518555, "_wandb": {"runtime": 180}}

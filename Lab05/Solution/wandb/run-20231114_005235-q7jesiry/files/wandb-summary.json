@@ -1,0 +1,1 @@
+{"Optimizer Name": "RMSprop", "Batch size": 128, "_timestamp": 1699916186.8979905, "_runtime": 231.85818147659302, "_step": 2737, "Train/Accuracy": 0.1049, "Epoch Train/Loss": 2.3221, "Val/Accuracy": 0.1, "Val/Loss": 2.3036, "Model/Norm": 21.46479034423828, "Batch Train/Loss": 2.3049004077911377, "_wandb": {"runtime": 231}}
