@@ -1,0 +1,8 @@
+wandb_version: 1
+
+batch_size:
+  value: 176
+learning_rate:
+  value: 0.013137744845898976
+optimizer:
+  value: sam

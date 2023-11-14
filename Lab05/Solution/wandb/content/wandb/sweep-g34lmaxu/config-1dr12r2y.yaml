@@ -1,0 +1,8 @@
+wandb_version: 1
+
+batch_size:
+  value: 32
+learning_rate:
+  value: 0.064818301399566
+optimizer:
+  value: rmsprop
