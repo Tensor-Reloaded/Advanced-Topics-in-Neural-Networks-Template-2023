@@ -19,6 +19,6 @@
   
  ### 4. Achieved multiple runs with 40% validation accuracy
 
-### WANDB link: https://wandb.ai/bogdan_gabriel757/Advanced-Topics-in-Neural-Networks-Template-2023-Lab05_me?workspace=user-bogdan_gabriel757
+ ### WANDB link: https://wandb.ai/bogdan_gabriel757/Advanced-Topics-in-Neural-Networks-Template-2023-Lab05_me?workspace=user-bogdan_gabriel757
  
- ###Expected points: 5
+ ### Expected points: 5
