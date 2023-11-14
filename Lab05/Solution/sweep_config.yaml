@@ -1,0 +1,37 @@
+program: training.py
+method: random
+name: sweep_all
+metric:
+  goal: maximize
+  name: acc_val
+parameters:
+  batch_size:
+    values: [64, 128, 256]
+  learning_rate:
+    values: [0.001, 0.005, 0.01, 0.05, 0.1]
+#  l_hidden:
+#    values: [100, 150]
+  optimizer:
+    values: ["SGD", "SGD_SAM", "Adam", "RMSProp", "AdaGrad"]
+  epochs:
+    values: [30, 50, 70]
+  l_input:
+    value: 784
+  l_hidden:
+    value: 100
+  l_output:
+    value: 10
+#  learning_rate:
+#    value: 0.01
+  loss:
+    value: "CrossEntropy"
+#  batch_size:
+#    value: 256
+  val_batch_size:
+    value: 500
+  activation:
+    value: "ReLU"
+  nesterov:
+    value: true
+  momentum:
+    value: 0.9

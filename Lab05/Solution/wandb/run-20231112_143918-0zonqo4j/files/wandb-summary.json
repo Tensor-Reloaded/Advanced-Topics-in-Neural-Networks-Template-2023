@@ -1,0 +1,1 @@
+{"global_step": 49, "_timestamp": 1699792901.6212525, "Learning rate": 0.026714395731687546, "Batch size": 64.0, "Train/Accuracy": 0.3846000134944916, "Train/Loss": 1.7368872165679932, "Val/Accuracy": 0.29660001397132874, "Val/Loss": 2.0088868141174316, "Model/Norm": 27.064634323120117, "_runtime": 143.18297362327576, "_step": 49, "_wandb": {"runtime": 141}}

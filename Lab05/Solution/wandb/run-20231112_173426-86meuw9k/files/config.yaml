@@ -1,0 +1,116 @@
+wandb_version: 1
+
+activation:
+  desc: null
+  value: ReLU
+batch_size:
+  desc: null
+  value: 128
+epochs:
+  desc: null
+  value: 50
+l_hidden:
+  desc: null
+  value: 50
+l_input:
+  desc: null
+  value: 784
+l_output:
+  desc: null
+  value: 10
+learning_rate:
+  desc: null
+  value: 0.05887393379938554
+loss:
+  desc: null
+  value: CrossEntropy
+momentum:
+  desc: null
+  value: 0.9
+nesterov:
+  desc: null
+  value: true
+optimizer:
+  desc: null
+  value: Adam
+val_batch_size:
+  desc: null
+  value: 500
+program:
+  desc: null
+  value: training.py
+method:
+  desc: null
+  value: random
+name:
+  desc: null
+  value: sweep
+metric:
+  desc: null
+  value:
+    goal: maximize
+    name: acc_val
+parameters:
+  desc: null
+  value:
+    batch_size:
+      values:
+      - 128
+      - 256
+    learning_rate:
+      min: 0.0001
+      max: 0.1
+    l_hidden:
+      values:
+      - 50
+      - 100
+      - 150
+    epochs:
+      value: 50
+    l_input:
+      value: 784
+    l_output:
+      value: 10
+    optimizer:
+      value: Adam
+    loss:
+      value: CrossEntropy
+    val_batch_size:
+      value: 500
+    activation:
+      value: ReLU
+    nesterov:
+      value: true
+    momentum:
+      value: 0.9
+_wandb:
+  desc: null
+  value:
+    python_version: 3.11.6
+    cli_version: 0.15.12
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1699803266.735997
+    t:
+      1:
+      - 1
+      - 41
+      - 55
+      2:
+      - 1
+      - 41
+      - 55
+      3:
+      - 2
+      - 13
+      - 16
+      - 23
+      - 35
+      - 37
+      4: 3.11.6
+      5: 0.15.12
+      8:
+      - 3
+      - 5
+      13: windows-amd64

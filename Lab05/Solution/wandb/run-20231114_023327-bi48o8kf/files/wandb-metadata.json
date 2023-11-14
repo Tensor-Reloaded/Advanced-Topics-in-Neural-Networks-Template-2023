@@ -1,0 +1,66 @@
+{
+    "os": "Windows-10-10.0.22621-SP0",
+    "python": "3.11.6",
+    "heartbeatAt": "2023-11-14T00:33:29.930220",
+    "startedAt": "2023-11-14T00:33:27.391037",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--activation=ReLU",
+        "--batch_size=256",
+        "--epochs=70",
+        "--l_hidden=100",
+        "--l_input=784",
+        "--l_output=10",
+        "--learning_rate=0.1",
+        "--loss=CrossEntropy",
+        "--momentum=0.9",
+        "--nesterov=True",
+        "--optimizer=Adam",
+        "--val_batch_size=500"
+    ],
+    "state": "running",
+    "program": "E:\\Master\\Anul1\\Sem1\\ATNN\\Advanced-Topics-in-Neural-Networks-Template-2023\\Lab05\\Solution\\training.py",
+    "codePathLocal": "training.py",
+    "codePath": "Lab05\\Solution\\training.py",
+    "git": {
+        "remote": "https://github.com/ApostuDaniel/Advanced-Topics-in-Neural-Networks-Template-2023.git",
+        "commit": "9b7ca248e1454e0046991def80f3f78e8b2b26a9"
+    },
+    "email": "apostudanbs@gmail.com",
+    "root": "E:/Master/Anul1/Sem1/ATNN/Advanced-Topics-in-Neural-Networks-Template-2023",
+    "host": "DESKTOP-N7OCIK0",
+    "username": "Apostu Daniel",
+    "executable": "D:\\Programing\\miniconda3\\envs\\ATNNMISS\\python.exe",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 2901.0,
+        "min": 0.0,
+        "max": 2901.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2901.0,
+            "min": 0.0,
+            "max": 2901.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 244.14062118530273,
+            "used": 36.57839584350586
+        }
+    },
+    "gpu": "NVIDIA GeForce GTX 1650",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce GTX 1650",
+            "memory_total": 4294967296
+        }
+    ],
+    "memory": {
+        "total": 15.422603607177734
+    }
+}

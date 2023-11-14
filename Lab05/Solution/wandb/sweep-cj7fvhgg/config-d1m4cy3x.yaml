@@ -1,0 +1,22 @@
+wandb_version: 1
+
+activation:
+  value: ReLU
+batch_size:
+  value: 32
+epochs:
+  value: 50
+l_hidden:
+  value: 125
+l_input:
+  value: 784
+l_output:
+  value: 10
+learning_rate:
+  value: 0.09368710905255748
+loss:
+  value: CrossEntropy
+optimizer:
+  value: SGD
+val_batch_size:
+  value: 500
