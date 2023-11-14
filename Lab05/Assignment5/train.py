@@ -24,9 +24,7 @@ class TrainTune:
                  similarity=torch.nn.CosineSimilarity(),
                  treshold: float = 0.95,
                  device: torch.device = torch.device('cpu'),
-                 config=None,
-                 resume=False,
-                 flag=False,
+                 config=None
                  ):
         self.model = cmodel
         self.train_loader = train_loader
@@ -37,8 +35,6 @@ class TrainTune:
         self.treshold = treshold
         self.writer = writer
         self.config = config
-        self.resume = resume
-        self.flag = flag
         if cmodel.optimizers and len(cmodel.optimizers) > 0:
             for index, optimizer in enumerate(cmodel.optimizers):
                 if cmodel.optimizer_args and len(cmodel.optimizer_args) > index \
@@ -92,10 +88,7 @@ class TrainTune:
 
                     self.optimizers[index].step(closure_idx)
             if self.model.lr_scheduler:
-                # if (self.resume and not self.flag)\
-                #         or (not self.resume):
-                    self.model.lr_scheduler.step()
-                    # self.flag = True
+                self.model.lr_scheduler.step()
             correct += (self.similarity(outputs, labels))
             total_loss += loss.item()
             pbar.set_postfix({'Loss': loss.item()})

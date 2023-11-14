@@ -34,10 +34,10 @@ class Runner:  # corresponds to scenario when dataset needs to be loaded and pro
 
     def run_model(self, model: Model, dataset_csv: bool = False, split_path='',
                   load_from_pytorch=False, transforms=None, transforms_test=None,
-                  pin_memory=False, batch_size=64, val_batch_size=32, num_workers=2, persistent_workers=True,
+                  pin_memory=False, batch_size=64, val_batch_size=64, num_workers=2, persistent_workers=True,
                   transforms_not_cached=None,
                   transforms_not_cached_test=None,
-                  config=None, resume=False):
+                  config=None):
         # set pin_memory as true if GPU is not used for transformations
 
         if not dataset_csv:
@@ -109,11 +109,6 @@ class Runner:  # corresponds to scenario when dataset needs to be loaded and pro
         train_tune = TrainTune(model, train_loader, validation_loader, self.writer,
                                device=self.device, similarity=self.similarity, treshold=self.treshold,
                                config=config)
-        if resume:
-            checkpoint = torch.load('checkpoint_5')
-            train_tune.optimizers[0].load_state_dict(checkpoint['optimizer_state_dict'])
-            train_tune.optimizers[0] = torch.optim.SGD(train_tune.model.parameters(), lr=0.0000005,
-                                                       momentum=0.9, weight_decay=1.0)
         train_tune.run(self.epochs)
 
     def configure_sweep(self):

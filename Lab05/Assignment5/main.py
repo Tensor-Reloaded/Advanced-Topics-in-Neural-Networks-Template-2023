@@ -104,7 +104,7 @@ if __name__ == "__main__":
     # sweep_id = wandb.sweep(runner.sweep_config, project="pytorch-sweeps-demo")
     # wandb.agent(sweep_id, sweep, count=100)
 
-    # Tensorboard testing + > 60% accuracy
+    # Tensorboard testing + > 65% accuracy
     model = (Model(784, 10, hidden_layers=[4000, 1000, 784, 4000],
                    activations=[torch.nn.ReLU(), -1, -1, torch.nn.ReLU()],
                    optimizers=[SAM], optimizer_args=[{'base_optimizer': torch.optim.SGD,
@@ -123,7 +123,7 @@ if __name__ == "__main__":
                                           torch.nn.init.xavier_normal_,
                                           ],
                    batch_normalization=True, closure=[True],
-                   # lr_scheduler={'gamma': 0.001, 'epochs': 312400},
+                   # lr_scheduler={'gamma': 0.5, 'epochs': 78100},
                    dropouts=[torch.nn.Dropout(0.1).to(utils.get_default_device()),
                              torch.nn.Dropout(0.1).to(utils.get_default_device()),
                              torch.nn.Dropout(0.1).to(utils.get_default_device()),
@@ -137,11 +137,6 @@ if __name__ == "__main__":
                                 torch.nn.BatchNorm1d(4000).to(utils.get_default_device()),
                                 ]
                    )).to(utils.get_default_device())
-    checkpoint = torch.load('checkpoint_5')
-    model.load_state_dict(checkpoint['model_state_dict'])
-    model.activations = [torch.nn.ReLU(), -1, -1, torch.nn.ReLU()]
-    model.loss = torch.nn.CrossEntropyLoss()
-    model.lr_scheduler = {'epochs': 78100, 'gamma': 0.5}
     runner.run_model(model, transforms=[v2.ToImage(),
                                         v2.ToDtype(torch.float32, scale=True),
                                         v2.Resize((28, 28), antialias=True),
@@ -166,4 +161,4 @@ if __name__ == "__main__":
                          ToGrayscale(instances=[0]),
                          Flatten(instances=[0]),
                      ],
-                     batch_size=8192, resume=True)
+                     batch_size=64)
