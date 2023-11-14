@@ -14,12 +14,12 @@ Summary
 
 ***
 Multiple optimizers and configurations comparison
-![Multiple configurations](/multiple_configurations.png "Multiple configurations").
+![Multiple configurations](./multiple_configurations.png "Multiple configurations").
 
 
 ***
 Best 2 models run on more epochs
-![Multiple configurations](/best_configurations.png "Multiple configurations").
+![Best configurations](./best_configurations.png "Best configurations").
 
 
 *** 
