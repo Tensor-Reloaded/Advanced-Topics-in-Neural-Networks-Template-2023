@@ -1,5 +1,4 @@
 W&B: https://wandb.ai/marius-workspace/wandb-final9/workspace?workspace=user-mariusmarin
-![Uploading image.png…]()
 
 ## Lab 
 
