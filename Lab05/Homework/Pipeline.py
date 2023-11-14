@@ -18,10 +18,12 @@ class Pipeline:
         all_outputs = []
         all_labels = []
 
+        batch = 0
         for data, labels in train_loader:
             data = data.to(config.device, non_blocking=True)
             labels = labels.to(config.device, non_blocking=True)
             output = model(data)
+            
             loss = config.criterion(output, labels)
             loss.backward()
             model.optimizer.step()
@@ -33,11 +35,53 @@ class Pipeline:
             all_labels.append(labels)
 
             training_loss += loss.item()
+            config.writer.add_scalar(f"{config.legend} Train Loss/Batch", loss.item(), batch)
+            batch += 1
 
         all_outputs = torch.cat(all_outputs).argmax(dim=1)
         all_labels = torch.cat(all_labels)
 
         return (round(Pipeline.accuracy(all_outputs, all_labels), 4), loss)
+    
+    @staticmethod
+    def train_sam(model, train_loader, config):
+        training_loss = 0.0
+        model.train()
+
+        all_outputs = []
+        all_labels = []
+
+        batch = 0
+        for data, labels in train_loader:
+            data = data.to(config.device, non_blocking=True)
+            labels = labels.to(config.device, non_blocking=True)
+            output = model(data)
+
+            model.optimizer.zero_grad()
+            loss = config.criterion(output, labels)
+            loss.backward()
+            torch.nn.utils.clip_grad_norm(model.parameters(), max_norm=1.0)
+            model.optimizer.first_step(zero_grad=True)
+
+            output = model(data)
+            loss = config.criterion(output, labels)
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+            model.optimizer.second_step(zero_grad=True)
+
+            output = output.softmax(dim=1).detach().cpu().squeeze()
+            labels = labels.cpu().squeeze()
+            all_outputs.append(output)
+            all_labels.append(labels)
+
+            training_loss += loss.item()
+            config.writer.add_scalar(f"{config.legend} Train Loss/Batch", loss.item(), batch)
+            batch += 1
+
+        all_outputs = torch.cat(all_outputs).argmax(dim=1)
+        all_labels = torch.cat(all_labels)
+
+        return round(Pipeline.accuracy(all_outputs, all_labels), 4), training_loss
     
     @staticmethod
     def val(model, val_loader, config):
@@ -71,7 +115,11 @@ class Pipeline:
 
     @staticmethod
     def do_epoch(model, train_loader, val_loader, config):
-        acc, loss = Pipeline.train(model, train_loader, config)
+        if config.base_optimizer:
+            acc, loss = Pipeline.train_sam(model, train_loader, config)
+        else:
+            acc, loss = Pipeline.train(model, train_loader, config)
+        
         acc_val, loss_val = Pipeline.val(model, val_loader, config)
         # torch.cuda.empty_cache()
         return acc, loss, acc_val, loss_val

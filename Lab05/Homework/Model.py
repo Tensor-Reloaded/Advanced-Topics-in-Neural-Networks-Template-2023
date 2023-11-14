@@ -1,12 +1,17 @@
 import torch
 
 class MLP(torch.nn.Module):
-    def __init__(self, input_size, output_size, optimizer, learning_rate):
+    def __init__(self, input_size, output_size, config):
         super(MLP, self).__init__()
         self.fc1 = torch.nn.Linear(input_size, 128)
         self.fc2 = torch.nn.Linear(128, 64)
         self.fc3 = torch.nn.Linear(64, output_size)
-        self.optimizer = optimizer(self.parameters(), lr=learning_rate)
+
+        if config.base_optimizer:
+            self.optimizer = config.optimizer(self.parameters(), config.base_optimizer, lr=config.learning_rate)
+        else:
+            self.optimizer = config.optimizer(self.parameters(), lr=config.learning_rate)
+
 
     def forward(self, x):
         x = torch.relu(self.fc1(x))

@@ -11,6 +11,10 @@ from Pipeline import Pipeline
 from CachedDataset import CachedDataset
 from sam import SAM
 
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
+
 def get_default_device():
     if torch.cuda.is_available():
         return torch.device('cuda')
@@ -26,7 +30,7 @@ def build_model(config):
         "dataset": "CIFAR-10",
         "epochs": config.epochs
     })
-    model = MLP(784, 10, config.optimizer, config.learning_rate)
+    model = MLP(784, 10, config)
     model = model.to(config.device)
     wandb.watch(models=model, criterion=config.criterion)
     return model
@@ -65,15 +69,22 @@ def main(device=get_default_device()):
         Config(device, epochs, criterion, torch.optim.SGD, 0.05, 'SGD: lr = 0.05', './runs/SGD_0.05'),
         Config(device, epochs, criterion, torch.optim.SGD, 0.1, 'SGD: lr = 0.1', './runs/SGD_0.1'),
         Config(device, epochs, criterion, torch.optim.SGD, 0.15, 'SGD: lr = 0.15', './runs/SGD_0.15'),
+
         Config(device, epochs, criterion, torch.optim.Adam, 0.0001, 'Adam: lr = 0.0001', './runs/Adam_0.0001'),
         Config(device, epochs, criterion, torch.optim.Adam, 0.0005, 'Adam: lr = 0.0005', './runs/Adam_0.0005'),
         Config(device, epochs, criterion, torch.optim.Adam, 0.001, 'Adam: lr = 0.001', './runs/Adam_0.001'),
+
         Config(device, epochs, criterion, torch.optim.RMSprop, 0.0001, 'RMSprop: lr = 0.0001', './runs/RMSprop_0.0001'),
         Config(device, epochs, criterion, torch.optim.RMSprop, 0.001, 'RMSprop: lr = 0.001', './runs/RMSprop_0.001'),
         Config(device, epochs, criterion, torch.optim.RMSprop, 0.005, 'RMSprop: lr = 0.01', './runs/RMSprop_0.01'),
+
         Config(device, epochs, criterion, torch.optim.Adagrad, 0.005, 'Adagrad: lr = 0.001', './runs/Adagrad_0.001'),
         Config(device, epochs, criterion, torch.optim.Adagrad, 0.01, 'Adagrad: lr = 0.01', './runs/Adagrad_0.01'),
-        Config(device, epochs, criterion, torch.optim.Adagrad, 0.05, 'Adagrad: lr = 0.05', './runs/Adagrad_0.05')
+        Config(device, epochs, criterion, torch.optim.Adagrad, 0.05, 'Adagrad: lr = 0.05', './runs/Adagrad_0.05'),
+
+        Config(device, epochs, criterion, SAM, 0.1, 'SAM with SGD: lr = 0.1', './runs/SAM_SGD_0.1', torch.optim.SGD),
+        Config(device, epochs, criterion, SAM, 0.15, 'SAM with SGD: lr = 0.15', './runs/SAM_SGD_0.15', torch.optim.SGD),
+        Config(device, epochs, criterion, SAM, 0.2, 'SAM with SGD: lr = 0.2', './runs/SAM_SGD_0.2', torch.optim.SGD)
     ]
 
     for config in model_configs:
