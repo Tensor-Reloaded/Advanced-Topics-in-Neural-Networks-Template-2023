@@ -24,7 +24,7 @@ def timed(fn: callable):
 
 def get_cifar10_images(data_path: str, train: bool):
     initial_transforms = v2.Compose([v2.ToImage(), v2.ToDtype(torch.float32, scale=True)])
-    cifar_10_images = CIFAR10(root=data_path, train=True, transform=initial_transforms, download=train)
+    cifar_10_images = CIFAR10(root=data_path, train=train, transform=initial_transforms, download=True)
     return [image for image, label in cifar_10_images]
 
 
