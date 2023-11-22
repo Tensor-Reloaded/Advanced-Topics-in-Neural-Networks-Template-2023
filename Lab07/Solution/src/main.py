@@ -55,7 +55,7 @@ def main():
     )
 
     model = MeteredTrainableNeuralNetwork(
-        input_size=784,
+        input_size=32 * 32,
         output_size=10,
         loss_function=torch.nn.CrossEntropyLoss,
         optimiser=torch.optim.Adam,
