@@ -36,8 +36,8 @@ def main():
         target_transform=target_transforms,
     )
 
-    cached_training_dataset = CachedDataset(dataset=training_dataset, cache=False)
-    cached_validation_dataset = CachedDataset(dataset=validation_dataset, cache=False)
+    cached_training_dataset = CachedDataset(dataset=training_dataset, cache=True)
+    cached_validation_dataset = CachedDataset(dataset=validation_dataset, cache=True)
 
     batched_train_dataset = torch_data.DataLoader(
         dataset=cached_training_dataset,
