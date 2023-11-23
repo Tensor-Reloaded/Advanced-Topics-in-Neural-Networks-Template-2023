@@ -14,5 +14,3 @@ def get_default_device():
     if hasattr(torch, "xpu") and torch.xpu is not None and torch.xpu.device_count() > 0:
         return torch.device("xpu")
     return torch.device("cpu")
-
-print(get_default_device())
