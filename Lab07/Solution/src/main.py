@@ -3,6 +3,7 @@ import torch
 import torch.utils.data as torch_data
 import torchvision
 from torchvision.transforms import v2
+from torchvision.transforms import Normalize, RandomResizedCrop, RandomHorizontalFlip
 from nn.metered_trainable_model import MeteredTrainableNeuralNetwork
 from nn.util import get_default_device
 from nn.dataset import CachedDataset
@@ -16,7 +17,10 @@ def main():
     transforms = torchvision.transforms.Compose(
         [
             v2.ToImageTensor(),
-            v2.ToDtype(torch.float32)
+            v2.ToDtype(torch.float32),
+            RandomResizedCrop(32),
+            RandomHorizontalFlip(),
+            Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
         ]
     )
     target_transforms = OneHot(range(0, 10))
@@ -59,20 +63,22 @@ def main():
         output_size=10,
         loss_function=torch.nn.CrossEntropyLoss,
         optimiser=torch.optim.Adam,
-        learning_rate=0.01,
+        learning_rate=0.001,
         device=device,
         log_directory=logs_path,
     )
-    
-    before_training_results = model.run_validation(
+    compiled_model = torch.compile(model)
+
+
+    before_training_results = compiled_model.run_validation(
         batched_validation_dataset=batched_validation_dataset
     )
-    model.run(
+    compiled_model.run(
         batched_training_dataset=batched_train_dataset,
         batched_validation_dataset=batched_validation_dataset,
-        epochs=100,
+        epochs=25,
     )
-    after_training_results = model.run_validation(
+    after_training_results = compiled_model.run_validation(
         batched_validation_dataset=batched_validation_dataset
     )
 
