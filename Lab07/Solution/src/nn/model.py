@@ -37,7 +37,9 @@ class NeuralNetwork(nn.Module):
         self.fc2 = nn.Linear(512, 256).to(
             device=self.device, non_blocking=self.device == "cuda"
         )
-        self.fc3 = nn.Linear(256, output_size)
+        self.fc3 = nn.Linear(256, output_size).to(
+            device=self.device, non_blocking=self.device == "cuda"
+        )
 
         torch.nn.init.kaiming_uniform_(self.fc1.weight)
         torch.nn.init.kaiming_uniform_(self.fc2.weight)
