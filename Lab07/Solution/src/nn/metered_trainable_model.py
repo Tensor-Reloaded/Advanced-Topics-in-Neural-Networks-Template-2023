@@ -59,7 +59,6 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
             self.summary_writer.add_scalar(
                 "Validation accuracy/epoch", validation_accuracy, epoch
             )
-            self.summary_writer.add_scalar("Norm/epoch", self.get_norm(), epoch)
             self.summary_writer.add_scalar(
                 "Learning rate/epoch", self.optimiser.param_groups[0]["lr"], epoch
             )
