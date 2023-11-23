@@ -67,18 +67,17 @@ def main():
         device=device,
         log_directory=logs_path,
     )
-    compiled_model = torch.compile(model)
 
-
-    before_training_results = compiled_model.run_validation(
+    timer = Timer()
+    before_training_results = model.run_validation(
         batched_validation_dataset=batched_validation_dataset
     )
-    compiled_model.run(
+    model.run(
         batched_training_dataset=batched_train_dataset,
         batched_validation_dataset=batched_validation_dataset,
         epochs=25,
     )
-    after_training_results = compiled_model.run_validation(
+    after_training_results = model.run_validation(
         batched_validation_dataset=batched_validation_dataset
     )
 
@@ -88,7 +87,9 @@ def main():
     print(
         f"Validation accuracy after  training: {after_training_results[1] * 100:>6.2f}%"
     )
-
+    print(
+        f"Run finished in: {timer()}s"
+    )
 
 if __name__ == "__main__":
     main()
