@@ -30,6 +30,10 @@ class TrainableNeuralNetwork(NeuralNetwork):
         self.loss_function = loss_function()
         self.optimiser = optimiser(self.parameters(), lr=learning_rate)
 
+        self.loss_function = self.loss_function.to(
+            device=self.device, non_blocking=self.device == "cuda"
+        )
+
     def run(
         self,
         batched_training_dataset: torch_data.DataLoader,

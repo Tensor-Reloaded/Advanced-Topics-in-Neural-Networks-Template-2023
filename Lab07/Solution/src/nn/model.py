@@ -20,26 +20,14 @@ class NeuralNetwork(nn.Module):
         super(NeuralNetwork, self).__init__()
         self.device = device
 
-        self.conv1 = nn.Conv2d(
-            3, 64, kernel_size=3, stride=1, padding=1, device=self.device
-        )
-        self.conv2 = nn.Conv2d(
-            64, 128, kernel_size=3, stride=1, padding=1, device=self.device
-        )
-        self.conv3 = nn.Conv2d(
-            128, 256, kernel_size=3, stride=1, padding=1, device=self.device
-        )
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1)
+        self.conv3 = nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1)
         self.pool = nn.MaxPool2d(2, 2)
 
-        self.fc1 = nn.Linear(256 * 16, 512).to(
-            device=self.device, non_blocking=self.device == "cuda"
-        )
-        self.fc2 = nn.Linear(512, 256).to(
-            device=self.device, non_blocking=self.device == "cuda"
-        )
-        self.fc3 = nn.Linear(256, output_size).to(
-            device=self.device, non_blocking=self.device == "cuda"
-        )
+        self.fc1 = nn.Linear(256 * 16, 512)
+        self.fc2 = nn.Linear(512, 256)
+        self.fc3 = nn.Linear(256, output_size)
 
         torch.nn.init.kaiming_uniform_(self.fc1.weight)
         torch.nn.init.kaiming_uniform_(self.fc2.weight)
@@ -51,6 +39,7 @@ class NeuralNetwork(nn.Module):
             if output_layer_activation_function is not None
             else nn.Identity()
         )
+        self.to(device=self.device, non_blocking=self.device == "cuda")
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = x.to(device=self.device, non_blocking=self.device == "cuda")

@@ -8,6 +8,7 @@ from nn.metered_trainable_model import MeteredTrainableNeuralNetwork
 from nn.util import get_default_device
 from nn.dataset import CachedDataset
 from nn.transforms import OneHot
+from util.util import Timer
 
 
 def main():
@@ -18,8 +19,6 @@ def main():
         [
             v2.ToImageTensor(),
             v2.ToDtype(torch.float32),
-            RandomResizedCrop(32),
-            RandomHorizontalFlip(),
             Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
         ]
     )
@@ -68,6 +67,8 @@ def main():
         log_directory=logs_path,
     )
 
+    print(f"Running the model on the device: {device}")
+
     timer = Timer()
     before_training_results = model.run_validation(
         batched_validation_dataset=batched_validation_dataset
@@ -87,9 +88,8 @@ def main():
     print(
         f"Validation accuracy after  training: {after_training_results[1] * 100:>6.2f}%"
     )
-    print(
-        f"Run finished in: {timer()}s"
-    )
+    print(f"Run finished in: {timer()}s")
+
 
 if __name__ == "__main__":
     main()
