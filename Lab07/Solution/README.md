@@ -77,7 +77,7 @@ While running, I collected the following data:
 
 Using Tensorboard, the following graph was generated
 
-![Validation accuracy graph](docs/validation_accuracy_graph.png)
+![Validation accuracy graph](docs/resources/validation_accuracy_graph.png)
 
 
 ### Timings
