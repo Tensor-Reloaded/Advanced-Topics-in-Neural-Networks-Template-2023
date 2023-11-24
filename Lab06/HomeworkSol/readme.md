@@ -12,7 +12,7 @@ This project involved implementing a custom ResNet34 architecture suitable for c
 ## Results
 The custom ResNet34 model achieved high 94.1% validation accuracy on the CIFAR-10 dataset, with promising results on CIFAR-100 as well. The exact figures are documented separately in the training logs.
 
-! [CIFAR-10 validation accuracy metric] ([image_url](https://github.com/mariusmarin98/Advanced-Topics-in-Neural-Networks-Template-2023/blob/main/Lab06/HomeworkSol/cifar10-validation-accuracy.png))
+![CIFAR-10 validation accuracy metric](https://github.com/mariusmarin98/Advanced-Topics-in-Neural-Networks-Template-2023/blob/main/Lab06/HomeworkSol/cifar10-validation-accuracy.png)
 
 | Epoch | Train Loss | Train Acc (%) | Val Loss | Val Acc (%) |
 |-------|------------|---------------|----------|-------------|
@@ -77,10 +77,10 @@ The custom ResNet34 model achieved high 94.1% validation accuracy on the CIFAR-1
 | 59    | 0.0849     | 97.06         | 0.2093   | 94.14       |
 | 60    | 0.0859     | 97.01         | 0.2145   | 94.10       |
 
-Model weights link: https://drive.google.com/drive/folders/1nJTLvwz8noIO7K9NBT2muGiDwjBR2ESf (ran with CUDA, not CPU)
+Model weights link: https://drive.google.com/drive/folders/1nJTLvwz8noIO7K9NBT2muGiDwjBR2ESf (ran with CUDA)
 
-W&B runs link:
-
+W&B runs link: https://wandb.ai/marius-workspace/cifar10_classification/runs/f3ozgmjj?workspace=user-mariusmarin
+todo: link for cifar100 
 ## Runtime Performance
 The table below summarizes the runtime performance in terms of average inference time for the base, traced, and scripted models:
 
