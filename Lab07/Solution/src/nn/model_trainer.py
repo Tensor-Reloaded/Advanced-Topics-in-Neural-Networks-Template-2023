@@ -18,7 +18,7 @@ class NeuralNetworkTrainer:
         optimiser: torch.optim.Optimizer,
         learning_rate: float,
         device: torch.device = torch.device("cpu"),
-        exports_path: str = "../data/exports",
+        exports_path: str = "/tmp",
     ) -> None:
         self.neural_network = neural_network
         self.loss_function = loss_function()
@@ -52,6 +52,7 @@ class NeuralNetworkTrainer:
             )
 
         print()
+
         torch.save(self.neural_network.state_dict(), f"{self.exports_path}/{time.time_ns()}.pt")
 
     def run_training(

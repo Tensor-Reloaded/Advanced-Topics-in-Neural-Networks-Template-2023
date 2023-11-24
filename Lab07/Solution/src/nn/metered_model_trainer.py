@@ -16,8 +16,8 @@ class MeteredNeuralNetworkTrainer(NeuralNetworkTrainer):
         optimiser: torch.optim.Optimizer,
         learning_rate: float,
         device: torch.device = torch.device("cpu"),
-        exports_path: str = "../data/exports",
-        log_directory: str = "../data/logs",
+        exports_path: str = "/tmp",
+        log_directory: str = "/tmp",
     ) -> None:
         super(MeteredNeuralNetworkTrainer, self).__init__(
             neural_network=neural_network,
@@ -73,6 +73,7 @@ class MeteredNeuralNetworkTrainer(NeuralNetworkTrainer):
             )
 
         print()
+
         self.summary_writer.flush()
         torch.save(
             self.neural_network.state_dict(), f"{self.exports_path}/{time.time_ns()}.pt"
