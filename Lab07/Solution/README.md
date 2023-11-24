@@ -69,6 +69,11 @@ While running, I collected the following data:
 | 14 | 25 | 83.16 | 97.50% | 118.63 | 74.66% |
 | 15 | 25 | 159.88 | 93.25% | 42.02 | 76.58% |
 
+Using Tensorboard, the following graph was generated
+
+![Validation accuracy graph](docs/validation_accuracy_graph.png)
+
+
 ### Timings
 
 The model underwent the following:
@@ -81,11 +86,10 @@ With the following results:
 | Process | Epochs | Runs | Best timing | Worst timing |
 | - | - | - | - | - |
 | Base model (`CPU`) | 25 | 2 | 2324s | 2413s |
-| Base model (`CUDA`) | 25 | 2 | 150.3s | 151.1s |
+| Base model (`CUDA`) | 25 | 3 | 150.3s | 151.1s |
 | Compiled model (`CUDA`) | 25 | 3 | 160.3s | 165.9s |
 | Traced model (`CUDA`) | 25 | 3 | 144.5s | 148.8s |
 | Scripted model (`CUDA`) | 25 | 3 | 145.1s | 149.8s |
-
 
 **LEGEND**: `CPU` = My laptop's Intel Core i7 1260p, `CUDA` = A rented server with 1 x RTX A5000
 
