@@ -30,6 +30,12 @@ In order to run the model using preexistent weights and biases, the following co
 $ ./run_inference.sh
 ```
 
+In order to run the test(s), the following command can be used:
+
+```sh
+$ ./run_tests.sh
+```
+
 ## Model
 
 The model contains:
