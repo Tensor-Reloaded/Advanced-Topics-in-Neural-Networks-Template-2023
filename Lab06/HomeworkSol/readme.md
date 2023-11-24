@@ -79,8 +79,12 @@ The custom ResNet34 model achieved high 94.1% validation accuracy on the CIFAR-1
 
 Model weights link: https://drive.google.com/drive/folders/1nJTLvwz8noIO7K9NBT2muGiDwjBR2ESf (ran with CUDA)
 
-W&B runs link: https://wandb.ai/marius-workspace/cifar10_classification/runs/f3ozgmjj?workspace=user-mariusmarin
-todo: link for cifar100 
+W&B runs links:
+
+https://wandb.ai/marius-workspace/cifar10_classification/runs/f3ozgmjj?workspace=user-mariusmarin
+
+https://wandb.ai/marius-workspace/deep_learning_project?workspace=user-mariusmarin
+
 ## Runtime Performance
 The table below summarizes the runtime performance in terms of average inference time for the base, traced, and scripted models:
 
