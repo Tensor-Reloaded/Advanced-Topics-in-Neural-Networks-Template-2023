@@ -1,0 +1,1 @@
+{"epoch": 4, "batch_nr": 1249, "avg_batch_loss": 0.5939418077468872, "_timestamp": 1700783015.4759274, "_runtime": 168.557302236557, "_step": 6259, "loss": 0.9152354508161544, "avg_epoch_loss": 1.1417099970912932, "_wandb": {"runtime": 167}}
