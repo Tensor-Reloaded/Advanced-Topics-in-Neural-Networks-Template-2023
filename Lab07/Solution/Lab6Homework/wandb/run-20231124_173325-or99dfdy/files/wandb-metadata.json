@@ -1,0 +1,47 @@
+{
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.10.4",
+    "heartbeatAt": "2023-11-24T15:33:26.153207",
+    "startedAt": "2023-11-24T15:33:25.289532",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "C:\\Users\\nicol\\PycharmProjects\\Lab5Homework\\main.py",
+    "codePathLocal": "main.py",
+    "codePath": "main.py",
+    "host": "DESKTOP-Q4RELQH",
+    "username": "nicol",
+    "executable": "C:\\Users\\nicol\\PycharmProjects\\Lab5Homework\\venv\\Scripts\\python.exe",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 4201.0,
+        "min": 0.0,
+        "max": 4201.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 4201.0,
+            "min": 0.0,
+            "max": 4201.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 465.13597106933594,
+            "used": 126.81624984741211
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 3080",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3080",
+            "memory_total": 10737418240
+        }
+    ],
+    "memory": {
+        "total": 31.14765167236328
+    }
+}
