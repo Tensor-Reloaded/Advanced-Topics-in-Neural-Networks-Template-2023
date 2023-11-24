@@ -1,3 +1,4 @@
+import time
 import typing as t
 import torch
 import torch.utils.data as torch_data
@@ -10,25 +11,21 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
 
     def __init__(
         self,
-        input_size: int,
-        output_size: int,
+        neural_network: torch.nn.Module,
         loss_function: torch.nn.modules.loss._Loss,
         optimiser: torch.optim.Optimizer,
         learning_rate: float,
-        output_layer_activation_function: t.Union[
-            t.Callable[[torch.Tensor], torch.Tensor], None
-        ] = None,
-        device: str = "cpu",
-        log_directory: str = "../data",
+        device: torch.device = torch.device("cpu"),
+        exports_path: str = "../data/exports",
+        log_directory: str = "../data/logs",
     ) -> None:
         super(MeteredTrainableNeuralNetwork, self).__init__(
-            input_size=input_size,
-            output_size=output_size,
+            neural_network=neural_network,
             loss_function=loss_function,
             optimiser=optimiser,
             learning_rate=learning_rate,
-            output_layer_activation_function=output_layer_activation_function,
             device=device,
+            exports_path=exports_path,
         )
 
         self.summary_writer = SummaryWriter(log_dir=log_directory)
@@ -77,12 +74,13 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
 
         print()
         self.summary_writer.flush()
+        torch.save(self.neural_network.state_dict(), f"{self.exports_path}/{time.time_ns()}.pt")
 
     def run_training(
         self,
         batched_training_dataset: torch_data.DataLoader,
     ) -> t.Tuple[float, float]:
-        self.train()
+        self.neural_network.train()
         batch = 0
         total = 0
         correct = 0
@@ -94,10 +92,12 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
             label = label.to(device=self.device, non_blocking=self.device == "cuda")
 
             self.optimiser.zero_grad()
-            y_hat = self(image)
+            y_hat = self.neural_network(image)
             loss = self.loss_function(y_hat, label)
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
+            torch.nn.utils.clip_grad_norm_(
+                self.neural_network.parameters(), max_norm=1.0
+            )
             self.optimiser.step()
 
             self.summary_writer.add_scalar("Training loss/batch", loss, batch)
@@ -117,7 +117,7 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
         self,
         batched_validation_dataset: torch_data.DataLoader,
     ) -> t.Tuple[float, float]:
-        self.eval()
+        self.neural_network.eval()
         batch = 0
         total = 0
         correct = 0
@@ -129,7 +129,7 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
                 image = image.to(device=self.device, non_blocking=self.device == "cuda")
                 label = label.to(device=self.device, non_blocking=self.device == "cuda")
 
-                y_hat = self(image)
+                y_hat = self.neural_network(image)
                 loss = self.loss_function(y_hat, label)
 
                 for i in range(label.shape[0]):

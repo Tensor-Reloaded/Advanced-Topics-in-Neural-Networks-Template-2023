@@ -3,24 +3,24 @@ import os
 import torch
 import torch.utils.data as torch_data
 import torchvision
-from torchvision.transforms import v2
-from torchvision.transforms import Normalize
+from torchvision.transforms import ToTensor, Normalize
 from nn.metered_trainable_model import MeteredTrainableNeuralNetwork
 from nn.util import get_default_device
 from nn.dataset import CachedDataset
 from nn.transforms import OneHot
+from nn.model import NeuralNetwork
 from util.util import Timer
 
 
 def main():
     device = get_default_device()
     dataset_path = os.path.join(os.path.dirname(__file__), "../data/datasets")
+    exports_path = os.path.join(os.path.dirname(__file__), "../data/exports")
     logs_path = os.path.join(os.path.dirname(__file__), "../data/logs")
     transforms = torchvision.transforms.Compose(
         [
-            v2.ToImageTensor(),
-            v2.ToDtype(torch.float32),
-            Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+            ToTensor(),
+            Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ]
     )
     target_transforms = OneHot(range(0, 10))
@@ -58,38 +58,82 @@ def main():
         pin_memory=device == "cuda",
     )
 
-    model = MeteredTrainableNeuralNetwork(
-        input_size=32 * 32,
+    base_model = NeuralNetwork(
+        input_size=16,
         output_size=10,
+        device=device,
+    )
+    compiled_model = torch.compile(base_model)
+    traced_model = torch.jit.trace(
+        base_model,
+        next(iter(batched_train_dataset))[0],
+    )
+    scripted_model = torch.jit.script(base_model)
+
+    metered_base_model = MeteredTrainableNeuralNetwork(
+        neural_network=base_model,
         loss_function=torch.nn.CrossEntropyLoss,
         optimiser=torch.optim.Adam,
         learning_rate=0.001,
         device=device,
-        log_directory=logs_path,
+        log_directory=logs_path
+    )
+    metered_compiled_model = MeteredTrainableNeuralNetwork(
+        neural_network=compiled_model,
+        loss_function=torch.nn.CrossEntropyLoss,
+        optimiser=torch.optim.Adam,
+        learning_rate=0.001,
+        device=device,
+        exports_path=exports_path,
+        log_directory=logs_path
+    )
+    metered_traced_model = MeteredTrainableNeuralNetwork(
+        neural_network=traced_model,
+        loss_function=torch.nn.CrossEntropyLoss,
+        optimiser=torch.optim.Adam,
+        learning_rate=0.001,
+        device=device,
+        exports_path=exports_path,
+        log_directory=logs_path
+    )
+    metered_scripted_model = MeteredTrainableNeuralNetwork(
+        neural_network=scripted_model,
+        loss_function=torch.nn.CrossEntropyLoss,
+        optimiser=torch.optim.Adam,
+        learning_rate=0.001,
+        device=device,
+        exports_path=exports_path,
+        log_directory=logs_path
     )
 
-    print(f"Running the model on the device: {device}")
+    for model in [
+        metered_compiled_model,
+        metered_traced_model,
+        metered_scripted_model,
+        metered_base_model,
+    ]:
+        print(f"Running the model on the device: {device}")
 
-    timer = Timer()
-    before_training_results = model.run_validation(
-        batched_validation_dataset=batched_validation_dataset
-    )
-    model.run(
-        batched_training_dataset=batched_train_dataset,
-        batched_validation_dataset=batched_validation_dataset,
-        epochs=25,
-    )
-    after_training_results = model.run_validation(
-        batched_validation_dataset=batched_validation_dataset
-    )
+        timer = Timer()
+        before_training_results = model.run_validation(
+            batched_validation_dataset=batched_validation_dataset
+        )
+        model.run(
+            batched_training_dataset=batched_train_dataset,
+            batched_validation_dataset=batched_validation_dataset,
+            epochs=25,
+        )
+        after_training_results = model.run_validation(
+            batched_validation_dataset=batched_validation_dataset
+        )
 
-    print(
-        f"Validation accuracy before training: {before_training_results[1] * 100:>6.2f}%"
-    )
-    print(
-        f"Validation accuracy after  training: {after_training_results[1] * 100:>6.2f}%"
-    )
-    print(f"Run finished in: {timer()}s")
+        print(
+            f"Validation accuracy before training: {before_training_results[1] * 100:>6.2f}%"
+        )
+        print(
+            f"Validation accuracy after  training: {after_training_results[1] * 100:>6.2f}%"
+        )
+        print(f"Run finished in: {timer()}s")
 
 
 if __name__ == "__main__":

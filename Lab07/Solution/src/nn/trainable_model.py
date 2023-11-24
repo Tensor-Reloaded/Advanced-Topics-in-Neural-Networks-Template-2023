@@ -1,34 +1,30 @@
+import time
 import typing as t
 import torch
 import torch.utils.data as torch_data
-from nn.model import NeuralNetwork
 
 
-class TrainableNeuralNetwork(NeuralNetwork):
+class TrainableNeuralNetwork:
+    neural_network: torch.nn.Module
+    device: torch.device
     loss_function: torch.nn.modules.loss._Loss
     optimiser: torch.optim.Optimizer
+    exports_path: str
 
     def __init__(
         self,
-        input_size: int,
-        output_size: int,
+        neural_network: torch.nn.Module,
         loss_function: torch.nn.modules.loss._Loss,
         optimiser: torch.optim.Optimizer,
         learning_rate: float,
-        output_layer_activation_function: t.Union[
-            t.Callable[[torch.Tensor], torch.Tensor], None
-        ] = None,
-        device: str = "cpu",
+        device: torch.device = torch.device("cpu"),
+        exports_path: str = "../data/exports",
     ) -> None:
-        super(TrainableNeuralNetwork, self).__init__(
-            input_size=input_size,
-            output_size=output_size,
-            output_layer_activation_function=output_layer_activation_function,
-            device=device,
-        )
-
+        self.neural_network = neural_network
         self.loss_function = loss_function()
-        self.optimiser = optimiser(self.parameters(), lr=learning_rate)
+        self.optimiser = optimiser(self.neural_network.parameters(), lr=learning_rate)
+        self.device = device
+        self.exports_path = exports_path
 
         self.loss_function = self.loss_function.to(
             device=self.device, non_blocking=self.device == "cuda"
@@ -56,12 +52,13 @@ class TrainableNeuralNetwork(NeuralNetwork):
             )
 
         print()
+        torch.save(self.neural_network.state_dict(), f"{self.exports_path}/{time.time_ns()}.pt")
 
     def run_training(
         self,
         batched_training_dataset: torch_data.DataLoader,
     ) -> t.Tuple[float, float]:
-        self.train()
+        self.neural_network.train()
         total = 0
         correct = 0
         training_loss = 0.0
@@ -72,10 +69,12 @@ class TrainableNeuralNetwork(NeuralNetwork):
             label = label.to(device=self.device, non_blocking=self.device == "cuda")
 
             self.optimiser.zero_grad()
-            y_hat = self(image)
+            y_hat = self.neural_network(image)
             loss = self.loss_function(y_hat, label)
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
+            torch.nn.utils.clip_grad_norm_(
+                self.neural_network.parameters(), max_norm=1.0
+            )
             self.optimiser.step()
 
             for i in range(label.shape[0]):
@@ -92,7 +91,7 @@ class TrainableNeuralNetwork(NeuralNetwork):
         self,
         batched_validation_dataset: torch_data.DataLoader,
     ) -> t.Tuple[float, float]:
-        self.eval()
+        self.neural_network.eval()
         total = 0
         correct = 0
         validation_loss = 0.0
@@ -103,7 +102,7 @@ class TrainableNeuralNetwork(NeuralNetwork):
                 image = image.to(device=self.device, non_blocking=self.device == "cuda")
                 label = label.to(device=self.device, non_blocking=self.device == "cuda")
 
-                y_hat = self(image)
+                y_hat = self.neural_network(image)
                 loss = self.loss_function(y_hat, label)
 
                 for i in range(label.shape[0]):
