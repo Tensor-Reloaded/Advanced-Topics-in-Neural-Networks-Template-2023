@@ -2,11 +2,11 @@ import time
 import typing as t
 import torch
 import torch.utils.data as torch_data
-from nn.trainable_model import TrainableNeuralNetwork
+from nn.model_trainer import NeuralNetworkTrainer
 from torch.utils.tensorboard import SummaryWriter
 
 
-class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
+class MeteredNeuralNetworkTrainer(NeuralNetworkTrainer):
     summary_writer: SummaryWriter
 
     def __init__(
@@ -19,7 +19,7 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
         exports_path: str = "../data/exports",
         log_directory: str = "../data/logs",
     ) -> None:
-        super(MeteredTrainableNeuralNetwork, self).__init__(
+        super(MeteredNeuralNetworkTrainer, self).__init__(
             neural_network=neural_network,
             loss_function=loss_function,
             optimiser=optimiser,
@@ -74,7 +74,9 @@ class MeteredTrainableNeuralNetwork(TrainableNeuralNetwork):
 
         print()
         self.summary_writer.flush()
-        torch.save(self.neural_network.state_dict(), f"{self.exports_path}/{time.time_ns()}.pt")
+        torch.save(
+            self.neural_network.state_dict(), f"{self.exports_path}/{time.time_ns()}.pt"
+        )
 
     def run_training(
         self,

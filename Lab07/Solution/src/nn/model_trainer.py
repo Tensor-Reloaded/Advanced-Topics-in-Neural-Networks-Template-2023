@@ -4,7 +4,7 @@ import torch
 import torch.utils.data as torch_data
 
 
-class TrainableNeuralNetwork:
+class NeuralNetworkTrainer:
     neural_network: torch.nn.Module
     device: torch.device
     loss_function: torch.nn.modules.loss._Loss
