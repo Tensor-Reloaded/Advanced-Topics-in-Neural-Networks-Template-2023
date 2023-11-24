@@ -122,4 +122,4 @@ I consider I have performed the following in this project:
 | * | TensorBoard files or weights & biases link | 0p | 0p | I have this in this README.md file |
 | * | PNG file with a plot of the validation accuracy of the model | 0p | 0p | I have this in this README.md file |
 | * | The `inference.py` file | 0p | 0p | The file should be available under `/src` |
-| - | Total | 15p | 7p | I think this is the grade I really achieved |
+| - | Total | 15p | 5p | I think this is the grade I really achieved |
