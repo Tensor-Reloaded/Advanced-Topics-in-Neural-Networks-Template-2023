@@ -11,6 +11,8 @@ This project involved implementing a custom ResNet34 architecture suitable for c
 
 ## Results
 The custom ResNet34 model achieved high accuracy on the CIFAR-10 dataset, with promising results on CIFAR-100 as well. The exact figures are documented separately in the training logs.
+Model weights link:
+W&B runs link:
 
 ## Runtime Performance
 The table below summarizes the runtime performance in terms of average inference time for the base, traced, and scripted models:
