@@ -85,6 +85,9 @@ With the following results:
 | Traced model (`CUDA`) | 25 | 3 | 144.5s | 148.8s |
 | Scripted model (`CUDA`) | 25 | 3 | 145.1s | 149.8s |
 
+
+**LEGEND**: `CPU` = My laptop's Intel Core i7 1260p, `CUDA` = A rented server with 1 x RTX A5000
+
 **NOTE**: only the forward function was compiled/traced/scripted.
 
 ## Grading
