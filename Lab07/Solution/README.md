@@ -24,6 +24,12 @@ In order to train the model, the following command can be used:
 $ ./run.sh
 ```
 
+In order to run the model using preexistent weights and biases, the following command can be used:
+
+```sh
+$ ./run_inference.sh
+```
+
 ## Model
 
 The model contains:
