@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
+import os
 import torch
 import torch.utils.data as torch_data
 import torchvision
 from torchvision.transforms import v2
-from torchvision.transforms import Normalize, RandomResizedCrop, RandomHorizontalFlip
+from torchvision.transforms import Normalize
 from nn.metered_trainable_model import MeteredTrainableNeuralNetwork
 from nn.util import get_default_device
 from nn.dataset import CachedDataset
@@ -13,8 +14,8 @@ from util.util import Timer
 
 def main():
     device = get_default_device()
-    dataset_path = "../data/datasets"
-    logs_path = "../data/logs"
+    dataset_path = os.path.join(os.path.dirname(__file__), "../data/datasets")
+    logs_path = os.path.join(os.path.dirname(__file__), "../data/logs")
     transforms = torchvision.transforms.Compose(
         [
             v2.ToImageTensor(),
