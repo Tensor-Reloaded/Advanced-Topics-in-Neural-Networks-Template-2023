@@ -23,3 +23,8 @@ References:
  - Faster R-CNN: https://arxiv.org/pdf/1506.01497.pdf
  - YOLO: https://arxiv.org/abs/1506.02640
  - R-CNN vs Fast R-CNN vs Faster R-CNN vs YOLO: https://towardsdatascience.com/r-cnn-fast-r-cnn-faster-r-cnn-yolo-object-detection-algorithms-36d53571365e
+
+*** 
+What was done:
+1. Custom conv2d and test in the same file - 4p
+2. Trace, script and save model operations in model_manager.py - Not tested (< 1p) 

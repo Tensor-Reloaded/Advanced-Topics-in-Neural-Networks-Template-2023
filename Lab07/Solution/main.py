@@ -1,3 +1,4 @@
+import random
 from multiprocessing import freeze_support
 
 import torch
@@ -7,7 +8,7 @@ from torchvision.datasets import CIFAR10
 from torchvision.transforms import v2
 from tqdm import tqdm
 
-from Lab07.Solution.model import ConvNet
+from model import ConvNet
 
 
 def get_default_device():
@@ -31,6 +32,59 @@ class CachedDataset(Dataset):
 
     def __getitem__(self, i):
         return self.dataset[i]
+
+
+class TrainCachedDataset(Dataset):
+    def __init__(self, dataset, cache=True, device='cuda'):
+        self.dataset = dataset
+        self.augmentation = self._get_default_augmentation()
+        if cache:
+            self.cached_data = [x for x in dataset]
+
+        self.device = device
+        self.to_device()
+
+    def _get_default_augmentation(self):
+        return v2.Compose([
+            v2.RandomApply([
+                v2.RandomHorizontalFlip(p=1),
+                v2.RandomVerticalFlip(p=1),
+                v2.RandomRotation(degrees=(-30, 30), expand=False, center=None),
+                v2.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
+                v2.RandomResizedCrop(size=(28, 28), scale=(0.8, 1.0), ratio=(0.8, 1.2), antialias=True),
+            ], p=0.5),
+        ])
+
+    def _augment_data(self, data):
+        image, label = data
+        augmented_image = self._augmentation(image)
+        return augmented_image, label
+
+    def _augmentation(self, image):
+        return self.augmentation(image)
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, i):
+        if random.randint(0, 2) == 0:
+            augmented_image, label = self._augment_data(self.dataset[i])
+
+            return augmented_image, label
+        return self.dataset[1]
+    def set_device(self, device):
+        self.device = device
+        self.to_device()
+
+    def to_device(self):
+        if self.device == 'cuda':
+            self.augmentation = self.augmentation.cuda()
+        else:
+            self.augmentation = self.augmentation.cpu()
+
+    def set_augmentation(self, augmentation):
+        self.augmentation = augmentation
+        self.to_device()
 
 
 def accuracy(output, labels):
@@ -111,22 +165,24 @@ def main(device=get_default_device()):
         v2.ToImage(),
         v2.ToDtype(torch.float32, scale=True),
         v2.Resize((28, 28), antialias=True),
+        v2.ToTensor(),
+        v2.Normalize(mean=[0.0, 0.0, 0.0], std=[1.0, 1.0, 1.0])
     ]
 
     data_path = '../data'
     train_dataset = CIFAR10(root=data_path, train=True, transform=v2.Compose(transforms), download=True)
     val_dataset = CIFAR10(root=data_path, train=False, transform=v2.Compose(transforms), download=True)
-    train_dataset = CachedDataset(train_dataset)
+    train_dataset = TrainCachedDataset(train_dataset)
     val_dataset = CachedDataset(val_dataset)
 
     model = ConvNet(3, 28, 10)
     model = model.to(device)
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
     criterion = torch.nn.CrossEntropyLoss()
     epochs = 50
 
-    batch_size = 256
-    val_batch_size = 500
+    batch_size = 1000
+    val_batch_size = 1000
     num_workers = 2
     persistent_workers = (num_workers != 0)
     pin_memory = device.type == 'cuda'
