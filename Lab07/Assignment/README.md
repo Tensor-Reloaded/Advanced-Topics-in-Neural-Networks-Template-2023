@@ -1,0 +1,2 @@
+- 4 puncte
+- handmade_conv2d_implementation
