@@ -26,9 +26,9 @@ def initialize_resnet(model_name, num_classes, use_pretrained=True, feature_extr
     Returns:
         A PyTorch model
     """
-    # Initialize your custom model (without pretrained weights)
+
     if model_name == 'ResNet34':
-        custom_model = ResNet34()  # Your custom ResNet34 class
+        custom_model = ResNet34()
     else:
         raise ValueError(f"Unsupported model: {model_name}")
 

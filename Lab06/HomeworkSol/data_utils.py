@@ -8,10 +8,9 @@ import torchvision.transforms.functional as TF
 from PIL import Image
 
 
-# Define your transformations and data loading functions here
+
 class AdvancedAugmentations:
     def __init__(self):
-        # Define individual transforms here
         self.color_jitter = transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1)
         # self.cutout = transforms.RandomErasing(p=0.5, scale=(0.02, 0.33), ratio=(0.3, 3.3), value=0, inplace=False)
 
@@ -58,8 +57,6 @@ class AdvancedAugmentations:
             translations = (np.round(random.uniform(-max_dx, max_dx)),
                             np.round(random.uniform(-max_dy, max_dy)))
             img = TF.affine(img, angle=0, translate=translations, scale=1.0, shear=0)
-
-        # Further augmentations like MixUp or CutMix are applied during the batch preparation
 
         return img
 

@@ -15,7 +15,6 @@ def main():
 
     wandb.init(project="deep_learning_project", config=config)
 
-    # Set num_classes based on the dataset
     num_classes = 10 if config['dataset_name'] == 'CIFAR10' else 100
 
     trainloader, validloader, testloader = prepare_data_loaders(config)
