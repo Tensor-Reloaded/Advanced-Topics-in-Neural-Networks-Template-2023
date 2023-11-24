@@ -1,12 +1,13 @@
-import os
 from multiprocessing import freeze_support
 
 import torch
+from torch.utils.data import Dataset, DataLoader
+from torch.utils.tensorboard import SummaryWriter
 from torchvision.datasets import CIFAR10
 from torchvision.transforms import v2
-from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
-from torch.utils.tensorboard import SummaryWriter
+
+from Lab07.Solution.model import ConvNet
 
 
 def get_default_device():
@@ -110,8 +111,6 @@ def main(device=get_default_device()):
         v2.ToImage(),
         v2.ToDtype(torch.float32, scale=True),
         v2.Resize((28, 28), antialias=True),
-        v2.Grayscale(),
-        torch.flatten,
     ]
 
     data_path = '../data'
@@ -120,7 +119,7 @@ def main(device=get_default_device()):
     train_dataset = CachedDataset(train_dataset)
     val_dataset = CachedDataset(val_dataset)
 
-    model = MLP(784, 100, 10)
+    model = ConvNet(3, 28, 10)
     model = model.to(device)
     optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
     criterion = torch.nn.CrossEntropyLoss()
