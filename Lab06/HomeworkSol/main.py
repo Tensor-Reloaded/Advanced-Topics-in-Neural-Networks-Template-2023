@@ -50,7 +50,8 @@ def main():
         if val_accuracy > best_val_accuracy:
             best_val_accuracy = val_accuracy
             torch.save(model.to('cpu').model.state_dict(), f"best_model_epoch_{epoch}.pth")
-            wandb.save(f"best_model_epoch_{epoch}.pth")
+            wandb.save(f"best_model_epoch_{epoch+1}.pth")
+            print(f"New best model saved at epoch {epoch + 1} with Validation Accuracy: {val_accuracy}%")
 
     test_accuracy = test(model, testloader, device)
     print(f"Test Accuracy: {test_accuracy}%")
