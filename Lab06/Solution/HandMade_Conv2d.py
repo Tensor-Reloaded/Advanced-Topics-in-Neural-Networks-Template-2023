@@ -1,5 +1,6 @@
 import torch
 
+# TODO:Also add padding and stride
 
 class HandMadeConv2d:
     def __init__(self, input_channels: int, output_channels: int, kernel_size: tuple[int, int]):

@@ -38,11 +38,7 @@ if __name__ == '__main__':
     transforms = [
         v2.ToImage(),
         v2.ToDtype(torch.float32, scale=True),
-        v2.Resize((28, 28), antialias=True),
-        v2.Grayscale(),
-        v2.RandomHorizontalFlip(),
-        v2.GaussianBlur(5)
-        # torch.flatten,
+        v2.AutoAugment(policy=v2.AutoAugmentPolicy.CIFAR10),
     ]
 
     # From testing,the following should be tested for augmentation:

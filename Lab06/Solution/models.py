@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-__all__ = ['MLP']
+__all__ = ['MLP', 'CNN']
 
 
 class MLP(nn.Module):
@@ -77,4 +77,40 @@ class MLP(nn.Module):
         # Last layer
         x = self.layers[-1](x)
 
+        return self.output_activation(x)
+
+
+class CNN(nn.Module):
+    def __init__(self, device: torch.device, no_classes: int, output_activation=None):
+        super(CNN, self).__init__()
+
+        self.device = device
+        self.output_activation = output_activation if output_activation is not None else nn.Identity()
+
+        self.activation_function = nn.ReLU()
+        self.layers = nn.Sequential(
+            self.get_block(3, 6, kernel_size=7, paddings=3),
+            nn.MaxPool2d(kernel_size=3, stride=2, padding=1),
+            self.get_block(6, 12, 5, 2),
+            nn.MaxPool2d(kernel_size=3, stride=2, padding=1),
+            self.get_block(12, 24, 3, 1),
+            nn.Conv2d(24, 6, kernel_size=1),
+            nn.Flatten(),
+            nn.Linear(6 * 8 * 8, 1024), nn.BatchNorm1d(1024), nn.ELU(), nn.Dropout(0.5),
+            nn.Linear(1024, 512), nn.BatchNorm1d(512), nn.ELU(), nn.Dropout(0.5),
+            nn.Linear(512, no_classes)
+        )
+        # The pipeline applies softmax
+
+        self.to(device)
+
+    def get_block(self, in_channels, out_channels, kernel_size, paddings):
+        return nn.Sequential(
+            nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size, padding=paddings),
+            nn.BatchNorm2d(out_channels),
+            nn.Conv2d(out_channels, out_channels, kernel_size=1), nn.ELU()
+        )
+
+    def forward(self, x):
+        x = self.layers(x)
         return self.output_activation(x)

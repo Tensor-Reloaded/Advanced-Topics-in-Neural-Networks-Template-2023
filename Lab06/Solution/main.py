@@ -41,14 +41,9 @@ def get_optimizer(model: torch.nn.Module, optimizer_name: str, optimizer_params:
 
 def run_model(optimizer_name: str, optimizer_params: dict = None, train_batch_size: int = None,
               device: torch.device = get_default_device()):
-    size = (28, 28)
-
     transforms = [
         v2.ToImage(),
         v2.ToDtype(torch.float32, scale=True),
-        v2.Resize(size, antialias=True),
-        v2.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261), inplace=True),
-        v2.Grayscale(),
     ]
 
     # (0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261)
@@ -57,12 +52,9 @@ def run_model(optimizer_name: str, optimizer_params: dict = None, train_batch_si
     train_dataset = CIFAR10(root=data_path, train=True, transform=v2.Compose(transforms), download=True)
     validation_dataset = CIFAR10(root=data_path, train=False, transform=v2.Compose(transforms), download=True)
 
-    no_epochs = 50
+    no_epochs = 5
 
-    no_units_per_layer = [784, 512, 256, 128, 64, 10]
-    dropout_per_layer = [0.15, 0.15, 0.15, 0.15, 0.15]
-    skip_connections = []
-    model = MLP(device, no_units_per_layer, dropout_per_layer, skip_connections)
+    model = CNN(device, no_classes=10)
     # optimizer = torch.optim.SGD(model.parameters(), lr=0.026172624468404335, momentum=0.01964499304214733,
     #                             weight_decay=0.090403235101392, nesterov=True)
 
@@ -75,15 +67,15 @@ def run_model(optimizer_name: str, optimizer_params: dict = None, train_batch_si
     num_workers = 2
     train_transforms = None
     train_transforms = v2.Compose([
-        v2.RandomHorizontalFlip(),
-        v2.GaussianBlur(3),
-        torch.flatten
+        # v2.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261)),
+        v2.RandAugment()
+        # v2.AutoAugment(policy=v2.AutoAugmentPolicy.CIFAR10),
     ])
 
     val_transforms = None
-    val_transforms = v2.Compose([
-        torch.flatten
-    ])
+    # val_transforms = v2.Compose([
+    #     v2.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261)),
+    # ])
 
     training_pipeline = TrainingPipeline(device, False, train_dataset, validation_dataset,
                                          train_transformer=train_transforms, val_transformer=val_transforms,
@@ -92,6 +84,8 @@ def run_model(optimizer_name: str, optimizer_params: dict = None, train_batch_si
                                          no_workers=num_workers)
     print("Device: ", device)
     training_pipeline.run(no_epochs, model, criterion, optimizer)
+
+    # torch.save(training_pipeline.model.state_dict(), "model.pth")
 
 
 def get_sweep_params(optimizer_name: str) -> dict:
@@ -207,9 +201,10 @@ def run_sweep(optimizer_name: str, sweep_id: str = None, device: torch.device = 
     transforms = [
         v2.ToImage(),
         v2.ToDtype(torch.float32, scale=True),
-        v2.Resize(size, antialias=True),
-        v2.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261), inplace=True),
-        v2.Grayscale(),
+        v2.AutoAugment(policy=v2.AutoAugmentPolicy.CIFAR10),
+        # v2.Resize(size, antialias=True),
+        # v2.Normalize((0.4914, 0.4822, 0.4465), (0.247, 0.243, 0.261), inplace=True),
+        # v2.Grayscale(),
     ]
 
     data_path = '../data'
@@ -219,11 +214,11 @@ def run_sweep(optimizer_name: str, sweep_id: str = None, device: torch.device = 
     train_transforms = None
     train_transforms = v2.Compose([
         v2.RandomHorizontalFlip(),
-        v2.GaussianBlur(3),
-        torch.flatten
+        # v2.GaussianBlur(3),
+        # torch.flatten
     ])
     val_transforms = v2.Compose([
-        torch.flatten
+        # torch.flatten
     ])
 
     training_pipeline = TrainingPipeline(device, use_config_for_train=True,
@@ -265,11 +260,11 @@ if __name__ == '__main__':
     freeze_support()
 
     # These are the parameters for the best runs
-    run_model('sgd',
-              {"lr": 0.00910, 'momentum': 0.0348287254025958, 'dampening': 0.0, 'weight_decay': 1e-5,
-               'nesterov': True}, train_batch_size=32)
+    # run_model('sgd',
+    #           {"lr": 0.00910, 'momentum': 0.0348287254025958, 'dampening': 0.0, 'weight_decay': 1e-5,
+    #            'nesterov': True}, train_batch_size=32)
     #
-    # run_model('adam', {'lr': 1e-3, 'weight_decay': 0.00002})
+    run_model('adam', {'lr': 1e-3, 'weight_decay': 0.00002})
 
     # run_model('rmsprop', {'lr': 0.00062, 'momentum': 0.006331417928678274, 'weight_decay': 0.0},
     #           train_batch_size=128)
