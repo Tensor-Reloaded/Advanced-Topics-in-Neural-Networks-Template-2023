@@ -10,7 +10,7 @@
    * optimizatorul SGD cu *lr=0.01, momentum=0.9, nesterov=True, weight_decay=1e-4*
    * sub 10 epoci de antrenare (2 pentru a depăși 97% acuratețe)
    * batch_size de 64
-* aceleași modele (cel cu PyramidNet și cel preantrenat cu ResNet), adaptate doar ca set de date, au fost utilizate și pentru CIFAR100, pentru a depăși 75% acuratețe; pentru a dovedi rularea modelului pre-antrenat și pe setul de date CIFAR100 și a-l compara cu celălalt model, menționez aici câteva idei pornind de la primele 2 valori ale acurateții la validare obținute: 20.31% (mai puțin cu ~5% decât prima valoare pentru modelul cu PyramidNet) și 25.78% (se observă deja un pas mai mare de creștere, pasul de creștere a fost de aprox. 1% de-a lungul primelor epoci pentru modelul cu PyramidNet)
+* aceleași modele (cel cu PyramidNet și cel preantrenat cu ResNet), adaptate doar ca set de date, au fost utilizate și pentru CIFAR100, pentru a depăși 75% acuratețe; pentru a dovedi rularea modelului pre-antrenat și pe setul de date CIFAR100 și a-l compara cu celălalt model, menționez aici câteva idei pornind de la primele 2 valori ale acurateții la validare obținute: 20.31% (mai puțin cu ~5% decât prima valoare pentru modelul cu PyramidNet) și 25.78% (se observă deja un pas mai mare de creștere, pasul de creștere a fost de aprox. 1% per epocă de-a lungul primelor 30-40 epoci pentru modelul cu PyramidNet)
 * *Observație CIFAR100: acuratețea se îmbunătățește mai rapid în cazul modelului preantrenat decât pentru modelul PyramidNet*
 
 #### Fișiere-dovadă a rulărilor ####
