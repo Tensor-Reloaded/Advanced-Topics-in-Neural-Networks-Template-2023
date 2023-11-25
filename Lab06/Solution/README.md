@@ -16,7 +16,7 @@
 * link wandb CIFAR10 model PyramidNet:
 * link wandb CIFAR10 model ResNet preantrenat:
 * link wandb CIFAR100 model PyramidNet:
-* link wandb CIFAR100 model ResNet preantrenat:
+* link wandb CIFAR100 model ResNet preantrenat: în curs de rulare
 * document LATEX în Explanation.pdf
 * plot acuratețe CIFAR10:
 * plot acuratețe CIFAR100: în curs de rulare; *Observație: acuratețea se îmbunătățește mai rapid pentru modelul PyramidNet*
