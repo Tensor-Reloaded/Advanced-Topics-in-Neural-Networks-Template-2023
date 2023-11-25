@@ -36,7 +36,7 @@ This project involved implementing a custom ResNet34 architecture suitable for c
 
 ### handmade_conv.py
 - **Purpose**: Implements a custom convolutional layer from scratch.
-- **Functionalities**: Demonstrates the mechanics of a convolutional layer, provides testing and comparison with PyTorch’s built-in layers.
+- **Functionalities**: Demonstrates the mechanics of a convolutional layer, provides testing and comparison with PyTorch’s built-in layers and produces the same results to within a small tolerance.
 
 ### trace_and_script.py
 - **Purpose**: Demonstrates the use of PyTorch JIT compilation for model optimization.
