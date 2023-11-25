@@ -29,6 +29,8 @@ def initialize_resnet(model_name, num_classes, use_pretrained=True, feature_extr
     # Initialize custom model with the correct number of classes
     if model_name == 'ResNet34':
         custom_model = ResNet34(num_classes=num_classes)
+    elif model_name == 'ResNet18':
+        custom_model = ResNet18(num_classes=num_classes)
     else:
         raise ValueError(f"Unsupported model: {model_name}")
 
