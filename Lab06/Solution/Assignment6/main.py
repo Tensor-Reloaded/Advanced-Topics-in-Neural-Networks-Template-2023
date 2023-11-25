@@ -12,7 +12,7 @@ from Assignment6.runner import Runner
 from Assignment6.utils import count_correct_predictions
 
 if __name__ == "__main__":
-    # utils.draw_double_plot([0.9446, 0.9713], 5, 2)
+    # utils.draw_double_plot()
     inp = torch.randn(1, 3, 10, 12)  # Input image
     # kernel of size 4x5, with 3 input channels and 2 output channels
     w = torch.randn(2, 3, 4, 5)  # Conv weights

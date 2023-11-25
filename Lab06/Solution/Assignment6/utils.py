@@ -116,14 +116,19 @@ def turn_to_zero(input: Tensor):
     input[:] = 0
 
 
-def draw_double_plot(acc2, epochs1, epochs2):
+def draw_double_plot():
     acc1 = []
-    with open('acc.txt', 'r') as file:
+    with open('acc_100.txt', 'r') as file:
         for line in file:
             acc1.append(float(line.strip()))
 
-    x_axis = list(range(1, epochs1 + 1))
-    x_axis_1 = list(range(1, epochs2 + 1))
+    acc2 = []
+    with open('acc_100_p.txt', 'r') as file:
+        for line in file:
+            acc2.append(float(line.strip()))
+
+    x_axis = list(range(1, len(acc1) + 1))
+    x_axis_1 = list(range(1, len(acc2) + 1))
     plt.plot(x_axis, acc1)
     plt.plot(x_axis_1, acc2)
     plt.legend(['Non-pretrained accuracy', 'Pretrained accuracy'
