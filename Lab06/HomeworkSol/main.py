@@ -3,10 +3,10 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.optim.lr_scheduler as lr_scheduler
 import wandb
-#from config import config
-#from data_utils import prepare_data_loaders
-#from model_utils import initialize_resnet
-#from train_utils import train_one_epoch, validate, test
+from config import config
+from data_utils import prepare_data_loaders
+from model_utils import initialize_resnet
+from train_utils import train_one_epoch, validate, test
 
 
 def main():
