@@ -11,7 +11,9 @@
    * sub 10 epoci de antrenare (2 pentru a depăși 97% acuratețe)
    * batch_size de 64
 * aceleași modele (cel cu PyramidNet și cel preantrenat cu ResNet), adaptate doar ca set de date, au fost utilizate și pentru CIFAR100, pentru a depăși 75% acuratețe; pentru a dovedi rularea modelului pre-antrenat și pe setul de date CIFAR100 și a-l compara cu celălalt model, menționez aici câteva idei pornind de la primele 2 valori ale acurateții la validare obținute: 20.31% (mai puțin cu ~5% decât prima valoare pentru modelul cu PyramidNet) și 25.78% (se observă deja un pas mai mare de creștere, pasul de creștere a fost de aprox. 1% per epocă de-a lungul primelor 30-40 epoci pentru modelul cu PyramidNet)
-* *Observație CIFAR100: acuratețea se îmbunătățește mai rapid în cazul modelului preantrenat decât pentru modelul PyramidNet*
+* *Observație CIFAR100: acuratețea se îmbunătățește mai rapid (ca număr de epoci) în cazul modelului preantrenat decât pentru modelul PyramidNet*
+
+##### Later update: La mărirea ratei de învățare pentru modelul PyramidNet pentru CIFAR100, am obținut peste 75% acuratețe în doar 11 epoci în loc de 78 (și acesta este modelul pe care îl includ în plot), ceea ce face ca performanța acestuia să întreacă modelul preantrenat cu parametrii de finetuning setați.
 
 #### Fișiere-dovadă a rulărilor ####
 * link wandb CIFAR10 model own_cnn: https://api.wandb.ai/links/me_myself_and_i/z2o7xbt5
@@ -20,11 +22,11 @@
 * link wandb CIFAR100 model PyramidNet: https://api.wandb.ai/links/me_myself_and_i/qbjfrr7i
 * document LATEX în Explanation.pdf
 * plot acuratețe CIFAR10: plot_CIFAR10.png
-* plot acuratețe CIFAR100: nu era specificat în cerințe explicit și plot pentru CIFAR100, dar este în curs de rulare (am tot așteptat să se termine, durează peste 10h modelul pre-antrenat pentru 75% acuratețe -- dar am realizat mai sus o scurtă comparație pentru acuratețile atinse între timp, dat fiind că în assignment nu se specifica un prag și pentru CIFAR100 la modelul preantrenat -- și nu am vrut să mai întârzii pull-request-ul)
+* plot acuratețe CIFAR100: nu era specificat în cerințe explicit și plot pentru CIFAR100, dar este în curs de rulare (durează peste 10h modelul pre-antrenat pentru 75% acuratețe pe hardware-ul meu -- dar am realizat mai sus o scurtă comparație pentru acuratețile atinse între timp, dat fiind că în assignment nu se specifica un prag și pentru CIFAR100 la modelul preantrenat)
 * checkpoint inferență CIFAR10 model own_cnn: checkpoint_simpler (~40-45 epoci pentru pragul de 97%)
 * checkpoint inferență CIFAR10 model PyramidNet: checkpoint_10_5 (ultimul număr reprezintă numărul necesar de epoci în care s-a atins pragul de acuratețe)
 * checkpoint inferență CIFAR10 model ResNet preantrenat: checkpoint_10_2_p (>100MB; pot trimite ulterior prin link WeTransfer dacă îmi este solicitat)
-* checkpoint inferență CIFAR100 model PyramidNet: checkpoint_100_78
+* checkpoint inferență CIFAR100 model PyramidNet: checkpoint_100_78 / checkpoint_100_11
 * checkpoint inferență CIFAR100 model ResNet preantrenat: (>100MB; pot trimite ulterior prin link WeTransfer dacă îmi este solicitat)
 
 *Notă: pentru rularea inferenței trebuie ca checkpoint-ul să fie plasat în directorul Assignment6 (ar trebui să folosesc WeTransfer pentru checkpoint-urile CIFAR100, deci ele nu ar fi deja acolo)*
