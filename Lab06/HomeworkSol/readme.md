@@ -9,6 +9,42 @@ This project involved implementing a custom ResNet34 architecture suitable for c
 - The model was adapted for CIFAR datasets by adjusting the final fully connected layer to match the number of target classes.
 - Feature extraction and fine-tuning strategies were implemented to enhance learning from the CIFAR datasets.
 
+## Script Summaries
+### main.py
+- **Purpose**: Core training script for the project.
+- **Functionalities**: Initializes and configures the model, data loaders, and training parameters. Manages the training loop, saves the best model, logs progress, and tests the final model.
+
+### model_utils.py
+- **Purpose**: Defines the custom ResNet model and initialization functions.
+- **Functionalities**: Implements the ResNet34 and BasicBlock classes and provides functions for model initialization with options for pretrained weights and feature extraction.
+
+### data_utils.py
+- **Purpose**: Manages data loading and preprocessing.
+- **Functionalities**: Implements image augmentation, loads and preprocesses CIFAR datasets, and handles data loaders.
+
+### train_utils.py
+- **Purpose**: Contains utility functions for training and validation.
+- **Functionalities**: Manages training, validation, and testing phases, including forward pass, loss computation, and optimization.
+
+### config.py
+- **Purpose**: Central configuration file for the project.
+- **Functionalities**: Holds configurable parameters for easy modification of training settings.
+
+### inference.py
+- **Purpose**: Script for model inference and validation accuracy calculation.
+- **Functionalities**: Loads the best saved model and runs inference on the validation dataset to print accuracy.
+
+### handmade_conv.py
+- **Purpose**: Implements a custom convolutional layer from scratch.
+- **Functionalities**: Demonstrates the mechanics of a convolutional layer, provides testing and comparison with PyTorch’s built-in layers.
+
+### trace_and_script.py
+- **Purpose**: Demonstrates the use of PyTorch JIT compilation for model optimization.
+- **Functionalities**:
+  - Measures the average inference time of the base, traced, and scripted models.
+  - Utilizes `torch.jit.trace` and `torch.jit.script` to create optimized versions of the ResNet34 model.
+  - Provides a clear comparison of the performance improvement from JIT compilation.
+
 ## Results
 The custom ResNet34 model achieved 94.1% validation accuracy on the CIFAR-10 dataset, with promising results on CIFAR-100 as well. The evolution of validation accuracy is shown below:
 
@@ -77,13 +113,12 @@ The custom ResNet34 model achieved 94.1% validation accuracy on the CIFAR-10 dat
 | 59    | 0.0849     | 97.06         | 0.2093   | 94.14       |
 | 60    | 0.0859     | 97.01         | 0.2145   | 94.10       |
 
-Model weights link (also included pretrained weights for transfer learning): https://drive.google.com/drive/folders/1nJTLvwz8noIO7K9NBT2muGiDwjBR2ESf (ran with CUDA)
+## Model Weights
+Model weights, including pretrained weights for transfer learning, can be found [here](https://drive.google.com/drive/folders/1nJTLvwz8noIO7K9NBT2muGiDwjBR2ESf) (ran with CUDA).
 
-W&B runs links:
-
-https://wandb.ai/marius-workspace/cifar10_classification/runs/f3ozgmjj?workspace=user-mariusmarin
-
-https://wandb.ai/marius-workspace/deep_learning_project?workspace=user-mariusmarin
+## W&B Runs Links
+- [CIFAR-10 Classification Run](https://wandb.ai/marius-workspace/cifar10_classification/runs/f3ozgmjj?workspace=user-mariusmarin)
+- [Deep Learning Project Workspace](https://wandb.ai/marius-workspace/deep_learning_project?workspace=user-mariusmarin)
 
 ## Runtime Performance
 The table below summarizes the runtime performance in terms of average inference time for the base, traced, and scripted models:
@@ -97,8 +132,21 @@ The table below summarizes the runtime performance in terms of average inference
 The traced and scripted models, processed via PyTorch's JIT compiler, showed improved inference times compared to the base model, indicating the effectiveness of model optimization techniques.
 
 
-## Expected Points
-Based on the project criteria and the results achieved, the expected number of points is [9 out of 15], considering the model's performance, the optimization techniques applied, and the comprehensive documentation provided.
+## Expected Points breakdown
+Based on the project criteria and the results achieved, the expected number of points is [9.5 out of 16], considering the model's performance, the optimization techniques applied, and the comprehensive documentation provided.
+
+
+| Task Description                                             | Points Earned | Maximum Points |
+|--------------------------------------------------------------|---------------|----------------|
+| Custom Conv2D Layer implementation and validation            | 4             | 4              |
+| Model compilation, tracing, and scripting, check runtime     | 1             | 1              |
+| 94% validation accuracy on CIFAR-10 without a pretrained model| 2             | 2              |
+| 95.5% validation accuracy on CIFAR-10 without a pretrained model| 0           | 2              |
+| Transfer learning on CIFAR-10 to achieve 97% accuracy        | 1             | 2              |
+| 97% validation accuracy on CIFAR-10 without a pretrained model| 0            | 2              |
+| 75% validation accuracy on CIFAR-100 without a pretrained model| 0.5-1       | 2              |
+| Testing a pretrained model on CIFAR-100 and comparing results| 1             | 1              |
+| **Total**                                                    | **9.5**        | **16**         |
 
 ## Further Work
 - Explore additional data augmentation techniques (such as CutMix and MixUp) for CIFAR-100 to improve model accuracy.
