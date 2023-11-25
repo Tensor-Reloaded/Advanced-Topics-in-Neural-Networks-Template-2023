@@ -9,6 +9,5 @@ config = {
     'feature_extract': False,  # Feature extraction or fine-tuning
     'dataset_root': './data',
     'num_workers': 2,
-    # Add other configurations as needed
 }
 

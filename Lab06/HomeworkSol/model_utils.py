@@ -26,11 +26,13 @@ def initialize_resnet(model_name, num_classes, use_pretrained=True, feature_extr
     Returns:
         A PyTorch model
     """
-
+    # Initialize custom model with the correct number of classes
     if model_name == 'ResNet34':
-        custom_model = ResNet34()
+        custom_model = ResNet34(num_classes=num_classes)
     else:
         raise ValueError(f"Unsupported model: {model_name}")
+
+    # print("Initializing model with num_classes:", num_classes)
 
     if use_pretrained:
         # Load torchvision model with pretrained weights
@@ -38,10 +40,6 @@ def initialize_resnet(model_name, num_classes, use_pretrained=True, feature_extr
 
         # Transfer weights from torchvision model to your custom model
         transfer_weights(torchvision_model, custom_model)
-
-        # Replace the final fully connected layer for your number of classes
-        num_ftrs = custom_model.linear.in_features
-        custom_model.linear = nn.Linear(num_ftrs, num_classes)
 
         if feature_extract:
             # Freeze all layers in the model except the final layer
@@ -51,6 +49,7 @@ def initialize_resnet(model_name, num_classes, use_pretrained=True, feature_extr
             for param in custom_model.linear.parameters():
                 param.requires_grad = True
 
+    # print(custom_model)  # Print the model to verify the final layer's output features
     return custom_model
 
 
@@ -112,9 +111,10 @@ class ResNet(nn.Module):
         return out
 
 
-def ResNet18():
-    return ResNet(BasicBlock, [2, 2, 2, 2])
+def ResNet18(num_classes=10):
+    return ResNet(BasicBlock, [2, 2, 2, 2], num_classes=num_classes)
 
 
-def ResNet34():
-    return ResNet(BasicBlock, [3, 4, 6, 3])
+def ResNet34(num_classes=10):
+    return ResNet(BasicBlock, [3, 4, 6, 3], num_classes=num_classes)
+

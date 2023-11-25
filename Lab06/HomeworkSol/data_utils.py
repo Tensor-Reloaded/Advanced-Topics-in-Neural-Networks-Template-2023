@@ -8,7 +8,6 @@ import torchvision.transforms.functional as TF
 from PIL import Image
 
 
-
 class AdvancedAugmentations:
     def __init__(self):
         self.color_jitter = transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1)
