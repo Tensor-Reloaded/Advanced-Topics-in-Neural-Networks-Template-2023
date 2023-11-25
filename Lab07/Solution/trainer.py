@@ -65,16 +65,17 @@ def val(model, val_loader, criterion, device) -> tuple[float, float]:
 
     for data, labels in val_loader:
         data = data.to(device, non_blocking=True)
+        labels = labels.to(device, non_blocking=True)
 
         with torch.cuda.amp.autocast():
             output = model(data)
+            loss = criterion(output, labels)
 
-        output = output.softmax(dim=1).cpu().squeeze()
+        output = output.softmax(dim=1).detach().cpu().squeeze()
+        labels = labels.cpu().squeeze()
 
-        loss = criterion(output, labels)
         total_loss += loss.item()
 
-        labels = labels.squeeze()
         all_outputs.append(output)
         all_labels.append(labels)
 
