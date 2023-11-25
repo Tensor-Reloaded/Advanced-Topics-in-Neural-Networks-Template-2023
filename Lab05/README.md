@@ -4,7 +4,13 @@
 Lab Notebook: [Augmentations.ipynb](./Augmentations.ipynb)
 
 ***
-Lab Assignment: [Assignment.pdf](./Assignment.pdf) (Deadline: PR by End-of-Day Monday, 06.11.2023).
+Lab Assignment: [Assignment.pdf](./Assignment.pdf) (Deadline: PR by End-of-Day Monday, 13.11.2023).
+
+***
+For self-study:
+ * SGD implementation: https://pytorch.org/docs/stable/_modules/torch/optim/sgd.html#SGD
+ * Check the references (and past references if not done yet)
+ * Adam paper: https://arxiv.org/abs/1412.6980
 
 ***
 References:
@@ -23,3 +29,8 @@ References:
    - CIFAR-10 training example: https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html (you must not use convolutions in your homework!)
  - TorchVision transforms getting started: https://pytorch.org/vision/main/auto_examples/transforms/plot_transforms_getting_started.html
  - TorchVision examples: https://pytorch.org/vision/stable/auto_examples/transforms/plot_transforms_illustrations.html#sphx-glr-auto-examples-transforms-plot-transforms-illustrations-py
+ - Optimizers:
+   - Optimizers, Learning Rate Schedulers \& other advanced techniques: https://pytorch.org/docs/stable/optim.html
+   - SAM implementation: https://github.com/davda54/sam
+ - Tensorboard: https://pytorch.org/docs/stable/tensorboard.html
+ - Weights and Biases: https://docs.wandb.ai/guides/integrations/pytorch
