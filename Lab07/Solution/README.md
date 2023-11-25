@@ -13,7 +13,7 @@ Summary
 
 ***
 Validation accuracy evolution grafic.
-![Multiple configurations](./multiple_configurations.png "Multiple configurations").
+![Validation accuracy](./validation_accuracy.png "Multiple configurations").
 
 
 *** 
