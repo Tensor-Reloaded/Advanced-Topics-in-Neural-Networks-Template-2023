@@ -10,7 +10,7 @@ This project involved implementing a custom ResNet34 architecture suitable for c
 - Feature extraction and fine-tuning strategies were implemented to enhance learning from the CIFAR datasets.
 
 ## Results
-The custom ResNet34 model achieved high 94.1% validation accuracy on the CIFAR-10 dataset, with promising results on CIFAR-100 as well. The exact figures are documented separately in the training logs.
+The custom ResNet34 model achieved 94.1% validation accuracy on the CIFAR-10 dataset, with promising results on CIFAR-100 as well. The evolution of validation accuracy is shown below:
 
 ![CIFAR-10 validation accuracy metric](https://github.com/mariusmarin98/Advanced-Topics-in-Neural-Networks-Template-2023/blob/main/Lab06/HomeworkSol/cifar10-validation-accuracy.png)
 
@@ -77,7 +77,7 @@ The custom ResNet34 model achieved high 94.1% validation accuracy on the CIFAR-1
 | 59    | 0.0849     | 97.06         | 0.2093   | 94.14       |
 | 60    | 0.0859     | 97.01         | 0.2145   | 94.10       |
 
-Model weights link: https://drive.google.com/drive/folders/1nJTLvwz8noIO7K9NBT2muGiDwjBR2ESf (ran with CUDA)
+Model weights link (also included pretrained weights for transfer learning): https://drive.google.com/drive/folders/1nJTLvwz8noIO7K9NBT2muGiDwjBR2ESf (ran with CUDA)
 
 W&B runs links:
 
@@ -95,6 +95,7 @@ The table below summarizes the runtime performance in terms of average inference
 | Scripted Model| 0.026931                         |
 
 The traced and scripted models, processed via PyTorch's JIT compiler, showed improved inference times compared to the base model, indicating the effectiveness of model optimization techniques.
+
 
 ## Expected Points
 Based on the project criteria and the results achieved, the expected number of points is [9 out of 15], considering the model's performance, the optimization techniques applied, and the comprehensive documentation provided.
