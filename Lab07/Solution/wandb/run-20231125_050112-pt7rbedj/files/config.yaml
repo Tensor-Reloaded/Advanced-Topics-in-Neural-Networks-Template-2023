@@ -1,0 +1,92 @@
+wandb_version: 1
+
+name:
+  desc: null
+  value: ConvMixer
+optimizer_name:
+  desc: null
+  value: AdamW
+batch_size:
+  desc: null
+  value: 512
+scale:
+  desc: null
+  value: 1.0
+reprob:
+  desc: null
+  value: 0.2
+ra_m:
+  desc: null
+  value: 12
+ra_n:
+  desc: null
+  value: 2
+jitter:
+  desc: null
+  value: 0.2
+hdim:
+  desc: null
+  value: 256
+depth:
+  desc: null
+  value: 8
+psize:
+  desc: null
+  value: 2
+conv_ks:
+  desc: null
+  value: 5
+wd:
+  desc: null
+  value: 0.005
+clip_norm:
+  desc: null
+  value: false
+epochs:
+  desc: null
+  value: 150
+lr_max:
+  desc: null
+  value: 0.05
+workers:
+  desc: null
+  value: 2
+_wandb:
+  desc: null
+  value:
+    python_version: 3.11.1
+    cli_version: 0.15.12
+    framework: huggingface
+    huggingface_version: 4.35.0
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1700881272.590872
+    t:
+      1:
+      - 1
+      - 2
+      - 3
+      - 11
+      - 41
+      - 49
+      - 55
+      - 105
+      2:
+      - 1
+      - 2
+      - 3
+      - 11
+      - 41
+      - 49
+      - 55
+      - 105
+      3:
+      - 16
+      - 23
+      4: 3.11.1
+      5: 0.15.12
+      6: 4.35.0
+      8:
+      - 3
+      - 5
+      13: windows-amd64

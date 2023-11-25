@@ -1,0 +1,59 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{Homework 7 ConvMixer network}
+\author{Mihalache Radu-Stefan}
+
+\begin{document}
+\maketitle
+
+\section{Model structure}
+
+I chose to use a ConvMixer neural network because of its good resuls and the small number of trainable parameters. The ConvMixer makes use of patch embeding, batch normalisation, skip conections (residuals) and regular 2d convolutional layers.
+
+The structure of the model is the following:
+
+\begin{enumerate}
+\item Conv2d; kernel\_size=2; stride=2; This takes care of the patch encoding,
+\item GELU (variation of RELU)
+\item Batch Normalization (normalizes the distribution)
+\item A list of the following layers
+\item 1. Conv2d layer
+\item 2. GELU
+\item 3. Batch Normalization
+\item A skip connection between 1 and 3
+\item 4. Conv2d layer
+\item 5. GELU
+\item 6. Batch Normalization
+\item After a list of the above, repeated a certen depth
+\item AdaptiveAvgPool2d (An adaptation of averege pooling that tries to automaticaly find the stride and kernel size)
+\item A fully connected layer
+\end{enumerate}
+
+
+\section{Forward pass}
+
+The flow of the input signal goes from one Conv layer to a GELU activation function, batch normalization and some skip connections. The exact flow follows the list above.
+A Conv2d layer applies a filter over the matrix. Batch normlization normalizez the distribution of values. Average pooling does the average for each section of a matrix given a kernal size. AdaptiveAvgPool2d just automaticaly find the best kernel size and stride. Finaly, the data is feed through a fully connected neural network.
+
+
+\section{Backword pass}
+Gradients are computed for the fully connected layer and then propagated backwords towards the convolutional layers. Each convolutional layer computes the gradients just for the neurons in the applied filter. Given that ConvMixer makes use of skip connections, gradients are not lost given that the neural network is deep.
+
+
+\section{Layer contributions}
+The biggest contributions to the results come from the first conv layer that does patch encoding, the layers with skip connections that make it possible to efficiantly train a deep neural network and the average pooling that reduces the dimensions of the data to be feed to the fully connected layer.
+
+\end{document}

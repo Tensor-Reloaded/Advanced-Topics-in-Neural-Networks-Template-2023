@@ -1,0 +1,1 @@
+{"Optimizer Name": "AdamW", "Batch size": 512, "_timestamp": 1700881085.0467305, "_runtime": 5370.9479904174805, "_step": 150, "Train/Accuracy": 0.9785, "Epoch Train/Loss": 0.0632, "Val/Accuracy": 0.9497, "Val/Loss": 0.1901, "Model/Norm": 4211.8525390625}
