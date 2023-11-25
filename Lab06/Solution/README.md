@@ -11,7 +11,7 @@
    * sub 10 epoci de antrenare (2 pentru a depăși 97% acuratețe)
    * batch_size de 64
 * aceleași modele (cel cu PyramidNet și cel preantrenat cu ResNet), adaptate doar ca set de date, au fost utilizate și pentru CIFAR100, pentru a depăși 75% acuratețe; pentru a dovedi rularea modelului pre-antrenat și pe setul de date CIFAR100 și a-l compara cu celălalt model, menționez aici câteva idei pornind de la primele 2 valori ale acurateții la validare obținute: 20.31% (mai puțin cu ~5% decât prima valoare pentru modelul cu PyramidNet) și 25.78% (se observă deja un pas mai mare de creștere, pasul de creștere a fost de aprox. 1% de-a lungul primelor epoci pentru modelul cu PyramidNet)
-* Observație CIFAR100: acuratețea se îmbunătățește mai rapid în cazul modelului preantrenat decât pentru modelul PyramidNet*
+* Observație CIFAR100: acuratețea se îmbunătățește mai rapid în cazul modelului preantrenat decât pentru modelul PyramidNet
 
 #### Fișiere-dovadă a rulărilor ####
 * link wandb CIFAR10 model own_cnn: https://api.wandb.ai/links/me_myself_and_i/z2o7xbt5
