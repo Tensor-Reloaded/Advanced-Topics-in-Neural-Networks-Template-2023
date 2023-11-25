@@ -45,7 +45,7 @@ This project involved implementing a custom ResNet34 architecture suitable for c
   - Utilizes `torch.jit.trace` and `torch.jit.script` to create optimized versions of the ResNet34 model.
   - Provides a clear comparison of the performance improvement from JIT compilation.
 
-## Results
+## CIFAR-10 Results
 The custom ResNet34 model achieved 94.1% validation accuracy on the CIFAR-10 dataset, with promising results on CIFAR-100 as well. The evolution of validation accuracy is shown below:
 
 ![CIFAR-10 validation accuracy metric](https://github.com/mariusmarin98/Advanced-Topics-in-Neural-Networks-Template-2023/blob/main/Lab06/HomeworkSol/cifar10-validation-accuracy.png)
@@ -113,12 +113,35 @@ The custom ResNet34 model achieved 94.1% validation accuracy on the CIFAR-10 dat
 | 59    | 0.0849     | 97.06         | 0.2093   | 94.14       |
 | 60    | 0.0859     | 97.01         | 0.2145   | 94.10       |
 
+- [CIFAR-10 Classification Run](https://wandb.ai/marius-workspace/cifar10_classification/runs/f3ozgmjj?workspace=user-mariusmarin)
+
+## CIFAR-100 Training Results
+
+We conducted training on the CIFAR-100 dataset with two separate approaches: without using pretrained weights and with pretrained weights. The aim was to observe the impact of transfer learning on the validation accuracy.
+
+### Without Pretrained Weights
+- **Best Validation Accuracy**: 64.68%
+- **Test Accuracy**: 71.5%
+
+This run demonstrated a gradual increase in validation accuracy, reaching a high of 64.68% by the 60th epoch. Test accuracy surpassed the validation accuracy, indicating a robust model performance.
+
+### With Pretrained Weights
+- **Best Validation Accuracy**: 65.02%
+- **Test Accuracy**: 71.44%
+
+Leveraging pretrained weights, the model achieved a slightly higher peak validation accuracy of 65.02%. The test accuracy was nearly identical to the non-pretrained model, suggesting that pretrained weights offered a marginal improvement for this dataset.
+
+The results underscore the effectiveness of transfer learning, even if the improvement is modest in this case. It highlights the potential for pretrained models to serve as a strong starting point, especially when computational resources or labeled data are limited.
+
+The full run details and epoch-wise performance can be viewed on the Weights & Biases platform:
+- [Without Pretrained Weights Run](https://wandb.ai/marius-workspace/deep_learning_project/runs/yd3zy8u6)
+- [With Pretrained Weights Run](https://wandb.ai/marius-workspace/deep_learning_project/runs/elqs2kgz)
+
+Given the complexity of the CIFAR-100 dataset, achieving over 75% validation accuracy without a pretrained model was not accomplished within the 60 epochs trained. Further tuning of hyperparameters and extended training might be required to reach the bonus task goal.
+
 ## Model Weights
 Model weights, including pretrained weights for transfer learning, can be found [here](https://drive.google.com/drive/folders/1nJTLvwz8noIO7K9NBT2muGiDwjBR2ESf) (ran with CUDA).
 
-## W&B Runs Links
-- [CIFAR-10 Classification Run](https://wandb.ai/marius-workspace/cifar10_classification/runs/f3ozgmjj?workspace=user-mariusmarin)
-- [Deep Learning Project Workspace](https://wandb.ai/marius-workspace/deep_learning_project?workspace=user-mariusmarin)
 
 ## Runtime Performance
 The table below summarizes the runtime performance in terms of average inference time for the base, traced, and scripted models:
