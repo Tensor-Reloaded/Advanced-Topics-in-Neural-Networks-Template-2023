@@ -1,6 +1,6 @@
 ## Informații relevante despre temă ##
 
-* am rezolvat atât partea obligatorie, cât și toate bonusurile (codul se găsește în folderul Assignment6) --> punctaj estimat: 9 temă (mie îmi ies 9 adunate la temă, nu 10, pe fișierul Assignment de pe Git) + 6 puncte bonus
+* am rezolvat atât partea obligatorie, cât și toate bonusurile (codul se găsește în folderul Assignment6) --> punctaj estimat: 9 temă (mie îmi ies 9 adunate la temă, nu 10, pe fișierul Assignment de pe Git) + 7 puncte bonus
 * am realizat implementarea de mână a pasului de forawrd în rețele convoluționale (plus am obținut eroare foarte mică la testarea codului propus): fișierul *Handmade_Conv2d.py* (plus testarea în *main.py*)
 * Runtime performance base model: 50 epoci în ~563 secunde
 * am realizat partea de tracing, scripting și compiling pentru modelul propus de mine în *own_cnn.py*; comenzile pentru scripting și tracing se regăsesc în cadrul aceluiași fișier *own_cnn.py* în care este declarat modelul, înlocuindu-l pe acesta pentru etapa de forward a antrenării (vezi parametru suplimentar *model_forward* dat apoi la apelul *runner-ului* în cadrul aceluiași fișier); pentru partea de compiling am utilizat Google Colab și notebook-ul se regăsește aici: https://colab.research.google.com/drive/1z22tLsxueB3nTKrQoFnALBFZUbSWqHrh?usp=sharing
