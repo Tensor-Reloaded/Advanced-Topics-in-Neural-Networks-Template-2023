@@ -27,5 +27,5 @@
 * checkpoint inferență CIFAR100 model PyramidNet: checkpoint_100_78
 * checkpoint inferență CIFAR100 model ResNet preantrenat: (>100MB; pot trimite ulterior prin link WeTransfer dacă îmi este solicitat)
 
-*Notă: pentru rularea inferenței trebuie ca checkpoint-ul să fie plasat în directorul Assignment6 (a trebuit să folosesc WeTransfer pentru checkpoint-urile CIFAR100)*
+*Notă: pentru rularea inferenței trebuie ca checkpoint-ul să fie plasat în directorul Assignment6 (ar trebui să folosesc WeTransfer pentru checkpoint-urile CIFAR100, deci ele nu ar fi deja acolo)
 
