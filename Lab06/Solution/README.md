@@ -20,7 +20,7 @@
 * link wandb CIFAR100 model PyramidNet: https://api.wandb.ai/links/me_myself_and_i/qbjfrr7i
 * document LATEX în Explanation.pdf
 * plot acuratețe CIFAR10: plot_CIFAR10.png
-* plot acuratețe CIFAR100: nu era specificat în cerințe explicit și plot pentru CIFAR100, dar este în curs de rulare (am tot așteptat să se termine, dar durează peste 10h modelul pre-antrenat din câte îmi aduc aminte de la prima rulare și nu am vrut să mai întârzii pull-request-ul)
+* plot acuratețe CIFAR100: nu era specificat în cerințe explicit și plot pentru CIFAR100, dar este în curs de rulare (am tot așteptat să se termine, dar durează peste 10h modelul pre-antrenat pentru 75% acuratețe -- dar am realizat mai sus o scurtă comparație pentru acuratețile atinse între timp, dat fiind că în assignment nu se specifica un prag și pentru CIFAR100 la modelul preantrenat -- și nu am vrut să mai întârzii pull-request-ul)
 * checkpoint inferență CIFAR10 model own_cnn: checkpoint_simpler (~40-45 epoci pentru pragul de 97%)
 * checkpoint inferență CIFAR10 model PyramidNet: checkpoint_10_5 (ultimul număr reprezintă numărul necesar de epoci în care s-a atins pragul de acuratețe)
 * checkpoint inferență CIFAR10 model ResNet preantrenat: checkpoint_10_2_p (>100MB; pot trimite ulterior prin link WeTransfer dacă îmi este solicitat)
