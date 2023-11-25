@@ -123,7 +123,7 @@ We conducted training on the CIFAR-100 dataset with two separate approaches: wit
 - **Best Validation Accuracy**: 64.68%
 - **Test Accuracy**: 71.5%
 
-This run demonstrated a gradual increase in validation accuracy, reaching a high of 64.68% by the 60th epoch. Test accuracy surpassed the validation accuracy, indicating a robust model performance.
+This run demonstrated a gradual increase in validation accuracy, reaching 64.68% by the 60th epoch. Test accuracy surpassed the validation accuracy, indicating a robust model performance.
 
 ### With Pretrained Weights
 - **Best Validation Accuracy**: 65.02%
@@ -135,7 +135,7 @@ The results underscore the effectiveness of transfer learning, even if the impro
 
 The full run details and epoch-wise performance can be viewed on the Weights & Biases platform:
 - [Without Pretrained Weights Run](https://wandb.ai/marius-workspace/deep_learning_project/runs/yd3zy8u6)
-- [With Pretrained Weights Run](https://wandb.ai/marius-workspace/deep_learning_project/runs/elqs2kgz)
+- [With Pretrained Weights Run](https://wandb.ai/marius-workspace/deep_learning_project/runs/elqs2kgz), [2nd run with saved .pth] (https://wandb.ai/marius-workspace/deep_learning_project/runs/h6e3ezg4)
 
 Given the complexity of the CIFAR-100 dataset, achieving over 75% validation accuracy without a pretrained model was not accomplished within the 60 epochs trained. Further tuning of hyperparameters and extended training might be required to reach the bonus task goal.
 
