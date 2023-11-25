@@ -135,7 +135,7 @@ The results underscore the effectiveness of transfer learning, even if the impro
 
 The full run details and epoch-wise performance can be viewed on the Weights & Biases platform:
 - [Without Pretrained Weights Run](https://wandb.ai/marius-workspace/deep_learning_project/runs/yd3zy8u6)
-- [With Pretrained Weights Run](https://wandb.ai/marius-workspace/deep_learning_project/runs/elqs2kgz), [2nd run with saved .pth] (https://wandb.ai/marius-workspace/deep_learning_project/runs/h6e3ezg4)
+- [With Pretrained Weights Run](https://wandb.ai/marius-workspace/deep_learning_project/runs/elqs2kgz), [2nd run with saved .pth](https://wandb.ai/marius-workspace/deep_learning_project/runs/h6e3ezg4)
 
 Given the complexity of the CIFAR-100 dataset, achieving over 75% validation accuracy without a pretrained model was not accomplished within the 60 epochs trained. Further tuning of hyperparameters and extended training might be required to reach the bonus task goal.
 
