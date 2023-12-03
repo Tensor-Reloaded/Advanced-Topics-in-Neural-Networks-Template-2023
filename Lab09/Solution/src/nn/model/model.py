@@ -26,7 +26,7 @@ class Model(Module):
         self.to(device=self.__device, non_blocking=self.__device == "cuda")
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x.to(device=self.__device, non_blocking=self.__device == "cuda")
+        x = x.to(device=self.__device, non_blocking=self.__device == "cuda")
 
         x = self.pool1(self.activation_function(self.conv1(x)))
         x = self.pool1(self.activation_function(self.conv2(x)))
