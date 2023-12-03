@@ -44,10 +44,10 @@ def get_model_init_strategy(args: argparse.Namespace):
 
 def train_model(device: torch.device) -> nn.Module:
     training_dataset = CustomDataset(
-        train=False, cache=False, data_path=f"{current_path}/../data/datasets"
+        train=False, cache=True, data_path=f"{current_path}/../data/datasets"
     )
     validation_dataset = CustomDataset(
-        train=True, cache=False, data_path=f"{current_path}/../data/datasets"
+        train=True, cache=True, data_path=f"{current_path}/../data/datasets"
     )
     batched_train_dataset = DataLoader(
         dataset=training_dataset,
@@ -77,7 +77,7 @@ def train_model(device: torch.device) -> nn.Module:
     model_trainer.run(
         batched_training_dataset=batched_train_dataset,
         batched_validation_dataset=batched_validation_dataset,
-        epochs=25,
+        epochs=50,
     )
 
     model_trainer.export()
@@ -101,7 +101,7 @@ def test_inference_time(model: nn.Module, device=torch.device("cpu")):
     test_dataset = torch.stack(test_dataset.images)
     test_dataset = TensorDataset(test_dataset)
 
-    batch_size = 100  # TODO: add the other parameters (device, ...)
+    batch_size = 100
 
     t1 = transform_dataset_with_transforms(test_dataset)
     t2 = transform_dataset_with_model(test_dataset, model, batch_size, device)
@@ -130,12 +130,12 @@ def transform_dataset_with_transforms(dataset: TensorDataset):
 def transform_dataset_with_model(
     dataset: TensorDataset, model: nn.Module, batch_size: int, device: torch.device
 ):
-    model.eval()  # TODO: uncomment this
+    model.eval()
     dataloader = DataLoader(
         dataset, batch_size=batch_size, num_workers=2, pin_memory=device == "cuda"
     )
     for images in dataloader:
-        model(x=images[0])  # TODO: uncomment this
+        model(x=images[0])
 
 
 if __name__ == "__main__":
