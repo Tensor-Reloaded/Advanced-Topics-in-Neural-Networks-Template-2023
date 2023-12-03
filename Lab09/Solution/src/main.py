@@ -1,59 +1,126 @@
-import gc
-from functools import wraps
+#!/usr/bin/env python3
+import os
+import argparse
+import typing as t
 from multiprocessing import freeze_support
-from time import time
 
 import torch
 from torch import nn
-from torchvision.datasets import CIFAR10
-from torchvision.transforms import v2, ToTensor
-from torch.utils.data import Dataset, DataLoader, TensorDataset
+from torchvision.transforms import v2
+from torch.utils.data import DataLoader, TensorDataset
+from nn.estimators.image_regression_accuracy_estimator import (
+    ImageRegressionAccuracyEstimator,
+)
+from nn.model.model import Model
+from nn.model.model_trainer import ModelTrainer
+from nn.util.device import get_default_device
+from nn.dataset.custom_dataset import CustomDataset
+from util.util import timed
+
+current_path = os.path.dirname(__file__)
 
 
-def timed(fn: callable):
-    @wraps(fn)
-    def wrap(*args, **kwargs):
-        gc.collect()
-        start = time()
-        fn(*args, **kwargs)
-        end = time()
-        return end - start
+def main():
+    args = parse_arguments()
+    device = get_default_device()
 
-    return wrap
+    init_model_strategy = get_model_init_strategy(args)
+    model = init_model_strategy(device=device)
+    test_inference_time(model=model, device=device)
 
 
-def get_cifar10_images(data_path: str, train: bool):
-    initial_transforms = v2.Compose([ToTensor()])
-    cifar_10_images = CIFAR10(
-        root=data_path, train=train, transform=initial_transforms, download=True
+def parse_arguments() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-w",
+        "--weights",
+        required=False,
+        help="Path to an already existing weights file",
     )
-    return [image for image, label in cifar_10_images]
+    args = parser.parse_args()
+
+    return args
 
 
-class CustomDataset(Dataset):
-    def __init__(
-        self, data_path: str = "./data", train: bool = True, cache: bool = True
-    ):
-        self.images = get_cifar10_images(data_path, train)
-        self.cache = cache
-        self.transforms = v2.Compose(
-            [
-                v2.Resize((28, 28), antialias=True),
-                v2.Grayscale(),
-                v2.functional.hflip,
-                v2.functional.vflip,
-            ]
-        )
-        if cache:
-            self.labels = [self.transforms(x) for x in self.images]
+def get_model_init_strategy(args: argparse.Namespace):
+    if args.weights is None:
+        return train_model
 
-    def __len__(self):
-        return len(self.images)
+    path = f"{current_path}/../{args.weights}"
 
-    def __getitem__(self, i):
-        if self.cache:
-            return self.images[i], self.labels[i]
-        return self.images[i], self.transforms(self.images[i])
+    if not os.path.exists(path):
+        return train_model
+
+    return load_model(path)
+
+
+def train_model(device: torch.device) -> nn.Module:
+    training_dataset = CustomDataset(
+        train=False, cache=False, data_path=f"{current_path}/../data/datasets"
+    )
+    validation_dataset = CustomDataset(
+        train=True, cache=False, data_path=f"{current_path}/../data/datasets"
+    )
+    batched_train_dataset = DataLoader(
+        dataset=training_dataset,
+        batch_size=64,
+        shuffle=True,
+        num_workers=2,
+        pin_memory=device == "cuda",
+    )
+    batched_validation_dataset = DataLoader(
+        dataset=validation_dataset,
+        batch_size=256,
+        shuffle=False,
+        num_workers=2,
+        pin_memory=device == "cuda",
+    )
+
+    model = Model(device=device)
+    model_trainer = ModelTrainer(
+        model=model,
+        loss_function=torch.nn.MSELoss,
+        optimiser=torch.optim.Adam,
+        learning_rate=0.001,
+        accuracy_estimator=ImageRegressionAccuracyEstimator(precision=0.05),
+        device=device,
+        exports_path=f"{current_path}/../data/exports",
+    )
+    model_trainer.run(
+        batched_training_dataset=batched_train_dataset,
+        batched_validation_dataset=batched_validation_dataset,
+        epochs=25,
+    )
+
+    model_trainer.export()
+
+    return Model
+
+
+def load_model(path: str) -> t.Callable[[torch.device], nn.Module]:
+    def load(device: torch.device) -> nn.Module:
+        model = Model(device=device)
+        model.load_state_dict(torch.load(path, map_location=device))
+        return model
+
+    return load
+
+
+def test_inference_time(model: nn.Module, device=torch.device("cpu")):
+    test_dataset = CustomDataset(
+        train=False, cache=False, data_path=f"{current_path}/../data/datasets"
+    )
+    test_dataset = torch.stack(test_dataset.images)
+    test_dataset = TensorDataset(test_dataset)
+
+    batch_size = 100  # TODO: add the other parameters (device, ...)
+
+    t1 = transform_dataset_with_transforms(test_dataset)
+    t2 = transform_dataset_with_model(test_dataset, model, batch_size, device)
+    print(
+        f"Sequential transforming each image took: {t1} on CPU. \n"
+        f"Using a model with batch_size: {batch_size} took {t2} on {device.type}. \n"
+    )
 
 
 @timed
@@ -73,37 +140,14 @@ def transform_dataset_with_transforms(dataset: TensorDataset):
 @timed
 @torch.no_grad()
 def transform_dataset_with_model(
-    dataset: TensorDataset, model: nn.Module, batch_size: int
+    dataset: TensorDataset, model: nn.Module, batch_size: int, device: torch.device
 ):
-    # model.eval()  # TODO: uncomment this
+    model.eval()  # TODO: uncomment this
     dataloader = DataLoader(
-        dataset, batch_size=batch_size
-    )  # TODO: Complete the other parameters
+        dataset, batch_size=batch_size, num_workers=2, pin_memory=device == "cuda"
+    )
     for images in dataloader:
-        # model(images)  # TODO: uncomment this
-        pass
-
-
-
-def test_inference_time(model: nn.Module, device=torch.device("cpu")):
-    test_dataset = CustomDataset(
-        train=False, cache=False, data_path=f"{current_path}/../data/datasets"
-    )
-    test_dataset = torch.stack(test_dataset.images)
-    test_dataset = TensorDataset(test_dataset)
-
-    batch_size = 100  # TODO: add the other parameters (device, ...)
-
-    t1 = transform_dataset_with_transforms(test_dataset)
-    t2 = transform_dataset_with_model(test_dataset, model, batch_size)
-    print(
-        f"Sequential transforming each image took: {t1} on CPU. \n"
-        f"Using a model with batch_size: {batch_size} took {t2} on {device.type}. \n"
-    )
-
-
-def main():
-    test_inference_time(None)
+        model(x=images)  # TODO: uncomment this
 
 
 if __name__ == "__main__":
