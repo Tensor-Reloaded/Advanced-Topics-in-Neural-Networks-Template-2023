@@ -71,7 +71,10 @@ During training, the following losses and accuracies were observed:
 | - | - | - | - | - | - | - | - | - |
 | 1 | Adam | `0.001` | `64` | `25` | `+- 0.05` | `1.85` | `52.51%` | [Ref weights file](./data/exports/1701617034023604121.pt) |
 | 2 | Adam | `0.001` | `64` | `50` | `+- 0.05` | `0.99` | `62.32%` | [Ref weights file](./data/exports/1701638102504962984.pt) |
-| 3 | Adam | `0.001` | `64` | `50` | `+- 0.05` | `0.99` | `62.32%` | [Ref weights file](./data/exports/1701638102504962984.pt) |
+| 3 | Adam | `0.001` | `64` | `42` (early stopped from `50`) | `+- 0.05` | `1.79` | `60.55%` | [Ref weights file](./data/exports/1701646987064690929.pt) |
+| 4 | Adam | `0.001` | `32` | `50` | `+- 0.05` | `1.85` | `62.75%` | [Ref weights file](./data/exports/1701647414871492378.pt) |
+| 5 | Adam | `0.001` | `128` | `50` | `+- 0.05` | `2.19` | `57.25%` | [Ref weights file](./data/exports/1701647228698466988.pt) |
+| 6 | Adam | `0.0005` | `64` | `100` | `+- 0.05` | `2.33` | `63.17%` | [Ref weights file](./data/exports/1701647661056570001.pt) |
 
 \* Precision example: Predicted pixel is of intensity `0.82` and should be of intensity `0.8`. If intensity is `+- 0.05`, then the predicted pixel is considered accurate due to `0.82` being between \[`0.75`, `0.85`\].
 
