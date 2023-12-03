@@ -24,7 +24,7 @@ def main():
     args = parse_arguments()
     device = get_default_device()
 
-    init_model_strategy = get_model_init_strategy(args)
+    init_model_strategy = get_model_init_strategy(args=args)
     model = init_model_strategy(device=device)
     test_inference_time(model=model, device=device)
 
@@ -147,7 +147,7 @@ def transform_dataset_with_model(
         dataset, batch_size=batch_size, num_workers=2, pin_memory=device == "cuda"
     )
     for images in dataloader:
-        model(x=images)  # TODO: uncomment this
+        model(x=images[0])  # TODO: uncomment this
 
 
 if __name__ == "__main__":
