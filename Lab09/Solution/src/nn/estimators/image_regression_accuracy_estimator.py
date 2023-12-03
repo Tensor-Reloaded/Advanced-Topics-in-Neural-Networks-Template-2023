@@ -1,5 +1,5 @@
 import torch
-from nn.util.base_accuracy_estimator import BaseAccuracyEstimator
+from nn.estimators.base_accuracy_estimator import BaseAccuracyEstimator
 
 
 class ImageRegressionAccuracyEstimator(BaseAccuracyEstimator):
