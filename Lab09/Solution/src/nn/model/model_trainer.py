@@ -42,7 +42,10 @@ class ModelTrainer:
         batched_training_dataset: torch_data.DataLoader,
         batched_validation_dataset: torch_data.DataLoader,
         epochs: int,
+        training_patience: int = 5,
     ):
+        training_patience_counter = 0
+        best_validation_loss = None
         epochs_digits = len(str(epochs))
 
         for epoch in range(0, epochs):
@@ -57,6 +60,19 @@ class ModelTrainer:
                 f"Training epoch {epoch + 1:>{epochs_digits}}: training loss = {training_loss:>8.2f}, training accuracy = {training_accuracy * 100:>6.2f}%, validation loss = {validation_loss:>8.2f}, validation accuracy = {validation_accuracy * 100:>6.2f}%",
                 end="\r",
             )
+
+            if best_validation_loss is None or best_validation_loss > validation_loss:
+                best_validation_loss = validation_loss
+                training_patience_counter = 0
+            else:
+                training_patience_counter += 1
+
+                if training_patience_counter > training_patience:
+                    print()
+                    print(
+                        f"Early stopping after {training_patience_counter} epochs with no improvement"
+                    )
+                    break
 
         print()
 
