@@ -82,7 +82,7 @@ def train_model(device: torch.device) -> nn.Module:
 
     model_trainer.export()
 
-    return Model
+    return model
 
 
 def load_model(path: str) -> t.Callable[[torch.device], nn.Module]:
