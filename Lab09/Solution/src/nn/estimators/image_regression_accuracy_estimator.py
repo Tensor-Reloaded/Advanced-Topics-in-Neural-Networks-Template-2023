@@ -18,8 +18,8 @@ class ImageRegressionAccuracyEstimator(BaseAccuracyEstimator):
         lower_bounds = y - self.__precision
         upper_bounds = y + self.__precision
 
-        is_within_lower_bounds = y_hat > lower_bounds
-        is_within_upper_bounds = y_hat < upper_bounds
+        is_within_lower_bounds = y_hat >= lower_bounds
+        is_within_upper_bounds = y_hat <= upper_bounds
 
         accurate_pixels = (is_within_lower_bounds & is_within_upper_bounds).sum().item()
         total_pixels = y.numel()
