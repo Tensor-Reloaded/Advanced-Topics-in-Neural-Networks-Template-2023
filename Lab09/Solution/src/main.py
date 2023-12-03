@@ -15,6 +15,7 @@ from nn.model.model import Model
 from nn.model.model_trainer import ModelTrainer
 from nn.util.device import get_default_device
 from nn.dataset.custom_dataset import CustomDataset
+from util.args import parse_arguments
 from util.util import timed
 
 current_path = os.path.dirname(__file__)
@@ -27,19 +28,6 @@ def main():
     init_model_strategy = get_model_init_strategy(args=args)
     model = init_model_strategy(device=device)
     test_inference_time(model=model, device=device)
-
-
-def parse_arguments() -> argparse.Namespace:
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-w",
-        "--weights",
-        required=False,
-        help="Path to an already existing weights file",
-    )
-    args = parser.parse_args()
-
-    return args
 
 
 def get_model_init_strategy(args: argparse.Namespace):
