@@ -12,10 +12,10 @@ class Model(Module):
 
         self.__device = device
 
-        self.conv1 = Conv2d(3, 32, kernel_size=5)
+        self.conv1 = Conv2d(3, 32, kernel_size=3)
         self.conv2 = Conv2d(32, 64, kernel_size=3)
-        self.pool1 = MaxPool2d(kernel_size=2, stride=2)
-        self.fc1 = Linear(64 * 8 * 8, 512)
+        self.pool1 = MaxPool2d(kernel_size=2, stride=2, padding=0)
+        self.fc1 = Linear(64 * 36, 512)
         self.fc2 = Linear(512, 28 * 28)
 
         init.kaiming_uniform_(self.fc1.weight)
