@@ -103,21 +103,19 @@ class MeteredModelTrainer(ModelTrainer):
         training_loss = 0.0
 
         for training_image in batched_training_dataset:
-            image, label = training_image
-            image = image.to(device=self._device, non_blocking=self._device == "cuda")
-            label = label.to(device=self._device, non_blocking=self._device == "cuda")
+            x, y = training_image
+            x = x.to(device=self._device, non_blocking=self._device == "cuda")
+            y = y.to(device=self._device, non_blocking=self._device == "cuda")
 
             self._optimiser.zero_grad()
-            y_hat = self._model(image)
-            loss = self._loss_function(y_hat, label)
+            y_hat = self._model(x)
+            loss = self._loss_function(y_hat, y)
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(
-                self._model.parameters(), max_norm=1.0
-            )
+            torch.nn.utils.clip_grad_norm_(self._model.parameters(), max_norm=1.0)
             self._optimiser.step()
 
             self.__summary_writer.add_scalar("Training loss/batch", loss, batch)
-            self._training_accuracy_estimator.update(y_hat=y_hat, y=label)
+            self._training_accuracy_estimator.update(y_hat=y_hat, y=y)
             training_loss += loss.item()
             batch += 1
 
@@ -133,15 +131,15 @@ class MeteredModelTrainer(ModelTrainer):
 
         with torch.no_grad():
             for validation_image in batched_validation_dataset:
-                image, label = validation_image
-                image = image.to(device=self._device, non_blocking=self._device == "cuda")
-                label = label.to(device=self._device, non_blocking=self._device == "cuda")
+                x, y = validation_image
+                x = x.to(device=self._device, non_blocking=self._device == "cuda")
+                y = y.to(device=self._device, non_blocking=self._device == "cuda")
 
-                y_hat = self._model(image)
-                loss = self._loss_function(y_hat, label)
+                y_hat = self._model(x)
+                loss = self._loss_function(y_hat, y)
 
                 self.__summary_writer.add_scalar("Validation loss/batch", loss, batch)
-                self._validation_accuracy_estimator.update(y_hat=y_hat, y=label)
+                self._validation_accuracy_estimator.update(y_hat=y_hat, y=y)
                 validation_loss += loss.item()
                 batch += 1
 
