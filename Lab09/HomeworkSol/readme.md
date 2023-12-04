@@ -10,7 +10,7 @@ This homework involved developing a model to transform CIFAR-10 images (3x32x32)
 
 [**Wandb Runs**](https://wandb.ai/marius-workspace/ImageTransformationBenchmark?workspace=user-mariusmarin)
 
-[Colab code](https://colab.research.google.com/drive/1OFhPqobpy1sZPRsope1UtYlW9R2Ikbcy#scrollTo=N-Zxi4gQK7xK)
+[Colab code](https://colab.research.google.com/drive/1OFhPqobpy1sZPRsope1UtYlW9R2Ikbcy#scrollTo=N-Zxi4gQK7xK) for inference
 
 ## Script Descriptions
 - `main.py`: Sets up the environment, loads data, trains the model, and saves the weights.
