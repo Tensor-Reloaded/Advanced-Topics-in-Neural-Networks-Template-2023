@@ -7,13 +7,13 @@ from nn.estimators.base_accuracy_estimator import BaseAccuracyEstimator
 
 
 class ModelTrainer:
-    __model: Module
-    __loss_function: torch.nn.modules.loss._Loss
-    __optimiser: torch.optim.Optimizer
-    __training_accuracy_estimator: BaseAccuracyEstimator
-    __validation_accuracy_estimator: BaseAccuracyEstimator
-    __device: torch.device
-    __exports_path: str
+    _model: Module
+    _loss_function: torch.nn.modules.loss._Loss
+    _optimiser: torch.optim.Optimizer
+    _training_accuracy_estimator: BaseAccuracyEstimator
+    _validation_accuracy_estimator: BaseAccuracyEstimator
+    _device: torch.device
+    _exports_path: str
 
     def __init__(
         self,
@@ -25,16 +25,16 @@ class ModelTrainer:
         device: torch.device = torch.device("cpu"),
         exports_path: str = "/tmp",
     ) -> None:
-        self.__model = model
-        self.__loss_function = loss_function()
-        self.__optimiser = optimiser(self.__model.parameters(), lr=learning_rate)
-        self.__training_accuracy_estimator = accuracy_estimator
-        self.__validation_accuracy_estimator = accuracy_estimator
-        self.__device = device
-        self.__exports_path = exports_path
+        self._model = model
+        self._loss_function = loss_function()
+        self._optimiser = optimiser(self._model.parameters(), lr=learning_rate)
+        self._training_accuracy_estimator = accuracy_estimator
+        self._validation_accuracy_estimator = accuracy_estimator
+        self._device = device
+        self._exports_path = exports_path
 
-        self.__loss_function = self.__loss_function.to(
-            device=self.__device, non_blocking=self.__device == "cuda"
+        self._loss_function = self._loss_function.to(
+            device=self._device, non_blocking=self._device == "cuda"
         )
 
     def run(
@@ -80,54 +80,54 @@ class ModelTrainer:
         self,
         batched_training_dataset: torch_data.DataLoader,
     ) -> t.Tuple[float, float]:
-        self.__model.train()
+        self._model.train()
         training_loss = 0.0
 
         for training_image in batched_training_dataset:
             image, label = training_image
-            image = image.to(device=self.__device, non_blocking=self.__device == "cuda")
-            label = label.to(device=self.__device, non_blocking=self.__device == "cuda")
+            image = image.to(device=self._device, non_blocking=self._device == "cuda")
+            label = label.to(device=self._device, non_blocking=self._device == "cuda")
 
-            self.__optimiser.zero_grad()
-            y_hat = self.__model(x=image)
-            loss = self.__loss_function(y_hat, label)
+            self._optimiser.zero_grad()
+            y_hat = self._model(x=image)
+            loss = self._loss_function(y_hat, label)
             loss.backward()
             torch.nn.utils.clip_grad_norm_(
-                parameters=self.__model.parameters(), max_norm=1.0
+                parameters=self._model.parameters(), max_norm=1.0
             )
-            self.__optimiser.step()
+            self._optimiser.step()
 
-            self.__training_accuracy_estimator.update(y_hat=y_hat, y=label)
+            self._training_accuracy_estimator.update(y_hat=y_hat, y=label)
             training_loss += loss.item()
 
-        return training_loss, self.__training_accuracy_estimator.get()
+        return training_loss, self._training_accuracy_estimator.get()
 
     def run_validation(
         self,
         batched_validation_dataset: torch_data.DataLoader,
     ) -> t.Tuple[float, float]:
-        self.__model.eval()
+        self._model.eval()
         validation_loss = 0.0
 
         with torch.no_grad():
             for validation_image in batched_validation_dataset:
                 image, label = validation_image
                 image = image.to(
-                    device=self.__device, non_blocking=self.__device == "cuda"
+                    device=self._device, non_blocking=self._device == "cuda"
                 )
                 label = label.to(
-                    device=self.__device, non_blocking=self.__device == "cuda"
+                    device=self._device, non_blocking=self._device == "cuda"
                 )
 
-                y_hat = self.__model(image)
-                loss = self.__loss_function(y_hat, label)
+                y_hat = self._model(image)
+                loss = self._loss_function(y_hat, label)
 
-                self.__validation_accuracy_estimator.update(y_hat=y_hat, y=label)
+                self._validation_accuracy_estimator.update(y_hat=y_hat, y=label)
                 validation_loss += loss.item()
 
-        return validation_loss, self.__validation_accuracy_estimator.get()
+        return validation_loss, self._validation_accuracy_estimator.get()
 
     def export(self) -> None:
         torch.save(
-            self.__model.state_dict(), f"{self.__exports_path}/{time.time_ns()}.pt"
+            self._model.state_dict(), f"{self._exports_path}/{time.time_ns()}.pt"
         )
