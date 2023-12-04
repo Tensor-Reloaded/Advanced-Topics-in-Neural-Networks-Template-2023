@@ -12,7 +12,7 @@ from nn.estimators.image_regression_accuracy_estimator import (
     ImageRegressionAccuracyEstimator,
 )
 from nn.model.model import Model
-from nn.model.model_trainer import ModelTrainer
+from nn.model.metered_model_trainer import MeteredModelTrainer
 from nn.util.device import get_default_device
 from nn.dataset.custom_dataset import CustomDataset
 from util.args import parse_arguments
@@ -65,7 +65,7 @@ def train_model(device: torch.device) -> nn.Module:
     )
 
     model = Model(device=device)
-    model_trainer = ModelTrainer(
+    model_trainer = MeteredModelTrainer(
         model=model,
         loss_function=torch.nn.MSELoss,
         optimiser=torch.optim.Adam,
@@ -73,6 +73,7 @@ def train_model(device: torch.device) -> nn.Module:
         accuracy_estimator=ImageRegressionAccuracyEstimator(precision=0.05),
         device=device,
         exports_path=f"{current_path}/../data/exports",
+        log_path=f"{current_path}/../data/logs"
     )
     model_trainer.run(
         batched_training_dataset=batched_train_dataset,
