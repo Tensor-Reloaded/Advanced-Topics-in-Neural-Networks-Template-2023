@@ -25,7 +25,7 @@ def main():
 
     # Generate and save images
     print("Generating and saving images...")
-    generate_and_save_images(model, test_dataset, num_images=5, device=device)
+    generate_and_save_images(model, test_dataset, num_images=10, device=device)
 
     # Evaluate model's accuracy
     print("Evaluating model accuracy...")

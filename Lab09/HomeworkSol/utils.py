@@ -54,7 +54,7 @@ def timed(fn: callable):
     return wrap
 
 
-def generate_and_save_images(model, dataset, num_images=5, device=torch.device('cpu')):
+def generate_and_save_images(model, dataset, num_images=10, device=torch.device('cpu')):
     model.eval()
     selected_indices = random.sample(range(len(dataset)), num_images)
     for idx in selected_indices:
@@ -63,6 +63,9 @@ def generate_and_save_images(model, dataset, num_images=5, device=torch.device('
         # Move image to the same device as the model
         image = image.to(device)
 
+        # Save the original image
+        save_image(image.cpu(), f'original_image_{idx}.png')
+
         # Process image with the model
         with torch.no_grad():
             processed_img = model(image.unsqueeze(0)).squeeze(0)  # Add and remove batch dimension
@@ -70,9 +73,10 @@ def generate_and_save_images(model, dataset, num_images=5, device=torch.device('
         # Generate ground truth image
         ground_truth_img = ground_truth_transform(image)
 
-        # Save images
+        # Save processed and ground truth images
         save_image(processed_img.cpu(), f'processed_image_{idx}.png')
         save_image(ground_truth_img.cpu(), f'ground_truth_image_{idx}.png')
+
 
 
 @timed
