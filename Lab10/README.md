@@ -8,3 +8,4 @@ For self-study:
 References:
 - LSTM explained: https://nn.labml.ai/lstm/index.html
 - LSTM paper: https://deeplearning.cs.cmu.edu/F23/document/readings/LSTM.pdf
+- RNN tutorial: https://pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial.html
