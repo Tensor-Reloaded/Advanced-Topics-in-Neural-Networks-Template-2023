@@ -35,7 +35,10 @@ def validate(device=utils.get_default_device()):
     #                   torch.nn.Conv2d(in_channels=64, out_channels=1, kernel_size=(4, 4), stride=1, padding=(1, 1)),
     #               ],
     #               to_initialize=[0, 2, 5, 8],
-    #               weight_initialization=[torch.nn.init.xavier_normal_
+    #               weight_initialization=[torch.nn.init.xavier_normal_,
+    #                                      torch.nn.init.xavier_normal_,
+    #                                      torch.nn.init.xavier_normal_,
+    #                                      torch.nn.init.xavier_normal_,
     #                                      ]
     #               )
     model = Model(optimizers=[torch.optim.Adam],
