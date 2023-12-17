@@ -1,0 +1,1 @@
+I did the convolution 2D layer by hand, also tested it using the nn.Conv2d.
