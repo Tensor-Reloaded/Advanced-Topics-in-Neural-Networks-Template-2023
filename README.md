@@ -18,7 +18,7 @@ Repository for the Advanced Topics in Neural Networks laboratory, "Alexandru Ioa
 PyTorch, Pandas, Numpy, Tensorboard, Matplotlib, and Opencv are already available in Google Colab.
 
 Local installation: 
-1. Create a Python virtual environment (the current stable version for ~~PyTorch 2.0.1 is Python 3.10~~ PyTorch 2.1 is Python 3.11).
+1. Create a Python virtual environment (the current stable version for ~~PyTorch 2.0.1 is Python 3.10~~ PyTorch 2.1.1 is Python 3.11).
     * If you are using `conda`, use `conda config --add channels conda-forge` first to add `conda-forge` as your highest priority channel.
 3. Activate the virtual environment and install PyTorch from [pytorch.org](https://pytorch.org/get-started/locally/) using `conda` or `pip`, depending on your environment.
     * Choose the Stable Release, choose your OS, select Conda or Pip and your compute platform. For Linux and Windows, CUDA 1X.X or CPU builds are available, while for Mac, only builds with CPU and MPS acceleration.
