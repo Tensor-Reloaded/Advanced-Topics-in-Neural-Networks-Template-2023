@@ -4,7 +4,6 @@ For self-study:
  - Multi-Headed Attention [implementation](https://nn.labml.ai/transformers/mha.html) from Attention Is All You Need ([paper](https://arxiv.org/abs/1706.03762), [video](https://www.youtube.com/watch?v=iDulhoQ2pro)). 
  - Transformer Encoder and Decoder Models [implementation](https://nn.labml.ai/transformers/models.html)
  - Fixed Positional Encodings [implementation](https://nn.labml.ai/transformers/positional_encoding.html)
- - Transformer Encoder and Decoder Models [implementation](https://nn.labml.ai/transformers/models.html)
 
 Supplementary materials: 
  - An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale (ViT): [paper](https://arxiv.org/abs/2010.11929), [code](https://nn.labml.ai/transformers/vit/index.html), [video](https://www.youtube.com/watch?v=TrdevFK_am4)
