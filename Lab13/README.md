@@ -10,6 +10,9 @@ Supplementary materials:
  - BERT: [paper](https://arxiv.org/abs/1810.04805) [code](https://nn.labml.ai/transformers/mlm/index.html), [video](https://www.youtube.com/watch?v=-9evrZnBorM)
  - GPT-2: [paper](https://d4mucfpksywv.cloudfront.net/better-language-models/language-models.pdf), [code](https://nn.labml.ai/transformers/gpt/index.html), [video](https://www.youtube.com/watch?v=u1_qMdb0kYU)
 
+Transformer and ViT implementations:
+* https://github.com/lucidrains/vit-pytorch
+* https://github.com/lucidrains/x-transformers
 
 ***
 References:
