@@ -1,0 +1,8 @@
+In this project i used:
+-Double Deep Q Learning Agent with Experience Replay ,model with BatchNorm and LeakyReLu
+-Multiple Game State Representations and 2 episode definitions
+
+The best obtained agent is named A1L and is competitive with a heuristic method for the environment 
+with 1 circle.In all environments,the Q Learning Agents easily outperforms the Random Agent.
+
+Agents A1L,A4L,A6L and A7L are trained for 1 circle and have different policies,the best by far being A1L.

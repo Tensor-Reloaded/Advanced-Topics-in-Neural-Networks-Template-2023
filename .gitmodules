@@ -1,0 +1,51 @@
+[submodule "projects/RL/BipedalWalker/P1"]
+	path = projects/RL/BipedalWalker/P1
+	url = https://github.com/pricoptudor/ATNN_PricopTudor.git
+[submodule "projects/RL/BipedalWalker/BipedalWalkerP3"]
+	path = projects/RL/BipedalWalker/BipedalWalkerP3
+	url = https://github.com/Lapus0108/ATNN-BipedalWalker-assets.git
+[submodule "projects/RL/Waterworld/WaterworldP1"]
+	path = projects/RL/Waterworld/WaterworldP1
+	url = https://github.com/vladromila/WATERWORLD-REINFORCEMENTLEARNING.git
+[submodule "projects/RL/CarRacing/CarRacingP1"]
+	path = projects/RL/CarRacing/CarRacingP1
+	url = https://github.com/Nick24-hub/Advanced-Topics-in-Neural-Networks-Car-Racing.git
+[submodule "projects/RL/CarRacing/CarRacingP2"]
+	path = projects/RL/CarRacing/CarRacingP2
+	url = https://github.com/ichim748/Proiect-ATNN.git
+[submodule "projects/NLP/RiskEvaluation/RiskEvaluationP1"]
+	path = projects/NLP/RiskEvaluation/RiskEvaluationP1
+	url = https://github.com/AlexandruBrezuleanu/Advanced-Topics-in-Neural-Networks-Template-2023.git
+[submodule "projects/NLP/QuestionAnswering/QuestionAnsweringP1"]
+	path = projects/NLP/QuestionAnswering/QuestionAnsweringP1
+	url = https://github.com/amaliuts/ATNN-QA.git
+[submodule "projects/NLP/QuestionAnswering/QuestionAnsweringP2"]
+	path = projects/NLP/QuestionAnswering/QuestionAnsweringP2
+	url = https://github.com/RaduStefan999/Advanced-Topics-in-Neural-Networks-2023.git
+[submodule "projects/CV/CIFAR-100/CIFAR100P1"]
+	path = projects/CV/CIFAR-100/CIFAR100P1
+	url = https://github.com/galaxy-hero/CIFAR-100.git
+[submodule "projects/CV/CIFAR-100/CIFAR100P2"]
+	path = projects/CV/CIFAR-100/CIFAR100P2
+	url = https://github.com/PopescuAndreiGeorge/Advanced-Topics-in-Neural-Networks-Template-2023.git
+[submodule "projects/CV/ADE20k/ADE20kP1"]
+	path = projects/CV/ADE20k/ADE20kP1
+	url = https://github.com/ApetriiRadu/Advanced-Topics-in-Neural-Networks-Template-2023.git
+[submodule "projects/CV/Embryo/EmbryoP1"]
+	path = projects/CV/Embryo/EmbryoP1
+	url = https://github.com/RazvanPanaite/Advanced-Methods-in-Embryo-Fertility-Classification.git
+[submodule "projects/CV/Monet/MonetP1"]
+	path = projects/CV/Monet/MonetP1
+	url = https://github.com/Covasan-Iosif/CycleGAN.git
+[submodule "projects/CV/Monet/MonetP2"]
+	path = projects/CV/Monet/MonetP2
+	url = https://github.com/MihaiBojescu/Advanced-topics-in-neural-networks-project.git
+[submodule "projects/CV/Monet/MonetP3"]
+	path = projects/CV/Monet/MonetP3
+	url = https://github.com/CorinaDimitriu/I-m_Something_of_a_Painter_Myself.git
+[submodule "projects/CV/BraTS/BraTSP1"]
+	path = projects/CV/BraTS/BraTSP1
+	url = https://github.com/GeorgeGit03/ATNN_Project.git
+[submodule "projects/RL/BipedalWalker/BipedalWalkerP1"]
+	path = projects/RL/BipedalWalker/BipedalWalkerP1
+	url = https://github.com/pricoptudor/ATNN_PricopTudor.git

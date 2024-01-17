@@ -1,0 +1,7 @@
+State representation as well as episode definition can have a big impact on Q Learnings performance.
+Using another definition we can get a speed up in terms of execution speed while not imparing our agent from learning.
+For more complex enviroments,it is better to use the second definition.
+
+The decision on hyper parameter values is also crucial,since we manage to get better performance from a model(A4L,A6L) with only 200 episodes
+by comparison with another(A4L) with 500 episodes due to the ratio of exploration and exploitation,with similar Experience Buffer sizes.
+
