@@ -1,0 +1,4 @@
+Model Type,Accuracy,Average Execution Time (ms) (Process),Peak Memory (MB) (Process),Average CPU Usage (%) (Process),Average Execution Time (ms) (Container),Peak Memory (MB) (Container),Average CPU Usage (%) (Container)
+torch_py,0.44,6735.0,575.45,6.550000000000001,9030.5,607.75,24.5
+onnx_py,0.44,6915.0,641.95,31.8,9013.5,642.0999999999999,48.400000000000006
+torch_cpp,0.44,3345.8,,,3065.0,426.45000000000005,40.8

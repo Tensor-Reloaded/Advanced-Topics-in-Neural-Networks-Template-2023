@@ -49,3 +49,6 @@
 [submodule "projects/RL/BipedalWalker/BipedalWalkerP1"]
 	path = projects/RL/BipedalWalker/BipedalWalkerP1
 	url = https://github.com/pricoptudor/ATNN_PricopTudor.git
+[submodule "projects/C++/Perceptron_MNIST"]
+	path = projects/C++/Perceptron_MNIST
+	url = https://github.com/TheWiseWolfy/MNIST_Perceptron.git

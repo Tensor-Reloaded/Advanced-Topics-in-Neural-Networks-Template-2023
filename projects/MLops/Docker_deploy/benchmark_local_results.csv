@@ -1,0 +1,3 @@
+Model Type,Accuracy,Average Execution Time (ms),Peak Memory (MB),Average CPU Usage (%)
+onnx,0.44,14730.0,336.6,49.3
+pytorch,0.44,15875.0,340.2,34.0

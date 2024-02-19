@@ -1,0 +1,189 @@
+\documentclass{article}
+\usepackage{booktabs}
+\usepackage[margin=1in]{geometry}
+
+\begin{document}
+
+\title{ML Model deployment using Torch}
+\author{Modoranu Ionut-Cosmin}
+\date{\today}
+\maketitle
+
+
+
+\section{Setup}
+\subsection{Trained model}
+
+The model used for performing inference is a ResNet18 trained for 30 minutes on T4 GPU on  Google Colab.
+
+\subsection{Containerized inference script}
+\subsubsection{The environment. Dockerfile.}
+
+The containerized environment is built following these steps:
+\begin{enumerate}
+    \item \textbf{Base and Python Setup:} Begins with an Ubuntu 22.04 base image integrated with NVIDIA CUDA, suitable for GPU-accelerated tasks. Installs Python 3.11.0 from source for the latest feature compatibility.
+    \item \textbf{PyTorch and ONNX Runtime:} Installs PyTorch for Python-based machine learning and ONNX Runtime for optimized model inference across various formats.
+    \item \textbf{C++ Support with LibTorch:} Prepares for C++ development by setting up `libtorch`, essential for utilizing torch in C++ applications.
+    \item \textbf{Script Handling and Execution Flexibility:} Copies Python inference scripts and compiles the C++ inference script as well. The entry point, `driver.sh`, determines the runtime mode based on environment variables, allowing execution in both Python and C++. Driver script also handles the measurement of metrics regarding CPU usage, memory, and execution time.
+\end{enumerate}
+
+\begin{verbatim}
+FROM nvidia/cuda:12.3.1-base-ubuntu22.04
+
+ENV DEVICE cpu
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    build-essential \
+    wget \
+    zlib1g-dev \
+    libssl-dev \
+    libffi-dev \
+    openssl \
+    libz-dev \
+    libbz2-dev \
+    liblzma-dev \
+    libreadline-dev \
+    libncursesw5-dev \
+    libgdbm-dev \
+    libsqlite3-dev \
+    libc6-dev \
+    libopenblas-dev \
+    liblapack-dev \
+    libblas-dev \
+    cmake \
+    unzip \
+    time
+
+# Download and install Python 3.11.0
+WORKDIR /usr/src/app
+
+RUN wget https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz && \
+    tar -xzf Python-3.11.0.tgz && \
+    rm Python-3.11.0.tgz && \
+    cd Python-3.11.0 && \
+    ./configure --enable-optimizations && \
+    make altinstall
+
+
+RUN python3.11 -m pip install torch torchvision onnxruntime psutil
+
+WORKDIR /usr/src/libtorch_cpu
+
+# Download libtorch
+RUN wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.2.0%2Bcpu.zip  && \
+    unzip libtorch-cxx11-abi-shared-with-deps-2.2.0+cpu.zip && \
+    rm libtorch-cxx11-abi-shared-with-deps-2.2.0+cpu.zip
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+# Build the C++ code
+WORKDIR /usr/src/app/cpp/example-app
+
+RUN mv /usr/src/libtorch_cpu/libtorch /usr/src/app/cpp/example-app/libtorch && \
+    rm -rf build/* && \
+    cmake -S . -B build && cmake --build build --config Release
+
+WORKDIR /usr/src/app
+
+ENTRYPOINT /bin/bash driver.sh
+
+\end{verbatim}
+
+\newpage
+\section{Comparison}
+\subsection{Inference script on Windows performance data}
+The following table shows the performance metrics for various models when the inference script is run on a Windows environment. These are the average values obtained from 30 runs.
+
+
+\begin{table}[ht]
+\centering
+
+\label{tab:windows_performance}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Model Type & Accuracy & \begin{tabular}[c]{@{}c@{}}Avg. Exec. Time (ms)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Avg. Peak Memory (MB)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Avg. CPU Usage (\%)\end{tabular} \\ \midrule
+onnx\_py    & 0.44      & 14730.0                                                    & 336.6                                                  & 49.3                                                     \\
+torch\_py & 0.44      & 15875.0                                                    & 340.2                                                  & 34.0                                                     \\ 
+\bottomrule
+\end{tabular}
+\caption{Performance metrics of inference script on Windows (bare metal)}
+\end{table}
+
+This section presents the performance analysis of different model types in containerized environments, specifically in Process and Container setups. The data represents average values obtained from 30 runs.
+
+\subsection{Container level performance data}
+\begin{table}[ht]
+\centering
+
+\label{tab:container_performance}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Model Type & Accuracy & \begin{tabular}[c]{@{}c@{}}Avg. Exec. Time (ms)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Avg. Peak Memory (MB)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Avg. CPU Usage (\%)\end{tabular} \\ \midrule
+torch\_py   & 0.44      & 9030.5                                                      & 607.75                                                 & 24.5                                                      \\
+onnx\_py    & 0.44      & 9013.5                                                      & 642.1                                                  & 48.4                                                      \\
+torch\_cpp  & 0.44      & 3465.0                                                      & 426.45                                                 & 40.8                                                      \\ 
+\bottomrule
+\end{tabular}
+\caption{Performance metrics of models at container level}
+\end{table}
+
+
+\subsection{Process level performance data}
+
+
+
+\begin{table}[ht]
+\centering
+
+\label{tab:process_performance}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Model Type & Accuracy & \begin{tabular}[c]{@{}c@{}}Avg. Exec. Time (ms)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Avg. Peak Memory (MB)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Avg. CPU Usage (\%)\end{tabular} \\ \midrule
+torch\_py   & 0.44      & 6735.0                                                      & 575.45                                                 & 6.55                                                     \\
+onnx\_py    & 0.44      & 6915.0                                                      & 641.95                                                 & 31.8                                                     \\
+torch\_cpp  & 0.44      & 3345.8                                                      & -                                                      & -                                                        \\ 
+\bottomrule
+\end{tabular}
+\caption{Performance metrics of models at process level}
+\end{table}
+
+\section{Observations}
+\subsection{Execution Time}
+\begin{itemize}
+    \item The model using \texttt{torch\_py} reduces its execution time from 15875.0 ms in Windows to 9030.5 ms in the Containerized environment.
+    \item For the model using \texttt{onnx\_py}, execution time decreases from 14730.0 ms in Windows to 9013.5 ms in the Containerized environment.
+    \item Performance characterized by \texttt{torch\_cpp} shows the fastest execution time in the Containerized environment at 3465.0 ms.
+\end{itemize}
+
+\subsection{Memory Usage}
+\begin{itemize}
+    \item In the Containerized environment, the models utilizing \texttt{torch\_py} and \texttt{onnx\_py} show increased memory usage at 607.75 MB and 642.1 MB, respectively, compared to their Windows counterparts.
+    \item The consumption profile of \texttt{torch\_cpp} indicates a lower memory footprint in the Containerized environment (426.45 MB).
+\end{itemize}
+
+\subsection{CPU Usage}
+\begin{itemize}
+    \item CPU usage for the \texttt{torch\_py}-based model is reduced in the Containerized environment (24.5\%) compared to Windows (34.0\%).
+    \item The \texttt{onnx\_py}-based model's CPU usage remains similar between Windows (49.3\%) and the Containerized environment (48.4\%).
+    \item The model utilizing \texttt{torch\_cpp} exhibits a CPU usage of 40.8\% in the Containerized environment.
+\end{itemize}
+
+\subsection{Model Accuracy}
+\begin{itemize}
+    \item The accuracy of all models remains consistent at 0.44 across both Windows and Containerized environments.
+\end{itemize}
+
+\section{Conclusions}
+\begin{itemize}
+    \item Containerized environments significantly improve execution speed and CPU usage for models using \texttt{torch\_py} and \texttt{onnx\_py} compared to Windows.
+    \item In the context of the containerized environment, The performance profile for the model using \texttt{torch\_cpp} demonstrates superior efficiency in execution time and memory usage.
+    \item While containerization enhances computational efficiency, particularly in terms of speed, it also leads to increased memory usage, which is a critical factor in resource-limited scenarios.
+    \item These findings underline the effectiveness of containerization as a deployment strategy for machine learning models if prioritizing execution time and CPU usage. Still, such a strategy could incur more memory being used.
+\end{itemize}
+
+
+\end{document}
