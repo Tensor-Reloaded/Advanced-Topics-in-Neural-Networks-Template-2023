@@ -8,7 +8,7 @@ Check:
 ***
 ## Optimizing PyTorch pipelines
 
-"Another benefit of striving for efficiency is that the process forces you to understand the problem in more depth. At the same time, this increased depth of understanding leads to more efficient implementations." - Alex Stepanov, [Three Algorithmic Journeys](http://stepanovpapers.com/Journeys/Journeys-0.3.pdf)
+"Another benefit of striving for efficiency is that the process forces you to understand the problem in more depth. At the same time, this increased depth of understanding leads to more efficient implementations." - Alexander Stepanov, [Three Algorithmic Journeys](http://stepanovpapers.com/Journeys/Journeys-0.3.pdf)
 ***
 Caution: Spending 5 hours to optimize a single pipeline that runs for only 1 hour is a waste of time.
 
