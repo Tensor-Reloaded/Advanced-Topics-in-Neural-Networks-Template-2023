@@ -40,3 +40,20 @@ Local installation:
    * [Neural Networks](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) (animated introduction to neural networks and backpropagation)
 - Convolutions:
    * [But what is a convolution?](https://www.youtube.com/watch?v=KuXjwB4LzSA) (convolution example; convolutions in image processing; convolutions and polynomial multiplication; FFT)
+ 
+
+## Table of contents
+
+* [Lab01](./Lab01): Logistic Regression (Homework: Implementing Multiclass Logistic Regression)
+* [Lab02](./Lab02): Tensor Operations (Homework: Implementing the Perceptron algorithm)
+* [Lab03](./Lab03): Advanced Tensor Operations (Homework: Implementing a Multi Layer Perceptron)
+* [Lab04](./Lab04): PyTorch Datasets, DataLoaders, Torchvision transforms (Homework: Implementing a training pipeline)
+* [Lab05](./Lab05): Advanced Data Augmentation techniques (RandAug, CutMix, MixUp) (Homework: Finetuning a training pipeline)
+* [Lab06](./Lab06): ReLU, Leaky ReLU, ELU, Internal Covariate Shift, Dropout
+* [Lab07](./Lab07): Convolutions, AlexNet, ResNet, R-CNN, Yolo (Homework: Training a CNN on CIFAR-10/100)
+* [Lab09](./Lab09): Reinforcement Learning (Q-Learning, AlphaZero, MuZero, ReBeL)
+* [Lab10](./Lab10): RNN, LSTM, GRU, torch.compile, torch.jit.script, torch.jit.trace, float16, bfloat16, autocst
+* [Lab11](./Lab11): Optimizing PyTorch pipelines
+* [Lab12](./Lab12): Self-Supervised Learning, Autoencoders, GAN and Diffusion
+* [Lab13](./Lab13): Multi-Headed Attention, Transformers, BERT, GPT 
+* [Projects](./projects)
