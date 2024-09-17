@@ -57,3 +57,5 @@ Local installation:
 * [Lab12](./Lab12): Self-Supervised Learning, Autoencoders, GAN and Diffusion
 * [Lab13](./Lab13): Multi-Headed Attention, Transformers, BERT, GPT 
 * [Projects](./projects)
+
+## [ATNN 2024](https://github.com/Tensor-Reloaded/Advanced-Topics-in-Neural-Networks-Template-2024)
